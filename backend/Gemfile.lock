@@ -122,6 +122,8 @@ GEM
     nio4r (2.7.4)
     nokogiri (1.18.1-aarch64-linux-gnu)
       racc (~> 1.4)
+    nokogiri (1.18.1-arm64-darwin)
+      racc (~> 1.4)
     parallel (1.26.3)
     parser (3.3.6.0)
       ast (~> 2.4.1)
@@ -134,6 +136,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.8)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-session (2.1.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -220,16 +224,18 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.7.1)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   aarch64-linux
+  arm64-darwin-22
 
 DEPENDENCIES
   bootsnap
   brakeman
   pg (~> 1.4)
   puma (>= 5.0)
+  rack-cors (~> 2.0.2)
   rails (~> 7.2.2, >= 7.2.2.1)
   rubocop-rails-omakase
 
