@@ -6,6 +6,7 @@ services:
     command: bundle exec rails server -b 0.0.0.0
     volumes:
       - ./backend:/app
+      - ./mapion_scraper/output:/app/mapion_scraper/output
     ports:
       - "3000:3000"
     depends_on:
