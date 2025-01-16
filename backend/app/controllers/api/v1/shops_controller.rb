@@ -2,17 +2,11 @@ module Api
   module V1
     class ShopsController < ApplicationController
       def index
-        page = params[:page].to_i > 0 ? params[:page].to_i : 1
-        per_page = params[:per_page].to_i > 0 ? params[:per_page].to_i : 10
-
-        shops = Shop.page(page).per(per_page)
-
+        shops = Shop.page(params[:page]).per(params[:per_page] || 10)
         render json: {
           data: shops,
           meta: {
-            current_page: shops.current_page,
-            total_pages: shops.total_pages,
-            total_count: shops.total_count
+            total_pages: shops.total_pages
           }
         }
       end
