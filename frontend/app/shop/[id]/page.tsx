@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 
 type Shop = {
@@ -14,9 +15,8 @@ type Shop = {
 const ShopDetailPage = () => {
   const [shop, setShop] = useState<Shop | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
   const { id } = useParams();
-
-  console.log("useParams result:", id); // `id` の値を確認
 
   useEffect(() => {
     const fetchShop = async () => {
@@ -27,15 +27,11 @@ const ShopDetailPage = () => {
         }
 
         const apiUrl = `http://localhost:3000/api/v1/shops/${id}`;
-        console.log(`Fetching shop details with ID: ${id}`);
-
         const response = await fetch(apiUrl, {
           headers: {
             Accept: "application/json",
           },
         });
-
-        console.log("Response object:", response);
 
         if (!response.ok) {
           if (response.status === 404) {
@@ -45,7 +41,6 @@ const ShopDetailPage = () => {
         }
 
         const data = await response.json();
-        console.log("Fetched data:", data);
         setShop(data);
       } catch (err) {
         console.error("Error fetching shop details:", err);
@@ -55,6 +50,30 @@ const ShopDetailPage = () => {
 
     fetchShop();
   }, [id]);
+
+  useEffect(() => {
+    if (isGoogleMapsLoaded && shop) {
+      const latitude = shop.latitude ? parseFloat(shop.latitude.toString()) : null;
+      const longitude = shop.longitude ? parseFloat(shop.longitude.toString()) : null;
+
+      if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {
+        console.error("Invalid coordinates:", { latitude, longitude });
+        setError("地図を表示するための座標が無効です。");
+        return;
+      }
+
+      const map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+        center: { lat: latitude, lng: longitude },
+        zoom: 15,
+      });
+
+      new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map,
+        title: shop.name,
+      });
+    }
+  }, [isGoogleMapsLoaded, shop]);
 
   if (error) {
     return (
@@ -75,11 +94,26 @@ const ShopDetailPage = () => {
 
   return (
     <div className="p-6">
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`}
+        strategy="lazyOnload"
+        onLoad={() => {
+          console.log("Google Maps API Loaded");
+          setIsGoogleMapsLoaded(true);
+        }}
+        onError={() => {
+          console.error("Failed to load Google Maps API");
+          setError("Google Maps API の読み込みに失敗しました。");
+        }}
+      />
+
       <h1 className="text-2xl font-bold mb-4">店舗詳細</h1>
       <h2 className="text-lg font-semibold mb-2">{shop.name}</h2>
       <p className="mb-1">住所: {shop.address}</p>
       <p className="mb-1">緯度: {shop.latitude !== null ? shop.latitude : "未登録"}</p>
       <p className="mb-1">経度: {shop.longitude !== null ? shop.longitude : "未登録"}</p>
+
+      <div id="map" className="w-6/12 h-96 mt-2" />
     </div>
   );
 };
