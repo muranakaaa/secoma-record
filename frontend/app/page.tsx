@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { getShops } from "../lib/api";
-import { Button } from "./components/ui/button";
+import Link from 'next/link';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getShops } from '../lib/api';
+import { Button } from './components/ui/button';
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from "./components/ui/command";
+} from './components/ui/command';
 
 type Shop = {
   id: number;
@@ -23,7 +23,7 @@ type Shop = {
 const HomePage = () => {
   const [shops, setShops] = useState<Shop[]>([]);
   const [searchResults, setSearchResults] = useState<Shop[]>([]);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +34,7 @@ const HomePage = () => {
         setShops(data);
         setSearchResults(data); // 初期状態で全て表示
       } catch (error) {
-        console.error("Error fetching shops:", error);
+        console.error('Error fetching shops:', error);
       }
     };
     fetchShops();
@@ -44,20 +44,23 @@ const HomePage = () => {
     if (inputText) {
       setSearchResults(
         shops.filter((shop) =>
-          shop.name.toLowerCase().includes(inputText.toLowerCase())
-        )
+          shop.name.toLowerCase().includes(inputText.toLowerCase()),
+        ),
       );
     } else {
       setSearchResults(shops);
     }
   }, [inputText, shops]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    const input = inputRef.current;
-    if (input && e.key === "Escape") {
-      input.blur();
-    }
-  }, []);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const input = inputRef.current;
+      if (input && e.key === 'Escape') {
+        input.blur();
+      }
+    },
+    [],
+  );
 
   return (
     <div className="p-6">
