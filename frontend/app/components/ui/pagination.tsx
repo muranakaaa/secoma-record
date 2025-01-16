@@ -1,28 +1,25 @@
 import { Button } from "./button";
 
 type PaginationProps = {
-  total: number; // 総ページ数
-  current: number; // 現在のページ
-  onPageChange: (page: number) => void; // ページ変更時のコールバック
+  total: number;
+  current: number;
+  onPageChange: (page: number) => void;
 };
 
 export const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
-  const MAX_VISIBLE_PAGES = 5; // 表示する最大ページ数
+  const MAX_VISIBLE_PAGES = 5;
 
   const getPages = () => {
     const pages = [];
 
-    // 計算するページ範囲
     const half = Math.floor(MAX_VISIBLE_PAGES / 2);
     let start = Math.max(1, current - half);
     let end = Math.min(total, current + half);
 
-    // 調整: 最初のページに近い場合
     if (start === 1) {
       end = Math.min(total, MAX_VISIBLE_PAGES);
     }
 
-    // 調整: 最後のページに近い場合
     if (end === total) {
       start = Math.max(1, total - MAX_VISIBLE_PAGES + 1);
     }
@@ -31,15 +28,14 @@ export const Pagination = ({ total, current, onPageChange }: PaginationProps) =>
       pages.push(i);
     }
 
-    // 必要に応じて "..." を追加
     if (start > 1) {
-      pages.unshift("..."); // 省略記号
-      pages.unshift(1); // 最初のページ
+      pages.unshift("...");
+      pages.unshift(1);
     }
 
     if (end < total) {
-      pages.push("..."); // 省略記号
-      pages.push(total); // 最後のページ
+      pages.push("...");
+      pages.push(total);
     }
 
     return pages;
@@ -55,12 +51,10 @@ export const Pagination = ({ total, current, onPageChange }: PaginationProps) =>
 
   return (
     <div className="flex justify-center items-center space-x-2 mt-4">
-      {/* 前へボタン */}
       <Button onClick={() => handlePageChange(current - 1)} disabled={current <= 1}>
         前へ
       </Button>
 
-      {/* ページ番号 */}
       {pages.map((page, index) =>
         typeof page === "number" ? (
           <Button
@@ -77,7 +71,6 @@ export const Pagination = ({ total, current, onPageChange }: PaginationProps) =>
         )
       )}
 
-      {/* 次へボタン */}
       <Button onClick={() => handlePageChange(current + 1)} disabled={current >= total}>
         次へ
       </Button>
