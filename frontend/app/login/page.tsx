@@ -19,7 +19,9 @@ export default function LoginPage() {
       router.push('/');
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError('ログイン失敗: メールアドレスまたはパスワードが正しくありません。');
+        setError(
+          'ログイン失敗: メールアドレスまたはパスワードが正しくありません。',
+        );
       }
     }
   };

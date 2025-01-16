@@ -17,7 +17,8 @@ export default function SignupPage() {
 
   const validateEmail = (value: string) => {
     if (!value) return 'メールアドレスを入力してください。';
-    if (!/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(value)) return 'メールアドレスの形式が正しくありません。';
+    if (!/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(value))
+      return 'メールアドレスの形式が正しくありません。';
     return '';
   };
 
@@ -35,7 +36,8 @@ export default function SignupPage() {
   const handleSignup = async () => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
-    const passwordConfirmationError = validatePasswordConfirmation(passwordConfirmation);
+    const passwordConfirmationError =
+      validatePasswordConfirmation(passwordConfirmation);
 
     setErrors({
       email: emailError,
@@ -68,7 +70,9 @@ export default function SignupPage() {
           placeholder="メールアドレス"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={() => setErrors((prev) => ({ ...prev, email: validateEmail(email) }))}
+          onBlur={() =>
+            setErrors((prev) => ({ ...prev, email: validateEmail(email) }))
+          }
         />
         {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
       </div>
@@ -79,7 +83,12 @@ export default function SignupPage() {
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          onBlur={() => setErrors((prev) => ({ ...prev, password: validatePassword(password) }))}
+          onBlur={() =>
+            setErrors((prev) => ({
+              ...prev,
+              password: validatePassword(password),
+            }))
+          }
         />
         {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
       </div>
@@ -93,7 +102,8 @@ export default function SignupPage() {
           onBlur={() =>
             setErrors((prev) => ({
               ...prev,
-              passwordConfirmation: validatePasswordConfirmation(passwordConfirmation),
+              passwordConfirmation:
+                validatePasswordConfirmation(passwordConfirmation),
             }))
           }
         />

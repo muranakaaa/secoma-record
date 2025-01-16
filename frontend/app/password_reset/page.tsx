@@ -17,7 +17,9 @@ export default function PasswordResetPage() {
       setError('');
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError('パスワードリセットに失敗しました。メールアドレスを確認してください。');
+        setError(
+          'パスワードリセットに失敗しました。メールアドレスを確認してください。',
+        );
         setMessage('');
       }
     }
