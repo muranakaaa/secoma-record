@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getShops } from "../lib/api";
+import { Button } from "./components/ui/button";
 
 type Shop = {
   id: number;
@@ -35,7 +36,7 @@ const HomePage = () => {
             <h2 className="text-lg font-semibold">{shop.name}</h2>
             <p>住所: {shop.address}</p>
             <Link href={`/shop/${shop.id}`} className="text-blue-500 underline">
-              詳細を見る
+              <Button>詳細を見る</Button>
             </Link>
           </li>
         ))}
