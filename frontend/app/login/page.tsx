@@ -12,13 +12,15 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/users/sign_in', {
+      await axios.post('http://localhost:3000/api/v1/users/sign_in', {
         user: { email, password },
       });
       alert('ログイン成功');
       router.push('/');
-    } catch (error: any) {
-      setError('ログイン失敗: メールアドレスまたはパスワードが正しくありません。');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError('ログイン失敗: メールアドレスまたはパスワードが正しくありません。');
+      }
     }
   };
 

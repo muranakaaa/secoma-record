@@ -32,21 +32,6 @@ export default function SignupPage() {
     return '';
   };
 
-  const handleBlurEmail = () => {
-    setErrors((prev) => ({ ...prev, email: validateEmail(email) }));
-  };
-
-  const handleBlurPassword = () => {
-    setErrors((prev) => ({ ...prev, password: validatePassword(password) }));
-  };
-
-  const handleBlurPasswordConfirmation = () => {
-    setErrors((prev) => ({
-      ...prev,
-      passwordConfirmation: validatePasswordConfirmation(passwordConfirmation),
-    }));
-  };
-
   const handleSignup = async () => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
@@ -66,8 +51,10 @@ export default function SignupPage() {
       });
       alert('登録成功');
       router.push('/login');
-    } catch (error: any) {
-      alert('登録失敗: 入力内容を確認してください。');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert('登録失敗: 入力内容を確認してください。');
+      }
     }
   };
 
@@ -81,7 +68,7 @@ export default function SignupPage() {
           placeholder="メールアドレス"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={handleBlurEmail}
+          onBlur={() => setErrors((prev) => ({ ...prev, email: validateEmail(email) }))}
         />
         {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
       </div>
@@ -92,7 +79,7 @@ export default function SignupPage() {
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          onBlur={handleBlurPassword}
+          onBlur={() => setErrors((prev) => ({ ...prev, password: validatePassword(password) }))}
         />
         {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
       </div>
@@ -103,7 +90,12 @@ export default function SignupPage() {
           placeholder="パスワード確認"
           value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
-          onBlur={handleBlurPasswordConfirmation}
+          onBlur={() =>
+            setErrors((prev) => ({
+              ...prev,
+              passwordConfirmation: validatePasswordConfirmation(passwordConfirmation),
+            }))
+          }
         />
         {errors.passwordConfirmation && (
           <p style={{ color: 'red' }}>{errors.passwordConfirmation}</p>
