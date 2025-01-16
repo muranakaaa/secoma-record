@@ -1,6 +1,7 @@
-"use client"
-import { getShops } from '@/lib/api';
-import { useEffect, useState } from 'react';
+"use client";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getShops } from "../lib/api";
 
 type Shop = {
   id: number;
@@ -8,7 +9,6 @@ type Shop = {
   address: string;
   latitude: number;
   longitude: number;
-  opening_hours: string;
 };
 
 const HomePage = () => {
@@ -20,7 +20,7 @@ const HomePage = () => {
         const data = await getShops();
         setShops(data);
       } catch (error) {
-        console.error('Error fetching shops:', error);
+        console.error("Error fetching shops:", error);
       }
     };
     fetchShops();
@@ -34,7 +34,9 @@ const HomePage = () => {
           <li key={shop.id} className="border p-4 rounded-md shadow-sm">
             <h2 className="text-lg font-semibold">{shop.name}</h2>
             <p>住所: {shop.address}</p>
-            <p>営業時間: {shop.opening_hours}</p>
+            <Link href={`/shop/${shop.id}`} className="text-blue-500 underline">
+              詳細を見る
+            </Link>
           </li>
         ))}
       </ul>

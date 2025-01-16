@@ -85,6 +85,10 @@ GEM
     connection_pool (2.5.0)
     crass (1.0.6)
     date (3.4.1)
+    dotenv (3.1.7)
+    dotenv-rails (3.1.7)
+      dotenv (= 3.1.7)
+      railties (>= 6.1)
     drb (2.2.1)
     erubi (1.13.1)
     globalid (1.2.1)
@@ -233,6 +237,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   brakeman
+  dotenv-rails (~> 3.1.7)
   pg (~> 1.4)
   puma (>= 5.0)
   rack-cors (~> 2.0.2)
