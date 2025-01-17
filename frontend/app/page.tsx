@@ -1,16 +1,17 @@
 'use client';
 
-import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { getShops } from '../lib/api';
-import { Button } from './components/ui/button';
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getShops } from "../lib/api";
+import { Button } from "./components/ui/button";
+import { Pagination } from "./components/ui/pagination";
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from './components/ui/command';
+} from "./components/ui/command";
 
 type Shop = {
   id: number;
@@ -23,44 +24,50 @@ type Shop = {
 const HomePage = () => {
   const [shops, setShops] = useState<Shop[]>([]);
   const [searchResults, setSearchResults] = useState<Shop[]>([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const PER_PAGE = 10;
 
   useEffect(() => {
     const fetchShops = async () => {
       try {
-        const data = await getShops();
-        setShops(data);
-        setSearchResults(data); // 初期状態で全て表示
+        const data = await getShops(page, PER_PAGE);
+        setShops(data.data);
+        setSearchResults(data.data); // 検索結果の初期状態として設定
+        setTotalPages(data.meta.total_pages);
       } catch (error) {
-        console.error('Error fetching shops:', error);
+        console.error("Error fetching shops:", error);
       }
     };
     fetchShops();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     if (inputText) {
       setSearchResults(
         shops.filter((shop) =>
-          shop.name.toLowerCase().includes(inputText.toLowerCase()),
-        ),
+          shop.name.toLowerCase().includes(inputText.toLowerCase())
+        )
       );
     } else {
       setSearchResults(shops);
     }
   }, [inputText, shops]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const input = inputRef.current;
-      if (input && e.key === 'Escape') {
-        input.blur();
-      }
-    },
-    [],
-  );
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    const input = inputRef.current;
+    if (input && e.key === "Escape") {
+      input.blur();
+    }
+  }, []);
 
   return (
     <div className="p-6">
@@ -116,6 +123,12 @@ const HomePage = () => {
           </li>
         ))}
       </ul>
+
+      <Pagination
+        total={totalPages}
+        current={page}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

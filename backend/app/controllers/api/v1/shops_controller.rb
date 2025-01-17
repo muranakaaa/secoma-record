@@ -2,17 +2,22 @@ module Api
   module V1
     class ShopsController < ApplicationController
       def index
-        @shops = Shop.all
-        render json: @shops
+        shops = Shop.page(params[:page]).per(params[:per_page] || 10)
+        render json: {
+          data: shops,
+          meta: {
+            total_pages: shops.total_pages
+          }
+        }
       end
 
       def show
         Rails.logger.info "Received request for Shop ID: #{params[:id]}"
-        @shop = Shop.find_by(id: params[:id])
+        shop = Shop.find_by(id: params[:id])
 
-        if @shop
-          Rails.logger.info "Shop found: #{@shop.inspect}"
-          render json: @shop
+        if shop
+          Rails.logger.info "Shop found: #{shop.inspect}"
+          render json: shop
         else
           Rails.logger.error "Shop with ID #{params[:id]} not found"
           render json: { error: 'Shop not found' }, status: :not_found
