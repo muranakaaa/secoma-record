@@ -15,9 +15,13 @@ export default function PasswordResetPage() {
       });
       setMessage('パスワードリセットメールを送信しました。');
       setError('');
-    } catch (error: any) {
-      setError('パスワードリセットに失敗しました。メールアドレスを確認してください。');
-      setMessage('');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(
+          'パスワードリセットに失敗しました。メールアドレスを確認してください。',
+        );
+        setMessage('');
+      }
     }
   };
 
