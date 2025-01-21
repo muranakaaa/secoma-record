@@ -4,10 +4,10 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
-    render json: { message: 'ログイン成功', user: resource }, status: :ok
+    render json: { message: "ログイン成功", user: resource }, status: :ok
   end
 
   def respond_to_on_destroy
-    render json: { message: 'ログアウト成功' }, status: :ok
+    render json: { message: "ログアウト成功" }, status: :ok
   end
 end
