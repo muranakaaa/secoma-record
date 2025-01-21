@@ -2,13 +2,14 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format": "prettier . --write"
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --write"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",
