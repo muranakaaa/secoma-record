@@ -20,7 +20,7 @@ module Api
           render json: shop
         else
           Rails.logger.error "Shop with ID #{params[:id]} not found"
-          render json: { error: 'Shop not found' }, status: :not_found
+          render json: { error: "Shop not found" }, status: :not_found
         end
       end
 
@@ -28,7 +28,7 @@ module Api
         Shop.find_each do |shop|
           shop.fetch_additional_info
         end
-        render json: { message: 'Shops updated with Google Places data.' }
+        render json: { message: "Shops updated with Google Places data." }
       end
     end
   end
