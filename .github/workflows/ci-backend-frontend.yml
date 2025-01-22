@@ -5,7 +5,7 @@ on:
 
 jobs:
   backend-ci:
-    name: Backend CI: Rubocop / RSpec
+    name: "Backend CI: Rubocop / RSpec"
     runs-on: ubuntu-latest
 
     steps:
