@@ -14,7 +14,7 @@ https://x.com/wage790<br>
 - コード解析: ESLint
 - フォーマッター: Prettier
 - CSSフレームワーク: Tailwind CSS
-- 主要パッケージ: shadcn / Axios
+- 主要パッケージ: shadcn / Axios / react-hook-form
 
 DB: PostgreSQL
 
