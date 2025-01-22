@@ -70,7 +70,7 @@ jobs:
       - name: Run ESLint
         run: npm run lint:fix
         working-directory: ./frontend
-      
+
       # Prettierによるコードフォーマットの実行
       - name: Run Prettier
         run: npm run format
