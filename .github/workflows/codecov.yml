@@ -1,0 +1,37 @@
+name: "CI: Codecov"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    # リポジトリをクローン
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Node.jsのセットアップ
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # 必要な依存関係をインストール
+    - name: Install dependencies
+      run: npm install
+
+    # テストとカバレッジレポートの生成
+    - name: Run tests
+      run: npx jest --coverage
+
+    # Codecovにカバレッジレポートをアップロード
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
