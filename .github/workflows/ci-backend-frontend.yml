@@ -16,6 +16,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: 3.1.4 # 使用しているRubyのバージョンを明示
           bundler-cache: true
 
       # バックエンドの依存関係をインストール
@@ -45,7 +46,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '18' # Next.jsが要求するNode.jsバージョンを指定
 
       # フロントエンドの依存関係をキャッシュ
       - name: Cache Node Modules
