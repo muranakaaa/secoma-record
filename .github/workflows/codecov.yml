@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches:
+    branches:https://zenn.dev/ddpmntcpbr/books/rna-hands-on/viewer/setup-04
       - main
 
 jobs:
