@@ -8,7 +8,7 @@ https://x.com/wage790<br>
 ## 使用技術一覧
 バックエンド: Ruby / Rails
 - コード解析 / フォーマッター: Rubocop
-- テストフレームワーク: RSpec
+- テストフレームワーク: RSpec（Model, Request Test）
 
 フロントエンド: TypeScript / Next.js
 - コード解析: ESLint
