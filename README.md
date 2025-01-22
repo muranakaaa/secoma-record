@@ -63,10 +63,10 @@ API:
 - クロスブラウザテスト
     - PC
         - Windows10 / 11: Google Chrome / Firefox / Microsoft Edge
-        - Mac: Google Chrome / Firefox / Safari
+        - Mac: Google Chrome / Firefox / Safari / Microsoft Edge
     - スマートフォン
         - Android: Google Chrome
-        - iOS: Safari
+        - iOS: Safari / Google Chrome
 - Codecovによるコードカバレッジの分析と可視化
 - 脆弱性対応(Dependabot Alerts / Code Scanning Alerts / GitGuardian)
 
