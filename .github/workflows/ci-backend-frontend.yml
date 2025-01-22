@@ -1,6 +1,7 @@
-name: CI: Backend (Rubocop / RSpec), Frontend (ESLint / Prettier)
+name: "CI: Backend (Rubocop / RSpec), Frontend (ESLint / Prettier)"
 
-on: push
+on:
+  push:
 
 jobs:
   backend-ci:
