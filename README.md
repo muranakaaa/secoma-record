@@ -17,8 +17,11 @@ https://x.com/wage790<br>
 - 主要パッケージ: shadcn / Axios
 
 DB: PostgreSQL
+
 インフラ: Vercel / fly.io / Cloudflare
+
 CI / CD: GitHub Actions
+
 環境構築: Docker / Docker Compose
 
 API: 
