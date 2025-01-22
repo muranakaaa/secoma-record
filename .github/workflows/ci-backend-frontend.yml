@@ -34,7 +34,7 @@ jobs:
         working-directory: ./backend
 
   frontend-ci:
-    name: Frontend CI: ESLint / Prettier
+    name: "Frontend CI: ESLint / Prettier"
     runs-on: ubuntu-latest
 
     steps:
