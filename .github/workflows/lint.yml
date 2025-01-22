@@ -1,0 +1,49 @@
+name: Lint and Format
+
+on: push
+
+jobs:
+  frontend-lint:
+    name: Frontend Lint and Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+        working-directory: ./frontend
+
+      - name: Run Prettier (Format)
+        run: npm run format
+        working-directory: ./frontend
+
+      - name: Run Lint (Fix)
+        run: npm run lint:fix
+        working-directory: ./frontend
+
+  backend-lint:
+    name: Backend Lint and Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.4
+          bundler-cache: true
+
+      - name: Install Dependencies
+        run: bundle install
+        working-directory: ./backend
+
+      - name: Run Rubocop (Auto-correct)
+        run: bundle exec rubocop -A
+        working-directory: ./backend
