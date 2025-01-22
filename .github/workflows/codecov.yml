@@ -12,26 +12,29 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    # リポジトリをクローン
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # リポジトリをクローン
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Node.jsのセットアップ
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
+      # Node.jsのセットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-    # 必要な依存関係をインストール
-    - name: Install dependencies
-      run: npm install
+      # 必要な依存関係をインストール
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
 
-    # テストとカバレッジレポートの生成
-    - name: Run tests
-      run: npx jest --coverage
+      # テストとカバレッジレポートの生成
+      - name: Run tests
+        working-directory: ./frontend
+        run: npx jest --coverage
 
-    # Codecovにカバレッジレポートをアップロード
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      # Codecovにカバレッジレポートをアップロード
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          working-directory: ./frontend
