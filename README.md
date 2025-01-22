@@ -68,7 +68,7 @@ API:
         - Android: Google Chrome
         - iOS: Safari / Google Chrome
 - Codecovによるコードカバレッジの分析と可視化
-- 脆弱性対応(Dependabot Alerts / Code Scanning Alerts / GitGuardian)
+- 脆弱性対応（Dependabot Alerts / Code Scanning Alerts / GitGuardian）
 
 ## ER図
 ![image](https://github.com/user-attachments/assets/6e6beab9-8efa-4c69-9ee1-2bae8b05dc82)
