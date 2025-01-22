@@ -1,0 +1,71 @@
+name: CI: Backend (Rubocop / RSpec), Frontend (ESLint / Prettier)
+
+on: push
+
+jobs:
+  backend-ci:
+    name: Backend CI: Rubocop / RSpec
+    runs-on: ubuntu-latest
+
+    steps:
+      # GitHubリポジトリのコードをチェックアウト
+      - uses: actions/checkout@v4
+
+      # Rubyのセットアップ
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      # バックエンドの依存関係をインストール
+      - name: Install Dependencies
+        run: bundle install
+        working-directory: ./backend
+
+      # Rubocopによるコードの静的解析と自動修正の実行
+      - name: Run Rubocop
+        run: bundle exec rubocop -A
+        working-directory: ./backend
+
+      # RSpecによるテストの実行
+      - name: Run RSpec
+        run: bin/rspec
+        working-directory: ./backend
+
+  frontend-ci:
+    name: Frontend CI: ESLint / Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      # GitHubリポジトリのコードをチェックアウト
+      - uses: actions/checkout@v4
+
+      # Node.jsのセットアップ
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      # フロントエンドの依存関係をキャッシュ
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # フロントエンドの依存関係をインストール
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+        working-directory: ./frontend
+
+      # ESLintによるコードのリントと修正の実行
+      - name: Run ESLint
+        run: npm run lint:fix
+        working-directory: ./frontend
+
+      # Prettierによるコードフォーマットの実行
+      - name: Run Prettier
+        run: npm run format
+        working-directory: ./frontend
