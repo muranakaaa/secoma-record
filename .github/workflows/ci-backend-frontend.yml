@@ -1,6 +1,12 @@
 name: CI: Backend (Rubocop / RSpec), Frontend (ESLint / Prettier)
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   backend-ci:
@@ -43,6 +49,8 @@ jobs:
       # Node.jsのセットアップ
       - name: Setup Node
         uses: actions/setup-node@v4
+        with:
+          node-version: '16'
 
       # フロントエンドの依存関係をキャッシュ
       - name: Cache Node Modules
