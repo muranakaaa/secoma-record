@@ -9,6 +9,7 @@ gem "devise_token_auth"
 gem "rack-cors", "~> 2.0.2"
 gem "kaminari", "~> 1.2.2"
 gem "bootsnap", require: false
+gem "active_model_serializers"
 
 group :development, :test do
   gem "brakeman", require: false
