@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import CurrentUserFetch from './components/CurrentUserFetch';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 import './globals.css';
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
+        <CurrentUserFetch />
         <Header />
         {children}
         <Footer />

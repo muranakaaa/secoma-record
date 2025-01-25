@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { useUserState } from "../hooks/useGlobalState";
 
 type SignInFormData = {
   email: string;
@@ -14,6 +15,7 @@ type SignInFormData = {
 
 export default function SignIn() {
   const router = useRouter();
+  const [user, setUser] = useUserState()
 
   const {
     handleSubmit,
@@ -43,7 +45,7 @@ export default function SignIn() {
 
   const onSubmit: SubmitHandler<SignInFormData> = async (data) => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/sign_in`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/sign_in`;
       const headers = { "Content-Type": "application/json" };
 
       const response = await axios.post(url, data, { headers });
@@ -51,6 +53,10 @@ export default function SignIn() {
       localStorage.setItem("access-token", response.headers["access-token"]);
       localStorage.setItem("client", response.headers["client"]);
       localStorage.setItem("uid", response.headers["uid"]);
+      setUser({
+           ...user,
+           isFetched: false,
+      })
 
       router.push("/");
     } catch (error) {
