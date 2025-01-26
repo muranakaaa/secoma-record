@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
+import { useUserState } from '../../hooks/useGlobalState';
 
 type Shop = {
   id: number;
@@ -12,43 +13,33 @@ type Shop = {
   longitude: number | null;
 };
 
+type Visit = {
+  id: number;
+  shop_id: number;
+  visit_date: string;
+  comment: string | null;
+};
+
 const ShopDetailPage = () => {
+  const { id } = useParams();
+  const [user] = useUserState();
   const [shop, setShop] = useState<Shop | null>(null);
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const [date, setDate] = useState<string>('');
+  const [comment, setComment] = useState<string>('');
+  const [isEditing, setIsEditing] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
-  const { id } = useParams();
 
   useEffect(() => {
     const fetchShop = async () => {
       try {
-        if (!id) {
-          setError('店舗IDが指定されていません。');
-          return;
-        }
-
-        const apiUrl = `http://localhost:3000/api/v1/shops/${id}`;
-        const response = await fetch(apiUrl, {
-          headers: {
-            Accept: 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('店舗が見つかりませんでした。');
-          }
-          throw new Error(
-            `データ取得中にエラーが発生しました: ${response.status}`,
-          );
-        }
-
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/shops/${id}`);
+        if (!response.ok) throw new Error('店舗情報の取得に失敗しました。');
         const data = await response.json();
         setShop(data);
       } catch (err) {
-        console.error('Error fetching shop details:', err);
-        setError(
-          err instanceof Error ? err.message : '不明なエラーが発生しました。',
-        );
+        setError(err instanceof Error ? err.message : '不明なエラー');
       }
     };
 
@@ -56,21 +47,26 @@ const ShopDetailPage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (isGoogleMapsLoaded && shop) {
-      const latitude = shop.latitude
-        ? parseFloat(shop.latitude.toString())
-        : null;
-      const longitude = shop.longitude
-        ? parseFloat(shop.longitude.toString())
-        : null;
+    const fetchVisits = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits?shop_id=${id}`);
+        if (!response.ok) throw new Error('訪問記録の取得に失敗しました。');
+        const data = await response.json();
+        setVisits(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-      if (
-        latitude === null ||
-        longitude === null ||
-        isNaN(latitude) ||
-        isNaN(longitude)
-      ) {
-        console.error('Invalid coordinates:', { latitude, longitude });
+    fetchVisits();
+  }, [id]);
+
+  useEffect(() => {
+    if (isGoogleMapsLoaded && shop) {
+      const latitude = shop.latitude ? parseFloat(shop.latitude.toString()) : null;
+      const longitude = shop.longitude ? parseFloat(shop.longitude.toString()) : null;
+
+      if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {
         setError('地図を表示するための座標が無効です。');
         return;
       }
@@ -80,7 +76,7 @@ const ShopDetailPage = () => {
         {
           center: { lat: latitude, lng: longitude },
           zoom: 15,
-        },
+        }
       );
 
       new google.maps.Marker({
@@ -91,10 +87,75 @@ const ShopDetailPage = () => {
     }
   }, [isGoogleMapsLoaded, shop]);
 
+  const handleCreateOrUpdate = async () => {
+    if (!user.isSignedIn) {
+      alert('ログインしてください');
+      return;
+    }
+
+    const method = isEditing ? 'PUT' : 'POST';
+    const url = isEditing
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits/${isEditing}`
+      : `${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits`;
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'access-token': localStorage.getItem('access-token') || '',
+        'client': localStorage.getItem('client') || '',
+        'uid': localStorage.getItem('uid') || '',
+      },
+      body: JSON.stringify({
+        shop_id: id,
+        visit_date: date,
+        comment,
+      }),
+    });
+
+    if (response.ok) {
+      const newVisit = await response.json();
+      setVisits((prev) =>
+        isEditing
+          ? prev.map((v) => (v.id === newVisit.id ? newVisit : v))
+          : [...prev, newVisit]
+      );
+      setDate('');
+      setComment('');
+      setIsEditing(null);
+    } else {
+      alert('エラーが発生しました');
+    }
+  };
+
+  const handleDelete = async (visitId: number) => {
+    if (!user.isSignedIn) {
+      alert('ログインしてください');
+      return;
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits/${visitId}`, {
+      method: 'DELETE',
+      headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+      'access-token': localStorage.getItem('access-token') || '',
+      client: localStorage.getItem('client') || '',
+      uid: localStorage.getItem('uid') || '',
+    },
+    });
+
+    if (response.ok) {
+      setVisits((prev) => prev.filter((v) => v.id !== visitId));
+    } else {
+      alert('削除に失敗しました');
+    }
+  };
+
   if (error) {
     return (
       <div className="p-6 text-red-500">
-        <h1 className="text-2xl font-bold mb-4">エラー</h1>
+        <h1>エラー</h1>
         <p>{error}</p>
       </div>
     );
@@ -103,7 +164,7 @@ const ShopDetailPage = () => {
   if (!shop) {
     return (
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Loading...</h1>
+        <h1>Loading...</h1>
       </div>
     );
   }
@@ -123,17 +184,55 @@ const ShopDetailPage = () => {
         }}
       />
 
-      <h1 className="text-2xl font-bold mb-4">店舗詳細</h1>
-      <h2 className="text-lg font-semibold mb-2">{shop.name}</h2>
-      <p className="mb-1">住所: {shop.address}</p>
-      <p className="mb-1">
-        緯度: {shop.latitude !== null ? shop.latitude : '未登録'}
-      </p>
-      <p className="mb-1">
-        経度: {shop.longitude !== null ? shop.longitude : '未登録'}
-      </p>
+      <h1 className="text-2xl font-bold">店舗詳細</h1>
+      <p>住所: {shop.address}</p>
 
-      <div id="map" className="w-6/12 h-96 mt-2" />
+      <div id="map" className="w-6/12 h-96 mt-2"></div>
+
+      <h2 className="text-xl font-bold mt-4">訪問記録</h2>
+      <div>
+        {visits.map((visit) => (
+          <div key={visit.id} className="p-2 border mb-2">
+            <p>日付: {visit.visit_date}</p>
+            <p>コメント: {visit.comment || 'なし'}</p>
+            {user.isSignedIn && (
+              <>
+                <button onClick={() => {
+                  setDate(visit.visit_date);
+                  setComment(visit.comment || '');
+                  setIsEditing(visit.id);
+                }}>
+                  編集
+                </button>
+                <button onClick={() => handleDelete(visit.id)}>削除</button>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {user.isSignedIn && (
+        <div className="mt-4">
+          <h3>{isEditing ? '訪問記録を編集' : '新規訪問記録を作成'}</h3>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="block mb-2"
+          />
+          <textarea
+            placeholder="コメント（任意）"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="block mb-2"
+          />
+          <button onClick={handleCreateOrUpdate}>
+            {isEditing ? '更新' : '作成'}
+          </button>
+        </div>
+      )}
+
+      {!user.isSignedIn && <p>ログインしてください。</p>}
     </div>
   );
 };
