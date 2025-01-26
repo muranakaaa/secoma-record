@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import CurrentUserFetch from './components/CurrentUserFetch';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
+import SuccessSnackbar from './components/common/Snackbar';
+import { Toaster } from './components/ui/toaster';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -22,6 +24,8 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <SuccessSnackbar />
+        <Toaster />
       </body>
     </html>
   );
