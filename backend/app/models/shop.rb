@@ -30,7 +30,6 @@ class Shop < ApplicationRecord
     place_details_uri = URI(place_details_url)
     place_details_uri.query = URI.encode_www_form({
       place_id: place_id,
-      fields: "geometry,opening_hours",
       key: api_key
     })
 
@@ -41,7 +40,6 @@ class Shop < ApplicationRecord
       result = place_details_data["result"]
       self.latitude = result.dig("geometry", "location", "lat")
       self.longitude = result.dig("geometry", "location", "lng")
-      self.opening_hours = result.dig("opening_hours", "weekday_text")&.join("\n")
       save!
     else
       Rails.logger.error("Google Place Details API Error: #{place_details_data['status']}")
