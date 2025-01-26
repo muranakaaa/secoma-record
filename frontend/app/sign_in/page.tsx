@@ -6,7 +6,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { useUserState } from "../hooks/useGlobalState";
+import { useSnackbarState, useUserState } from "../hooks/useGlobalState";
 
 type SignInFormData = {
   email: string;
@@ -16,6 +16,7 @@ type SignInFormData = {
 export default function SignIn() {
   const router = useRouter();
   const [user, setUser] = useUserState()
+  const [, setSnackbar] = useSnackbarState()
 
   const {
     handleSubmit,
@@ -54,18 +55,23 @@ export default function SignIn() {
       localStorage.setItem("client", response.headers["client"]);
       localStorage.setItem("uid", response.headers["uid"]);
       setUser({
-           ...user,
-           isFetched: false,
+        ...user,
+        isFetched: false,
+      })
+      setSnackbar({
+        message: 'サインインに成功しました',
+        severity: 'success',
+        pathname: '/',
       })
 
       router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("API Error Response:", error.response);
-        alert("ログインに失敗しました。メールアドレスまたはパスワードを確認してください。");
-      } else {
-        console.error("Network error", (error as Error).message);
-        alert("ネットワークエラーが発生しました。時間をおいて再試行してください。");
+        setSnackbar({
+          message: '登録ユーザーが見つかりません',
+          severity: 'error',
+          pathname: '/sign_in',
+        })
       }
     }
   };
