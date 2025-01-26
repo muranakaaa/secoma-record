@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from 'react';
 
 const SuccessSnackbar = () => {
-  const router = useRouter()
   const [snackbar, setSnackbar] = useSnackbarState()
   const { toast } = useToast()
 
