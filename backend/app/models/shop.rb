@@ -2,6 +2,7 @@ require "net/http"
 require "json"
 
 class Shop < ApplicationRecord
+  has_many :visits, dependent: :destroy
   def fetch_google_places_data
     return unless address.present?
 
