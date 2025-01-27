@@ -8,6 +8,16 @@ jobs:
     name: "Backend CI: Rubocop / RSpec"
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
     steps:
       # GitHubリポジトリのコードをチェックアウト
       - uses: actions/checkout@v4
@@ -24,6 +34,18 @@ jobs:
         run: bundle install
         working-directory: ./backend
 
+      - name: Setup Database
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: db
+          DB_PORT: ${{ secrets.DB_PORT }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+        working-directory: ./backend
+
       # Rubocopによるコードの静的解析と自動修正の実行
       - name: Run Rubocop
         run: bundle exec rubocop -A
@@ -31,6 +53,12 @@ jobs:
 
       # RSpecによるテストの実行
       - name: Run RSpec
+        env:
+            DB_USERNAME: ${{ secrets.DB_USERNAME }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            DB_HOST: db
+            DB_PORT: ${{ secrets.DB_PORT }}
+            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: bin/rspec
         working-directory: ./backend
 

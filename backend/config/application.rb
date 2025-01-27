@@ -1,5 +1,7 @@
 require_relative "boot"
 require "rails/all"
+require 'dotenv'
+Dotenv.load('../../.env') if defined?(Dotenv)
 
 Bundler.require(*Rails.groups)
 
