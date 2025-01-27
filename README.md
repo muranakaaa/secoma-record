@@ -23,7 +23,7 @@ https://x.com/wage790
 
 **CI / CD:** GitHub Actions
 
-環境構築: Docker / Docker Compose
+**環境構築:** Docker / Docker Compose
 
 **API:**
 - Google Maps JavaScript API（地図上で店舗の位置を表示するために使用）
