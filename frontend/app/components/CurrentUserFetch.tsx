@@ -12,7 +12,7 @@ const CurrentUserFetch = () => {
     }
 
     if (localStorage.getItem('access-token')) {
-      const url = 'http://localhost:3001/api/v1/current/user';
+      const url = '${process.env.NEXT_PUBLIC_API_BASE_URL}/current/user';
       axios
         .get(url, {
           headers: {

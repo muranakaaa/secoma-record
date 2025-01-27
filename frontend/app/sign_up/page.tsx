@@ -46,7 +46,7 @@ export default function SignUp() {
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth`;
       const headers = { "Content-Type": "application/json" };
       const confirmSuccessUrl = `${process.env.NEXT_PUBLIC_FRONT_BASE_URL}/sign_in`;
 

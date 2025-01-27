@@ -46,7 +46,7 @@ export default function SignIn() {
 
   const onSubmit: SubmitHandler<SignInFormData> = async (data) => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/sign_in`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/sign_in`;
       const headers = { "Content-Type": "application/json" };
 
       const response = await axios.post(url, data, { headers });

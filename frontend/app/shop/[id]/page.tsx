@@ -34,7 +34,7 @@ const ShopDetailPage = () => {
   useEffect(() => {
     const fetchShop = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/shops/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/${id}`);
         if (!response.ok) throw new Error('店舗情報の取得に失敗しました。');
         const data = await response.json();
         setShop(data);
@@ -49,7 +49,7 @@ const ShopDetailPage = () => {
   useEffect(() => {
     const fetchVisits = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits?shop_id=${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/visits?shop_id=${id}`);
         if (!response.ok) throw new Error('訪問記録の取得に失敗しました。');
         const data = await response.json();
         setVisits(data);
@@ -95,8 +95,8 @@ const ShopDetailPage = () => {
 
     const method = isEditing ? 'PUT' : 'POST';
     const url = isEditing
-      ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits/${isEditing}`
-      : `${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits`;
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits/${isEditing}`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits`;
 
     const response = await fetch(url, {
       method,
@@ -134,7 +134,7 @@ const ShopDetailPage = () => {
       return;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/visits/${visitId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/visits/${visitId}`, {
       method: 'DELETE',
       headers: {
       'Content-Type': 'application/json',
