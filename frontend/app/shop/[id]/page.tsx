@@ -1,3 +1,4 @@
+/// <reference types="@types/google.maps" />
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -71,13 +72,13 @@ const ShopDetailPage = () => {
         return;
       }
 
-      const map = new google.maps.Map(
-        document.getElementById('map') as HTMLElement,
-        {
-          center: { lat: latitude, lng: longitude },
-          zoom: 15,
-        }
-      );
+      const mapElement = document.getElementById('map') as HTMLElement;
+      const mapOptions: google.maps.MapOptions = {
+        center: { lat: latitude, lng: longitude },
+        zoom: 15,
+      };
+
+      const map = new google.maps.Map(mapElement, mapOptions);
 
       new google.maps.Marker({
         position: { lat: latitude, lng: longitude },
