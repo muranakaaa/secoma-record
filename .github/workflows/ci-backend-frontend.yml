@@ -38,7 +38,7 @@ jobs:
         env:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: postgres
+          DB_HOST: db
           DB_PORT: ${{ secrets.DB_PORT }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
@@ -56,7 +56,7 @@ jobs:
         env:
             DB_USERNAME: ${{ secrets.DB_USERNAME }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            DB_HOST: postgres
+            DB_HOST: db
             DB_PORT: ${{ secrets.DB_PORT }}
             POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: bin/rspec
