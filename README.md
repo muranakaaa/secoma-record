@@ -7,25 +7,25 @@ https://x.com/wage790
 何かあれば、こちらまでお気軽にご連絡ください。
 
 ## 使用技術一覧
-バックエンド: Ruby / Rails
+**バックエンド:** Ruby / Rails
 - コード解析 / フォーマッター: Rubocop
 - テストフレームワーク: RSpec
 
-フロントエンド: TypeScript / Next.js
+**フロントエンド:** TypeScript / Next.js
 - コード解析: ESLint
 - フォーマッター: Prettier
 - CSSフレームワーク: Tailwind CSS
 - 主要パッケージ: shadcn / axios / SWR / react-hook-form
 
-DB: PostgreSQL
+**DB:** PostgreSQL
 
-インフラ: Vercel / fly.io / Cloudflare
+**インフラ:** Vercel / fly.io / Cloudflare
 
-CI / CD: GitHub Actions
+**CI / CD:** GitHub Actions
 
 環境構築: Docker / Docker Compose
 
-API: 
+**API:**
 - Google Maps JavaScript API（地図上で店舗の位置を表示するために使用）
 - Google Places API（店舗情報の取得に使用）
 - Google Photos API（店舗外観画像の取得に使用）
@@ -33,19 +33,19 @@ API:
 ## 機能
 
 ### ユーザー向け
-機能
+**機能**
 - メールアドレスを利用したユーザー登録 / ログイン機能
 - パスワード再設定機能
 - 訪問記録の作成 / 更新 / 削除
 - セイコーマートの検索機能
 
-画面
+**画面**
 - ローディング画面
 - レスポンシブデザイン
 - スナックバー
 
 ### 非ユーザー向け
-システム / インフラ
+**システム / インフラ**
 - Next.jsのImage / Linkコンポーネントなどの活用によるサービス全体の高速化
 - Dockerによる開発環境のコンテナ化
 - Cloudflareによる独自ドメイン + SSL化
@@ -57,7 +57,7 @@ API:
         - CI: ESLint / Prettier
         - CD: Vercel
 
-テスト / セキュリティ
+**テスト / セキュリティ**
 - クロスブラウザテスト
     - PC
         - Windows10 / 11: Google Chrome / Firefox / Microsoft Edge
