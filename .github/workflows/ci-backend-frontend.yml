@@ -34,20 +34,6 @@ jobs:
         run: bundle install
         working-directory: ./backend
 
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..10}
-          do
-            if nc -zv postgres 5432 2>/dev/null; then
-              echo "PostgreSQL is up!"
-              exit 0
-            fi
-            echo "Waiting for PostgreSQL..."
-            sleep 2
-          done
-          echo "PostgreSQL failed to start within the expected time"
-          exit 1
-
       - name: Setup Database
         env:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
