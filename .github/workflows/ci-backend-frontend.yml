@@ -8,21 +8,6 @@ jobs:
     name: "Backend CI: Rubocop / RSpec"
     runs-on: ubuntu-latest
 
-    services:
-      db:
-        image: postgres:15
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: sp2324sp2324
-          POSTGRES_DB: secoma_db
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       # GitHubリポジトリのコードをチェックアウト
       - uses: actions/checkout@v4
@@ -31,7 +16,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1.4
+          ruby-version: 3.1.4 # 使用しているRubyのバージョンを明示
           bundler-cache: true
 
       # バックエンドの依存関係をインストール
@@ -39,19 +24,12 @@ jobs:
         run: bundle install
         working-directory: ./backend
 
-      # データベースのセットアップ
-      - name: Setup Database
-        run: |
-          bin/rails db:create RAILS_ENV=test
-          bin/rails db:migrate RAILS_ENV=test
-        working-directory: ./backend
-
-      # Rubocopによるコード解析
+      # Rubocopによるコードの静的解析と自動修正の実行
       - name: Run Rubocop
         run: bundle exec rubocop -A
         working-directory: ./backend
 
-      # RSpecによるテスト実行
+      # RSpecによるテストの実行
       - name: Run RSpec
         run: bin/rspec
         working-directory: ./backend
@@ -68,7 +46,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18' # Next.jsが要求するNode.jsバージョンを指定
 
       # フロントエンドの依存関係をキャッシュ
       - name: Cache Node Modules
