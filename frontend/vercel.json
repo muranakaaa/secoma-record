@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://secoma-record.fly.dev/api/$1"
+    }
+  ]
+}
