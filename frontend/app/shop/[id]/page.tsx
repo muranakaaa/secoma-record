@@ -72,15 +72,20 @@ const ShopDetailPage = () => {
         return;
       }
 
+      if (!window.google) {
+        setError('Google Maps API がロードされていません。');
+        return;
+      }
+
       const mapElement = document.getElementById('map') as HTMLElement;
       const mapOptions: google.maps.MapOptions = {
         center: { lat: latitude, lng: longitude },
         zoom: 15,
       };
 
-      const map = new google.maps.Map(mapElement, mapOptions);
+      const map = new window.google.maps.Map(mapElement, mapOptions);
 
-      new google.maps.Marker({
+      new window.google.maps.Marker({
         position: { lat: latitude, lng: longitude },
         map,
         title: shop.name,
