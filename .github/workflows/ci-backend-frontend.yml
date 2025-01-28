@@ -38,10 +38,14 @@ jobs:
         env:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: db
+          DB_HOST: localhost
           DB_PORT: ${{ secrets.DB_PORT }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
+          until pg_isready -h localhost -p $DB_PORT -U $DB_USERNAME; do
+              echo "Waiting for Postgres..."
+              sleep 1
+          done
           bundle exec rails db:create
           bundle exec rails db:schema:load
         working-directory: ./backend
@@ -56,7 +60,7 @@ jobs:
         env:
             DB_USERNAME: ${{ secrets.DB_USERNAME }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            DB_HOST: db
+            DB_HOST: localhost
             DB_PORT: ${{ secrets.DB_PORT }}
             POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: bin/rspec

@@ -51,7 +51,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_26_150101) do
   create_table "visits", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "shop_id", null: false
-    t.date "visit_date", null: false
+    t.date "visit_date"
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -60,5 +60,4 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_26_150101) do
   end
 
   add_foreign_key "visits", "shops"
-  add_foreign_key "visits", "users"
 end
