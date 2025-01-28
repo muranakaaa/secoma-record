@@ -63,6 +63,11 @@ const ShopDetailPage = () => {
 
   useEffect(() => {
     if (isGoogleMapsLoaded && shop) {
+      if (!window.google || !google.maps) {
+        setError('Google Maps API が正しくロードされていません。');
+        return;
+      }
+
       const latitude = shop.latitude ? parseFloat(shop.latitude.toString()) : null;
       const longitude = shop.longitude ? parseFloat(shop.longitude.toString()) : null;
 
