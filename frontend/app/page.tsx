@@ -37,7 +37,7 @@ const HomePage = () => {
       try {
         const data = await getShops(page, PER_PAGE);
         setShops(data.data);
-        setSearchResults(data.data); // 検索結果の初期状態として設定
+        setSearchResults(data.data);
         setTotalPages(data.meta.total_pages);
       } catch (error) {
         console.error("Error fetching shops:", error);
