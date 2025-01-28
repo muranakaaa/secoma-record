@@ -17,7 +17,7 @@ const Header = () => {
     <header className="bg-zinc-300 py-4 px-6">
       <div className="flex justify-between items-center">
         <Link href="/">
-          <span className="text-xl font-bold">Logo</span>
+          <span className="text-2xl font-bold text-white">Secoma-Record</span>
         </Link>
         {user.isFetched && (
           <div>
