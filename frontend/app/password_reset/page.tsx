@@ -10,7 +10,7 @@ export default function PasswordResetPage() {
 
   const handlePasswordReset = async () => {
     try {
-      await axios.post('${process.env.NEXT_PUBLIC_API_BASE_URL}/users/password', {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/password`, {
         user: { email },
       });
       setMessage('パスワードリセットメールを送信しました。');
