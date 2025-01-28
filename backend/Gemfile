@@ -20,3 +20,4 @@ group :development, :test do
   gem "letter_opener_web"
   gem 'spring-commands-rspec'
 end
+gem "dockerfile-rails", ">= 1.7", :group => :development
