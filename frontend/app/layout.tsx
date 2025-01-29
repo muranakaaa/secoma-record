@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from 'next';
 import CurrentUserFetch from './components/CurrentUserFetch';
 import Footer from './components/common/Footer';
@@ -17,6 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
   return (
     <html lang="ja">
       <body>
@@ -26,6 +28,7 @@ export default function RootLayout({
         <Footer />
         <SuccessSnackbar />
         <Toaster />
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
