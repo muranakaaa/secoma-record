@@ -78,3 +78,24 @@ https://x.com/wage790<br>
 ![image](https://github.com/user-attachments/assets/6e6beab9-8efa-4c69-9ee1-2bae8b05dc82)
 
 ## 画面遷移図
+
+
+## 選定技術の採用理由
+### バックエンド : Ruby / Ruby on Rails
+**検討技術：** PHP / Laravel<br>
+**採用理由**
+- 先輩や友人にRailsエンジニアがいて質問できる環境だったため
+- ProgateやRailsチュートリアルといった定番の学習サービスがあり、初心者でも学びやすい環境が整っていたため
+- 転職先候補の企業での採用数が多かったため
+- Rubyの開発者Matzさんが、自分の母校（筑波大学）のOBで縁を感じたため
+
+### フロントエンド : React / Next.js
+**検討技術：** Vue.js / Nuxt.js<br>
+**採用理由**
+- MicroCMSとNext.jsでブログを運用した経験があり、Next.jsには慣れていたため、開発効率を上げやすかった
+- Vercelとの親和性が高く、簡単にデプロイ・運用ができるため
+
+### 認証 : devise(gem)
+**検討技術：** Firebase Authentication<br>
+**採用理由**
+- Railsのエコシステム内で完結しやすく、追加のランニングコストが不要なため
