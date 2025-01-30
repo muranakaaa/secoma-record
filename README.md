@@ -81,6 +81,7 @@ https://x.com/wage790<br>
 ### 店舗情報
 - 大エリア一覧: /
 - 中エリア一覧: /area/[id]
+- 店舗一覧: /shop
 - 店舗詳細: /shop/[id]
 - 検索結果: /search
 
