@@ -86,10 +86,11 @@ https://x.com/wage790<br>
 - 検索結果: /search
 
 ### 認証関連
-- パスワードリセット: /password_reset
-- サインイン: /sign_in
 - サインアップ: /sign_up
+- サインイン: /sign_in
 - サインアウト: /sign_out
+- パスワードリセット: /password_reset
+
 ### 静的ページ
 - 利用規約: /terms
 - プライバシーポリシー: /privacy-policy
