@@ -1,24 +1,28 @@
-# README
+## API エンドポイント
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### **認証**
+| メソッド | エンドポイント | 説明 |
+|----------|--------------|------|
+| POST     | `/api/auth/sign_in` | ログイン |
+| DELETE   | `/api/auth/sign_out` | ログアウト |
+| POST     | `/api/auth` | ユーザー登録 |
 
-Things you may want to cover:
+### **ユーザー関連**
+| メソッド | エンドポイント | 説明 |
+|----------|--------------|------|
+| GET      | `/api/v1/current/users` | ログイン中のユーザー取得 |
 
-* Ruby version
+### **店舗関連**
+| メソッド | エンドポイント | 説明 |
+|----------|--------------|------|
+| GET      | `/api/v1/shops` | 店舗一覧取得 |
+| GET      | `/api/v1/shops/:id` | 店舗詳細取得 |
+| PUT      | `/api/v1/shops/update_places_info` | Google Placesデータ更新 |
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### **訪問記録関連**
+| メソッド | エンドポイント | 説明 |
+|----------|--------------|------|
+| GET      | `/api/v1/visits` | 訪問記録一覧取得 |
+| POST     | `/api/v1/visits` | 訪問記録作成 |
+| PUT      | `/api/v1/visits/:id` | 訪問記録更新 |
+| DELETE   | `/api/v1/visits/:id` | 訪問記録削除 |
