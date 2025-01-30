@@ -78,7 +78,20 @@ https://x.com/wage790<br>
 ![image](https://github.com/user-attachments/assets/6e6beab9-8efa-4c69-9ee1-2bae8b05dc82)
 
 ## 画面遷移図
+### 店舗情報
+- 大エリア一覧: /
+- 中エリア一覧: /area/[id]
+- 店舗詳細: /shop/[id]
+- 検索結果: /search
 
+### 認証関連
+- パスワードリセット: /password_reset
+- サインイン: /sign_in
+- サインアップ: /sign_up
+- サインアウト: /sign_out
+### 静的ページ
+- 利用規約: /terms
+- プライバシーポリシー: /privacy-policy
 
 ## 選定技術の採用理由
 ### バックエンド : Ruby / Ruby on Rails
@@ -99,3 +112,5 @@ https://x.com/wage790<br>
 **検討技術：** Firebase Authentication<br>
 **採用理由**
 - Railsのエコシステム内で完結しやすく、追加のランニングコストが不要なため
+
+## ディレクトリ構成
