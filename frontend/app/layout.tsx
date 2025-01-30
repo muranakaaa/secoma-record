@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: 'セコマレコード',
   description:
     'セコマレコードは、「すべてのセイコーマートの店舗に行きたい」という想いから作られた、無料のセイコーマート訪問記録管理サービスです。会員登録せずに、セコマの店舗検索システムとして使用することもできます。セイコーマート非公式。',
+  verification: {
+  google: process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE_CONTENT,
+  },
 };
 
 export default function RootLayout({
