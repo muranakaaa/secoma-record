@@ -125,7 +125,7 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: メールアドレス・パスワードを入力
-    Frontend->>Backend: POST /api/auth/sign_up
+    Frontend->>Backend: POST /api/v1/auth/sign_up
     Backend->>Database: ユーザー情報を保存
     Database-->>Backend: 保存成功
     Backend-->>Frontend: { access-token, client, uid } を発行
@@ -141,7 +141,7 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: メールアドレス・パスワードを入力
-    Frontend->>Backend: POST /api/auth/sign_in
+    Frontend->>Backend: POST /api/v1/auth/sign_in
     Backend->>Database: ユーザー情報を照合
     Database-->>Backend: 認証成功
     Backend-->>Frontend: { access-token, client, uid } を発行
@@ -157,7 +157,7 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: 訪問記録を作成
-    Frontend->>Backend: POST /api/visits (ヘッダーに access-token, client, uid を含む)
+    Frontend->>Backend: POST /api/v1/visits (ヘッダーに access-token, client, uid を含む)
     Backend->>Database: ユーザー認証を検証
     Database-->>Backend: 認証成功
     Backend->>Database: 訪問記録を保存
@@ -197,7 +197,7 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: アプリを開く (`/`)
-    Frontend->>Backend: GET /api/areas
+    Frontend->>Backend: GET /api/v1/areas
     Backend->>Database: エリア一覧を取得
     Database-->>Backend: エリア一覧を返す
     Backend-->>Frontend: JSONレスポンス
@@ -225,7 +225,7 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: エリアを選択 (`/area/[id]`)
-    Frontend->>Backend: GET /api/areas/:id
+    Frontend->>Backend: GET /api/v1/areas/:id
     Backend->>Database: 選択されたエリアの詳細エリア一覧を取得
     Database-->>Backend: 詳細エリア一覧を返す
     Backend-->>Frontend: JSONレスポンス
@@ -256,7 +256,7 @@ sequenceDiagram
     participant Database
 
     User->>Frontend: 詳細エリアを選択 (`/shop?area_id=X`)
-    Frontend->>Backend: GET /api/shops?area_id=X
+    Frontend->>Backend: GET /api/v1/shops?area_id=X
     Backend->>Database: 選択されたエリアの店舗一覧を取得
     Database-->>Backend: 店舗一覧を返す
     Backend-->>Frontend: JSONレスポンス
@@ -291,7 +291,7 @@ sequenceDiagram
     participant GoogleAPI
 
     User->>Frontend: 店舗を選択 (`/shop/[id]`)
-    Frontend->>Backend: GET /api/shops/:id
+    Frontend->>Backend: GET /api/v1/shops/:id
     Backend->>Database: 店舗詳細情報を取得
     Database-->>Backend: 店舗詳細情報を返す
     Backend->>GoogleAPI: GET Google Places API (店舗の追加情報取得)
