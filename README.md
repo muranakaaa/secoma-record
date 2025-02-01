@@ -305,11 +305,12 @@ sequenceDiagram
 {
   "shop": {
     "id": 1001,
-    "name": "セイコーマートあさの店",
-    "address": "北海道札幌市中央区南４条西４-１１",
-    "latitude": 43.055,
-    "longitude": 141.345,
-    "photo_url": "https://maps.googleapis.com/.../photo_reference"
+    "name": "セイコーマート中士幌店",
+    "address": "北海道河東郡士幌町字中士幌西２線７８",
+    "latitude": 43.1443337,
+    "longitude": 143.2394352,
+    "created_at": "2025-01-15T21:51:38.008+09:00",
+    "updated_at": "2025-01-16T14:16:29.391+09:00"
   }
 }
 ```
