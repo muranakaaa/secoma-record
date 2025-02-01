@@ -208,9 +208,10 @@ sequenceDiagram
 ```json
 {
   "areas": [
-    { "id": 1, "name": "札幌" },
-    { "id": 2, "name": "釧路・阿寒・根室・川湯・屈斜路" },
-    { "id": 3, "name": "帯広・十勝" }
+    "id": "884dccc3-0d91-49e5-b961-4b23e5d758f0",
+    "area": "ニセコ・ルスツ",
+    "visitedShops": 0,
+    "totalShops": 23
   ]
 }
 
