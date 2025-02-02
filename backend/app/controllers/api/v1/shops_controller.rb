@@ -9,28 +9,28 @@ module Api
         end
       end
 
+
       def show
         Rails.logger.info "Received request for Shop ID: #{params[:id]}"
-        shop = Shop.find_by(id: params[:id])
 
-        if shop
-          render json: {
-            id: shop.id,
-            name: shop.name,
-            address: shop.address,
-            latitude: shop.latitude,
-            longitude: shop.longitude,
-            area: shop.area,
-            visited: false
-          }
-        else
-          render json: { error: "Shop not found" }, status: :not_found
-  end
+        shop = Shop.find(params[:id])
+
+        render json: {
+          id: shop.id,
+          name: shop.name,
+          address: shop.address,
+          latitude: shop.latitude,
+          longitude: shop.longitude,
+          area: shop.area,
+          visited: false
+        }
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: "Shop not found" }, status: :not_found
       end
 
       def update_places_info
-        Shop.find_each do |shop|
-          shop.fetch_additional_info
+        Shop.find_in_batches(batch_size: 100) do |shops|
+          shops.each(&:fetch_additional_info)
         end
         render json: { message: "Shops updated with Google Places data." }
       end
@@ -46,6 +46,7 @@ module Api
         end
 
         shops = Shop.where(sub_area: sub_area_name)
+                    .select(:id, :name, :address)
                     .page(params[:page])
                     .per(params[:per_page])
 
@@ -60,17 +61,21 @@ module Api
             }
           end,
           meta: {
-            total_pages: shops.total_pages
+            total_pages: shops.total_pages,
+            total_count: shops.total_count
           }
         }
       end
 
       def fetch_all_shops
-        shops = Shop.page(params[:page]).per(params[:per_page] || 10)
+        per_page = params[:per_page].presence || 10
+        shops = Shop.page(params[:page]).per(per_page)
+
         render json: {
           data: shops,
           meta: {
-            total_pages: shops.total_pages
+            total_pages: shops.total_pages,
+            total_count: shops.total_count
           }
         }
       end
