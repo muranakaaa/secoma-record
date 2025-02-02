@@ -2,6 +2,7 @@
 
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
@@ -17,6 +18,14 @@ type Area = {
 
 const HomePage = () => {
   const [areas, setAreas] = useState<Area[]>([]);
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+  };
 
   useEffect(() => {
     const fetchAreas = async () => {
@@ -71,8 +80,14 @@ const HomePage = () => {
         </CardHeader>
         <CardContent>
           <div className="mb-6">
-            <form className="flex gap-2">
-              <Input type="text" placeholder="店舗を検索" className="flex-grow" />
+            <form className="flex gap-2" onSubmit={handleSearch}>
+              <Input
+                type="text"
+                placeholder="店舗を検索"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-grow"
+              />
               <Button type="submit">検索</Button>
             </form>
           </div>
