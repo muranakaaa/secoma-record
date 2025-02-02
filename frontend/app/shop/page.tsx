@@ -2,7 +2,7 @@
 
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Badge } from "../components/ui/badge";
@@ -17,11 +17,10 @@ type Shop = {
 
 export default function ShopListPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const subArea = searchParams.get("sub_area") || "";
   const area = searchParams.get("area") || "";
   const [shops, setShops] = useState<Shop[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!subArea) return;

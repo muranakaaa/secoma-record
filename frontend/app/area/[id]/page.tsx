@@ -18,7 +18,7 @@ export default function AreaPage() {
   const params = useParams();
   const [areaName, setAreaName] = useState<string | null>(null);
   const [subAreas, setSubAreas] = useState<SubArea[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!params || !params.id) return;
