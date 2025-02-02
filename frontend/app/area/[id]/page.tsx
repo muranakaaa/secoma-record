@@ -21,24 +21,28 @@ export default function AreaPage() {
   const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!params || !params.id) return;
+      if (!params || !params.id) return;
 
-    const fetchSubAreas = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
+      const fetchSubAreas = async () => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/${params.id}`);
+          if (!response.ok) throw new Error("Failed to fetch");
+          const data = await response.json();
 
-        setAreaName(data.area);
-        setSubAreas(data.sub_areas);
-      } catch (error) {
-        console.error("Error fetching sub areas:", error);
-        setError(error.message);
-      }
-    };
+          setAreaName(data.area);
+          setSubAreas(data.sub_areas);
+        } catch (error) {
+          console.error("Error fetching sub areas:", error);
+          if (error instanceof Error) {
+            setError(error.message);
+          } else {
+            setError("An unknown error occurred");
+          }
+        }
+      };
 
-    fetchSubAreas();
-  }, [params]);
+      fetchSubAreas();
+    }, [params]);
 
   return (
     <main className="container mx-auto px-4 py-8">

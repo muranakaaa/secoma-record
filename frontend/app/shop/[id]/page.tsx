@@ -151,7 +151,7 @@ const ShopDetailPage = () => {
           ? prev.map((v) => (v.id === newVisit.id ? newVisit : v))
           : [...prev, newVisit]
       );
-      setDate('');
+      setDate(null);
       setComment('');
       setIsEditing(null);
     } else {
@@ -249,7 +249,7 @@ const ShopDetailPage = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setDate(visit.visit_date);
+                  setDate(new Date(visit.visit_date + "T00:00:00Z"));
                   setComment(visit.comment || '');
                   setIsEditing(visit.id);
                 }}
