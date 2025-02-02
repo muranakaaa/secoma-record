@@ -34,8 +34,12 @@ export default function ShopListPage() {
         setShops(data.shops);
       } catch (error) {
         console.error("Error fetching shops:", error);
-        setError(error.message);
-      }
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+}
     };
 
     fetchShops();
