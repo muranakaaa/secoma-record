@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { CalendarIcon, ChevronLeft, PenIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from "next/navigation";
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import { Button } from "../../components/ui/button";
@@ -41,6 +41,9 @@ const ShopDetailPage = () => {
   const [isEditing, setIsEditing] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
+  const searchParams = useSearchParams();
+  const subArea = searchParams.get("sub_area") || "";
+  const area = searchParams.get("area") || "";
 
   useEffect(() => {
     const fetchShop = async () => {
@@ -213,9 +216,11 @@ const ShopDetailPage = () => {
       />
       <Card className="w-full max-w-3xl mx-auto">
         <CardHeader>
-          <Link href="/shop" className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
+          <Link
+            href={`/shop?sub_area=${encodeURIComponent(subArea)}&area=${encodeURIComponent(area)}`}
+            className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
             <ChevronLeft className="w-4 h-4 mr-1" />
-            店舗一覧に戻る
+            {subArea}の店舗一覧に戻る
           </Link>
           <CardTitle className="text-2xl font-bold">{shop.name}</CardTitle>
         </CardHeader>

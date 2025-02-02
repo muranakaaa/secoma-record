@@ -1,135 +1,87 @@
 'use client';
 
+import { CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { getShops } from "../lib/api";
+import { useEffect, useState } from "react";
+import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
-import { Pagination } from "./components/ui/pagination";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./components/ui/command";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import { Input } from "./components/ui/input";
 
-type Shop = {
-  id: number;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
+type Area = {
+  id: string;
+  area: string;
+  visitedShops: number;
+  totalShops: number;
 };
 
 const HomePage = () => {
-  const [shops, setShops] = useState<Shop[]>([]);
-  const [searchResults, setSearchResults] = useState<Shop[]>([]);
-  const [inputText, setInputText] = useState("");
-  const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const PER_PAGE = 10;
+  const [areas, setAreas] = useState<Area[]>([]);
 
   useEffect(() => {
-    const fetchShops = async () => {
+    const fetchAreas = async () => {
       try {
-        const data = await getShops(page, PER_PAGE);
-        setShops(data.data);
-        setSearchResults(data.data);
-        setTotalPages(data.meta.total_pages);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/`);
+        if (!response.ok) throw new Error("Failed to fetch");
+        const data: Area[] = await response.json();
+        setAreas(data);
       } catch (error) {
-        console.error("Error fetching shops:", error);
+        console.error("Error fetching areas:", error);
       }
     };
-    fetchShops();
-  }, [page]);
 
-  useEffect(() => {
-    if (inputText) {
-      setSearchResults(
-        shops.filter((shop) =>
-          shop.name.toLowerCase().includes(inputText.toLowerCase())
-        )
-      );
-    } else {
-      setSearchResults(shops);
-    }
-  }, [inputText, shops]);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    const input = inputRef.current;
-    if (input && e.key === "Escape") {
-      input.blur();
-    }
+    fetchAreas();
   }, []);
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <Command
-          shouldFilter={false}
-          onKeyDown={handleKeyDown}
-          className="relative w-full max-w-lg mx-auto"
-        >
-          <CommandInput
-            ref={inputRef}
-            value={inputText}
-            placeholder="店舗名を検索"
-            onValueChange={(text) => setInputText(text)}
-            onFocus={() => setOpen(true)}
-            onBlur={() => setOpen(false)}
-            className="border rounded-md px-4 py-2 w-full"
-          />
-          <div className="relative mt-2">
-            {open && (
-              <CommandList className="absolute left-0 top-0 w-full bg-white rounded shadow-md">
-                <CommandEmpty className="p-4 text-gray-500">
-                  一致する店舗が見つかりません
-                </CommandEmpty>
-                {searchResults.map((shop) => (
-                  <CommandItem
-                    key={shop.id}
-                    value={shop.name}
-                    onSelect={() => {
-                      setInputText(shop.name);
-                      setOpen(false);
-                    }}
-                    className="p-4 hover:bg-gray-100"
-                  >
-                    {shop.name}
-                  </CommandItem>
-                ))}
-              </CommandList>
-            )}
+    <main className="container mx-auto px-4 py-8">
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">セコマレコード</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6">
+            <form className="flex gap-2">
+              <Input type="text" placeholder="店舗を検索" className="flex-grow" />
+              <Button type="submit">検索</Button>
+            </form>
           </div>
-        </Command>
-      </div>
-
-      <h1 className="text-2xl font-bold mb-4">セイコーマート店舗一覧</h1>
-      <ul className="space-y-4">
-        {searchResults.map((shop) => (
-          <li key={shop.id} className="border p-4 rounded-md shadow-sm">
-            <h2 className="text-lg font-semibold">{shop.name}</h2>
-            <p>住所: {shop.address}</p>
-            <Link href={`/shop/${shop.id}`} className="text-blue-500 underline">
-              <Button>詳細を見る</Button>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      <Pagination
-        total={totalPages}
-        current={page}
-        onPageChange={handlePageChange}
-      />
-    </div>
+          <div>
+            <h2 className="text-xl font-semibold mb-4">エリアで選ぶ</h2>
+            <ul className="space-y-2">
+            {areas.length > 0 ? (
+              areas.map((area) => {
+                const areaSlug = area.area.replace(/\s+/g, "-").toLowerCase();
+                return (
+                  <li key={area.id || `fallback-${index}`}>
+                    <Link
+                      href={`/area/${areaSlug}`}
+                      className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm sm:text-base">{area.area}</span>
+                        {area.visitedShops === area.totalShops && (
+                          <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800">
+                            <CheckCircle className="w-3 h-3" />
+                            コンプリート！
+                          </Badge>
+                        )}
+                      </div>
+                      <span className="text-gray-600 text-sm">
+                        {area.visitedShops}/{area.totalShops}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })
+            ) : (
+              <p className="text-center text-gray-500">エリア情報がありません</p>
+            )}
+          </ul>
+          </div>
+        </CardContent>
+      </Card>
+    </main>
   );
 };
 
