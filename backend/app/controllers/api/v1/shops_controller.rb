@@ -35,6 +35,31 @@ module Api
         render json: { message: "Shops updated with Google Places data." }
       end
 
+      def search_shops
+        query = params[:query]
+
+        if query.blank?
+          render json: { error: "検索キーワードが必要です" }, status: :bad_request
+          return
+        end
+
+        shops = Shop.where("name LIKE ?", "%#{query}%")
+                    .select(:id, :name, :address)
+                    .limit(100)
+
+        render json: {
+          query: query,
+          shops: shops.map do |shop|
+            {
+              id: shop.id,
+              name: shop.name,
+              address: shop.address,
+              visited: false
+            }
+          end
+        }
+      end
+
       private
 
       def fetch_shops_by_sub_area

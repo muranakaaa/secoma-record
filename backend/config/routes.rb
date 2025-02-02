@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :shops, only: [:index, :show] do
         collection do
           get 'by_sub_area', to: 'shops#index'
+          get :search_shops
         end
       end
       resources :areas, only: [:index, :show]
