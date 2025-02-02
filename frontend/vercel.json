@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/media/:path*",
+      "destination": "https://secoma-record-media.vercel.app/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
