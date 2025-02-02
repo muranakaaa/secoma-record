@@ -27,7 +27,7 @@ export default function ShopListPage() {
 
     const fetchShops = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}&page=1&per_page=100`);
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
 
