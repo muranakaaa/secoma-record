@@ -89,6 +89,9 @@ GEM
     brakeman (7.0.0)
       racc
     builder (3.3.0)
+    bullet (8.0.0)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     case_transform (0.2)
       activesupport
     childprocess (5.1.0)
@@ -306,6 +309,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
+    uniform_notifier (1.16.0)
     useragent (0.16.11)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -324,6 +328,7 @@ DEPENDENCIES
   active_model_serializers
   bootsnap
   brakeman
+  bullet
   devise (~> 4.9.4)
   devise-i18n
   devise_token_auth

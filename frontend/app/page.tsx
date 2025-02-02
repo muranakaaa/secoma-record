@@ -50,7 +50,7 @@ const HomePage = () => {
             <h2 className="text-xl font-semibold mb-4">エリアで選ぶ</h2>
             <ul className="space-y-2">
             {areas.length > 0 ? (
-              areas.map((area) => {
+              areas.map((area, index) => {
                 const areaSlug = area.area.replace(/\s+/g, "-").toLowerCase();
                 return (
                   <li key={area.id || `fallback-${index}`}>
