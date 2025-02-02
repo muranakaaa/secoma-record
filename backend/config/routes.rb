@@ -3,8 +3,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :shops, only: [:index, :show]
-      resources :areas, only: [:index]
+      resources :shops, only: [:index, :show] do
+        collection do
+          get 'by_sub_area', to: 'shops#index'
+        end
+      end
+      resources :areas, only: [:index, :show]
       resources :visits, only: [:index, :create, :update, :destroy]
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"

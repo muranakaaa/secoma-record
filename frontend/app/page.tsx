@@ -51,11 +51,11 @@ const HomePage = () => {
             <ul className="space-y-2">
             {areas.length > 0 ? (
               areas.map((area) => {
-                console.log("Rendering area:", area);
+                const areaSlug = area.area.replace(/\s+/g, "-").toLowerCase();
                 return (
                   <li key={area.id || `fallback-${index}`}>
                     <Link
-                      href={`/area/${area.id}`}
+                      href={`/area/${areaSlug}`}
                       className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
                     >
                       <div className="flex items-center gap-2">
