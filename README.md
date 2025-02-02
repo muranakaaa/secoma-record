@@ -34,7 +34,6 @@ https://x.com/wage790<br>
 **API:**
 - Google Maps JavaScript API（地図上で店舗の位置を表示するために使用）
 - Google Places API（店舗情報の取得に使用）
-- Google Photos API（店舗外観画像の取得に使用）
 
 ## 機能
 
@@ -75,7 +74,7 @@ https://x.com/wage790<br>
 - 脆弱性対応（Dependabot Alerts / Code Scanning Alerts / GitGuardian）
 
 ## ER図
-![image](https://github.com/user-attachments/assets/6e6beab9-8efa-4c69-9ee1-2bae8b05dc82)
+
 
 ## 画面遷移図
 ### 店舗情報
