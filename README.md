@@ -2,15 +2,11 @@
 ## アプリ概要
 セコマレコードは、「すべてのセイコーマートの店舗に行きたい」という想いから作られた、無料のセイコーマート訪問記録管理サービスです。会員登録せずに、セコマの店舗検索システムとして使用することもできます。セイコーマート非公式。
 
-### ▼ アプリURL<br>
-https://secoma-record.com/<br>
-レスポンシブ対応済のため、PCでもスマートフォンでも快適にご利用いただけます。
+**アプリURL:** https://secoma-record.com/
 
+**開発者X:** https://x.com/miyoshi3rd
 
-### ▼ 開発者X<br>
-https://x.com/wage790<br>
-何かあれば、こちらまでお気軽にご連絡ください。
-
+**分析ダッシュボード:** https://lookerstudio.google.com/reporting/0e398a30-366a-4ac4-ae41-f71537df997e
 
 ## 使用技術一覧
 **バックエンド:** Ruby / Rails
