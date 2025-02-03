@@ -9,17 +9,19 @@
 **分析ダッシュボード:** https://lookerstudio.google.com/reporting/0e398a30-366a-4ac4-ae41-f71537df997e
 
 ## 使用技術一覧
-**バックエンド:** Ruby / Rails
+**バックエンド:** Ruby 3.2.2 / Rails 7.2.2.1
 - コード解析 / フォーマッター: Rubocop
 - テストフレームワーク: RSpec
+- 主要ライブラリ: devise-token-auth / active_model_serializers / brakeman
 
-**フロントエンド:** TypeScript / Next.js
+**フロントエンド:** TypeScript ^5 / Next.js 15.1.4
 - コード解析: ESLint
 - フォーマッター: Prettier
+- テストフレームワーク: Jest / React Testing Library
 - CSSフレームワーク: Tailwind CSS
-- 主要パッケージ: shadcn / axios / SWR / react-hook-form
+- 主要パッケージ: shadcn / axios / swr / react-hook-form / lucide-react
 
-**DB:** PostgreSQL
+**DB:** PostgreSQL 15
 
 **インフラ:** Vercel / fly.io / Cloudflare
 
@@ -27,7 +29,7 @@
 
 **環境構築:** Docker / Docker Compose
 
-**API:**
+**外部API:**
 - Google Maps JavaScript API（地図上で店舗の位置を表示するために使用）
 - Google Places API（店舗情報の取得に使用）
 
@@ -37,17 +39,17 @@
 **機能**
 - メールアドレスを利用したユーザー登録 / ログイン機能
 - パスワード再設定機能
-- 訪問記録の作成 / 更新 / 削除
-- セイコーマートの検索機能
+- 店舗の検索機能
+- 訪問記録の取得 / 作成 / 更新 / 削除
 
 **画面**
-- ローディング画面
 - レスポンシブデザイン
-- スナックバー
+- ローディング画面
+- 404 / 500エラーのカスタム画面
+- スナックバー表示
 
 ### 非ユーザー向け
 **システム / インフラ**
-- Next.jsのImage / Linkコンポーネントなどの活用によるサービス全体の高速化
 - Dockerによる開発環境のコンテナ化
 - Cloudflareによる独自ドメイン + SSL化
 - GitHub ActionsによるCI / CDパイプラインの構築
@@ -55,13 +57,13 @@
         - CI: Rubocop / RSpec
         - CD: fly.io
     - フロントエンド
-        - CI: ESLint / Prettier
+        - CI: ESLint / Prettier / Jest / Codecov
         - CD: Vercel
 
 **テスト / セキュリティ**
 - クロスブラウザテスト
     - PC
-        - Windows10 / 11: Google Chrome / Firefox / Microsoft Edge
+        - Windows 11: Google Chrome / Firefox / Microsoft Edge
         - Mac: Google Chrome / Firefox / Safari / Microsoft Edge
     - スマートフォン
         - Android: Google Chrome
@@ -70,25 +72,56 @@
 - 脆弱性対応（Dependabot Alerts / Code Scanning Alerts / GitGuardian）
 
 ## ER図
+```mermaid
+erDiagram
+    USERS {
+        bigint id "PK, not null"
+        string provider "default: email, not null"
+        string uid "default: '', not null"
+        string encrypted_password "default: '', not null"
+        string reset_password_token
+        datetime reset_password_sent_at
+        boolean allow_password_change "default: false"
+        datetime remember_created_at
+        string confirmation_token
+        datetime confirmed_at
+        datetime confirmation_sent_at
+        string unconfirmed_email
+        string name
+        string nickname
+        string image
+        string email "unique"
+        json tokens
+        datetime created_at "not null"
+        datetime updated_at "not null"
+    }
+    
+    SHOPS {
+        bigint id "PK, not null"
+        string name
+        string address
+        decimal latitude
+        decimal longitude
+        string area
+        string sub_area
+        datetime created_at "not null"
+        datetime updated_at "not null"
+    }
+    
+    VISITS {
+        bigint id "PK, not null"
+        bigint user_id "FK -> USERS.id, not null"
+        bigint shop_id "FK -> SHOPS.id, not null"
+        date visit_date
+        text comment
+        datetime created_at "not null"
+        datetime updated_at "not null"
+    }
+    
+    USERS ||--o{ VISITS : "has many"
+    SHOPS ||--o{ VISITS : "has many"
 
-
-## 画面遷移図
-### 店舗情報
-- エリア一覧: /
-- 詳細エリア一覧: /area/[id]
-- 店舗一覧: /shop
-- 店舗詳細: /shop/[id]
-- 検索結果: /search
-
-### 認証関連
-- サインアップ: /sign_up
-- サインイン: /sign_in
-- サインアウト: /sign_out
-- パスワードリセット: /password_reset
-
-### 静的ページ
-- 利用規約: /terms
-- プライバシーポリシー: /privacy-policy
+```
 
 ## 選定技術の採用理由
 ### バックエンド : Ruby / Ruby on Rails
