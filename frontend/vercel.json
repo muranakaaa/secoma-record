@@ -1,12 +1,9 @@
 {
-  "redirects": [
+  "rewrites": [
     {
       "source": "/media/:path*",
-      "destination": "https://secoma-record-media.vercel.app/:path*",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
+      "destination": "https://secoma-record-media.vercel.app/:path*"
+    },
     {
       "source": "/api/(.*)",
       "destination": "https://secoma-record.fly.dev/api/$1"
