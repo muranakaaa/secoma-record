@@ -52,6 +52,7 @@ export default function PasswordResetPage() {
         setMessage("");
       }
     } catch (err) {
+      console.error("パスワードリセットAPIエラー:", err);
       setError("通信エラーが発生しました。");
       setMessage("");
     }
