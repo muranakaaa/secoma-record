@@ -15,7 +15,7 @@
 - テストフレームワーク: RSpec
 - 主要ライブラリ: devise-token-auth / active_model_serializers / brakeman
 
-**フロントエンド:** TypeScript ^5 / Next.js 15.1.4
+**フロントエンド:** TypeScript 5.7.3 / Next.js 15.1.4
 - コード解析: ESLint
 - フォーマッター: Prettier
 - テストフレームワーク: Jest / React Testing Library
