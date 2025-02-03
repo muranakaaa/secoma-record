@@ -268,7 +268,9 @@ const ShopDetailPage = () => {
               )}
             </div>
           ) : (
-            <p>ログインしてください。</p>
+            <p><Link href="/sign_in" className="text-blue-600 hover:underline">
+              ログイン
+            </Link>すると訪問記録がつけられます！</p>
           )}
           {user.isSignedIn && (
             (isEditing !== null || visits.length === 0) && (
