@@ -123,6 +123,26 @@ erDiagram
 
 ```
 
+## APIエンドポイント一覧
+| HTTPメソッド | エンドポイント | 説明 |
+|-------------|--------------|------|
+| `POST` | `/api/v1/auth/sign_up` | ユーザー登録 |
+| `POST` | `/api/v1/auth/sign_in` | ユーザーログイン |
+| `DELETE` | `/api/v1/auth/sign_out` | ユーザーのサインアウト |
+| `POST` | `/api/v1/visits` | 訪問記録の作成 |
+| `GET` | `/api/v1/visits?shop_id=X` | 指定店舗の訪問記録取得 |
+| `PUT` | `/api/v1/visits/:id` | 訪問記録の更新 |
+| `DELETE` | `/api/v1/visits/:id` | 訪問記録の削除 |
+| `GET` | `/api/v1/areas` | エリア一覧取得 |
+| `GET` | `/api/v1/areas/:id` | 詳細エリア一覧取得 |
+| `GET` | `/api/v1/shops?area_id=X` | 指定エリアの店舗一覧取得 |
+| `GET` | `/api/v1/shops?sub_area=Y&area=Z` | 指定エリア・サブエリアの店舗一覧取得 |
+| `GET` | `/api/v1/shops/by_sub_area?sub_area=Y&page=A&per_page=B` | サブエリアごとの店舗一覧取得（ページング対応） |
+| `GET` | `/api/v1/shops/:id` | 店舗詳細情報取得 |
+| `GET` | `/api/v1/shops/search_shops?query=キーワード` | 店舗検索 |
+| `GET` | `/api/v1/areas/` | トップページでのエリア一覧取得 |
+
+
 ## 選定技術の採用理由
 ### バックエンド : Ruby / Ruby on Rails
 **検討技術：** PHP / Laravel<br>
@@ -142,211 +162,3 @@ erDiagram
 **検討技術：** Firebase Authentication<br>
 **採用理由**
 - Railsのエコシステム内で完結しやすく、追加のランニングコストが不要なため
-
-## シーケンス図
-### ユーザー登録
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: メールアドレス・パスワードを入力
-    Frontend->>Backend: POST /api/v1/auth/sign_up
-    Backend->>Database: ユーザー情報を保存
-    Database-->>Backend: 保存成功
-    Backend-->>Frontend: { access-token, client, uid } を発行
-    Frontend-->>User: 登録完了画面を表示
-```
-
-### ログイン
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: メールアドレス・パスワードを入力
-    Frontend->>Backend: POST /api/v1/auth/sign_in
-    Backend->>Database: ユーザー情報を照合
-    Database-->>Backend: 認証成功
-    Backend-->>Frontend: { access-token, client, uid } を発行
-    Frontend-->>User: ログイン完了画面を表示
-```
-
-### 訪問記録の作成
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: 訪問記録を作成
-    Frontend->>Backend: POST /api/v1/visits (ヘッダーに access-token, client, uid を含む)
-    Backend->>Database: ユーザー認証を検証
-    Database-->>Backend: 認証成功
-    Backend->>Database: 訪問記録を保存
-    Database-->>Backend: 保存成功
-    Backend-->>Frontend: 記録成功レスポンス
-    Frontend-->>User: 訪問記録の作成完了画面を表示
-```
-
-### トークンの有効期限の確認
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: 認証が必要なページを開く
-    Frontend->>Backend: 認証付きリクエストを送信 (ヘッダーに access-token, client, uid を含む)
-    Backend->>Database: トークンの有効性を確認
-    alt トークンが有効
-        Database-->>Backend: 認証成功
-        Backend-->>Frontend: リクエスト成功レスポンス
-        Frontend-->>User: ページを表示
-    else トークンが無効（期限切れなど）
-        Database-->>Backend: 認証エラー
-        Backend-->>Frontend: 401 Unauthorized
-        Frontend-->>User: ログイン画面へリダイレクト
-    end
-```
-
-### エリア一覧: /
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: アプリを開く (`/`)
-    Frontend->>Backend: GET /api/v1/areas
-    Backend->>Database: エリア一覧を取得
-    Database-->>Backend: エリア一覧を返す
-    Backend-->>Frontend: JSONレスポンス
-    Frontend-->>User: エリア一覧を表示
-```
-
-**レスポンス例**
-```json
-{
-  "areas": [
-    "id": "884dccc3-0d91-49e5-b961-4b23e5d758f0",
-    "area": "ニセコ・ルスツ",
-    "visitedShops": 0,
-    "totalShops": 23
-  ]
-}
-
-```
-
-### 詳細エリア一覧: /area/[id]
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: エリアを選択 (`/area/[id]`)
-    Frontend->>Backend: GET /api/v1/areas/:id
-    Backend->>Database: 選択されたエリアの詳細エリア一覧を取得
-    Database-->>Backend: 詳細エリア一覧を返す
-    Backend-->>Frontend: JSONレスポンス
-    Frontend-->>User: 詳細エリア一覧を表示
-```
-
-**レスポンス例**
-```json
-{
-  "area": {
-    "id": 1,
-    "name": "札幌",
-    "sub_areas": [
-      { "id": 101, "name": "中央区" },
-      { "id": 102, "name": "北区" },
-      { "id": 103, "name": "東区" }
-    ]
-  }
-}
-
-```
-### 店舗一覧: /shop
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-
-    User->>Frontend: 詳細エリアを選択 (`/shop?area_id=X`)
-    Frontend->>Backend: GET /api/v1/shops?area_id=X
-    Backend->>Database: 選択されたエリアの店舗一覧を取得
-    Database-->>Backend: 店舗一覧を返す
-    Backend-->>Frontend: JSONレスポンス
-    Frontend-->>User: 店舗一覧を表示
-```
-
-**レスポンス例**
-```json
-{
-  "shops": [
-    {
-      "id": 1001,
-      "name": "セイコーマートあさの店",
-      "address": "北海道札幌市中央区南４条西４-１１"
-    },
-    {
-      "id": 1002,
-      "name": "セイコーマート帯広白樺通店",
-      "address": "北海道帯広市西１９条南３丁目５５番２０号"
-    }
-  ]
-}
-```
-
-### 店舗詳細: /shop/[id]
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-    participant GoogleAPI
-
-    User->>Frontend: 店舗を選択 (`/shop/[id]`)
-    Frontend->>Backend: GET /api/v1/shops/:id
-    Backend->>Database: 店舗詳細情報を取得
-    Database-->>Backend: 店舗詳細情報を返す
-    Backend->>GoogleAPI: GET Google Places API (店舗の追加情報取得)
-    GoogleAPI-->>Backend: 店舗の詳細データを返す
-    Backend-->>Frontend: JSONレスポンス
-    Frontend-->>User: 店舗詳細を表示
-```
-
-**レスポンス例**
-```json
-{
-  "shop": {
-    "id": 1001,
-    "name": "セイコーマート中士幌店",
-    "address": "北海道河東郡士幌町字中士幌西２線７８",
-    "latitude": 43.1443337,
-    "longitude": 143.2394352,
-    "created_at": "2025-01-15T21:51:38.008+09:00",
-    "updated_at": "2025-01-16T14:16:29.391+09:00"
-  }
-}
-```
-
-### 検索結果: /search
-
-## セキュリティ
-### XSS対策
-### SQLインジェクション対策
-### CSRF対策
