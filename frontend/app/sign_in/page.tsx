@@ -1,9 +1,10 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useSnackbarState, useUserState } from "../hooks/useGlobalState";
@@ -77,41 +78,59 @@ export default function SignIn() {
   };
 
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        <CardDescription>Enter your email and password to login to your account</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                {...register("email", validationRules.email)}
-              />
-              {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register("password", validationRules.password)}
-              />
-              {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-            </div>
+    <main className="container mx-auto px-4 py-6 md:py-10 flex items-center justify-center min-h-[calc(100vh-8rem)]">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold">ログイン</CardTitle>
+          <CardDescription>メールアドレスとパスワードを入力してログインしてください</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">メールアドレス</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="secoma-record@example.com"
+                  {...register("email", validationRules.email)}
+                />
+                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">パスワード</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  {...register("password", validationRules.password)}
+                />
+                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+              </div>
 
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+              <Button type="submit" className="w-full">
+                ログイン
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col justify-center gap-2">
+          <p className="text-sm text-gray-600">
+            アカウントをお持ちでない方は{" "}
+            <Link href="/sign_up" className="text-blue-600 hover:underline">
+              こちら
+            </Link>{" "}
+            から新規登録
+          </p>
+          <p className="text-sm text-gray-600">
+            パスワードを忘れた方は{" "}
+            <Link href="/password_reset" className="text-blue-600 hover:underline">
+              こちら
+            </Link>{" "}
+            から再設定
+          </p>
+        </CardFooter>
+      </Card>
+    </main>
   );
 }

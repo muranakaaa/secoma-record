@@ -1,10 +1,11 @@
 "use client";
 
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useSnackbarState } from "../hooks/useGlobalState";
@@ -75,50 +76,61 @@ export default function SignUp() {
   };
 
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
-        <CardDescription>Create a new account by filling in your details</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                {...register("email", validationRules.email)}
-              />
-              {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+    <main className="container mx-auto px-4 py-6 md:py-10 flex items-center justify-center min-h-[calc(100vh-8rem)]">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold">新規登録</CardTitle>
+          <CardDescription>新しいアカウントを作成するには以下を入力してください</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">メールアドレス</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="secoma-record@example.com"
+                  {...register("email", validationRules.email)}
+                />
+                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">パスワード</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  {...register("password", validationRules.password)}
+                />
+                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">ユーザー名</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="勢子真 太郎"
+                  {...register("name", validationRules.name)}
+                />
+                {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+              </div>
+              <Button type="submit" className="w-full">
+                登録
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register("password", validationRules.password)}
-              />
-              {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Username</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                {...register("name", validationRules.name)}
-              />
-              {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-            </div>
-            <Button type="submit" className="w-full">
-              Sign Up
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-gray-600">
+            すでにアカウントをお持ちの方は{" "}
+            <Link href="/sign_in" className="text-blue-600 hover:underline">
+              こちら
+            </Link>{" "}
+            からログイン
+          </p>
+        </CardFooter>
+      </Card>
+    </main>
   );
 }
