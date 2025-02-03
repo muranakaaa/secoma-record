@@ -1,12 +1,12 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useForm, type SubmitHandler } from "react-hook-form"
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { useForm, type SubmitHandler } from "react-hook-form"
 
 type PasswordResetFormData = {
   email: string
@@ -14,7 +14,7 @@ type PasswordResetFormData = {
 
 export default function PasswordResetPage() {
   const [message, setMessage] = useState("")
-  const [error, setError] = useState("")
+  const [, setError] = useState("")
   const router = useRouter()
 
   const {
