@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useUserState } from "../../hooks/useGlobalState";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
@@ -11,50 +11,41 @@ const Header = () => {
   const [user] = useUserState();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const displayName = user.name && user.name.trim() !== "" ? user.name : "テストユーザー";
-
   return (
-    <header className="bg-orange-400 py-4 px-6">
-      <div className="flex justify-between items-center">
-        <Link href="/">
-          <span className="text-2xl font-bold text-white">Secoma-Record</span>
+    <header className="bg-gradient-to-r from-orange-400 to-orange-500 py-2 px-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/" className="text-white hover:text-orange-100 transition-colors duration-200 flex items-center">
+          <Image src="/logo.svg" alt="Logo" width={24} height={24} className="mr-2" />
+          <span className="text-xl font-bold">Secoma-Record</span>
         </Link>
         {user.isFetched && (
           <div>
             {!user.isSignedIn ? (
-              <div className="flex space-x-4">
+              <div className="flex space-x-2">
                 <Link href="/sign_in">
-                  <Button className="bg-blue-500 text-white hover:bg-blue-600">Sign In</Button>
+                  <Button size="sm" variant="secondary" className="bg-white text-orange-500 hover:bg-orange-100">ログイン</Button>
                 </Link>
                 <Link href="/sign_up">
-                  <Button className="bg-gray-500 text-white hover:bg-gray-600">Sign Up</Button>
+                  <Button size="sm" variant="secondary" className="bg-white text-orange-500 hover:bg-orange-100">新規登録</Button>
                 </Link>
               </div>
             ) : (
               <div className="flex items-center space-x-4">
                 <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
-                  <DropdownMenuTrigger>
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem className="font-semibold">
-                      {displayName}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link href="/visit_records" className="w-full">
-                        訪問記録を見る
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link href="/sign_out" className="w-full">
-                        サインアウト
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="sm" variant="ghost" className="text-white hover:bg-orange-500">
+                    <span className="mr-2">{user.name || "テストユーザー"}</span>
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem>
+                    <Link href="/sign_out" className="w-full">
+                      サインアウト
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               </div>
             )}
           </div>
