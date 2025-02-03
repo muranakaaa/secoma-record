@@ -14,7 +14,7 @@ type PasswordResetFormData = {
 
 export default function PasswordResetPage() {
   const [message, setMessage] = useState("")
-  const [, setError] = useState("")
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const {
@@ -43,7 +43,6 @@ export default function PasswordResetPage() {
         setMessage("パスワードリセットメールを送信しました。");
         setError("");
 
-        // 2秒後にログインページに遷移
         setTimeout(() => {
           router.push("/sign_in")
         }, 2000);
