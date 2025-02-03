@@ -268,7 +268,7 @@ const ShopDetailPage = () => {
               )}
             </div>
           ) : (
-            <p>ログインしてください。</p>
+            <p>ログインすると訪問記録をつけられます！</p>
           )}
           {user.isSignedIn && (
             (isEditing !== null || visits.length === 0) && (
