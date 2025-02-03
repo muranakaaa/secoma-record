@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/media",
   async rewrites() {
     return [
       {
@@ -10,6 +9,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  /* 他の config オプションをここに追加 */
 };
 
 export default nextConfig;
