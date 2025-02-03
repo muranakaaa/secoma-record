@@ -142,24 +142,3 @@ erDiagram
 | `GET` | `/api/v1/shops/:id` | 店舗詳細情報取得 |
 | `GET` | `/api/v1/shops/search_shops?query=キーワード` | 店舗検索 |
 | `GET` | `/api/v1/areas/` | トップページでのエリア一覧取得 |
-
-
-## 選定技術の採用理由
-### バックエンド : Ruby / Ruby on Rails
-**検討技術：** PHP / Laravel<br>
-**採用理由**
-- 先輩や友人にRailsエンジニアがいて質問できる環境だったため
-- ProgateやRailsチュートリアルといった定番の学習サービスがあり、初心者でも学びやすい環境が整っていたため
-- 転職先候補の企業での採用数が多かったため
-- Rubyの開発者Matzさんが、自分の母校（筑波大学）のOBで縁を感じたため
-
-### フロントエンド : React / Next.js
-**検討技術：** Vue.js / Nuxt.js<br>
-**採用理由**
-- MicroCMSとNext.jsでブログを運用した経験があり、Next.jsには慣れていたため、開発効率を上げやすかった
-- Vercelとの親和性が高く、簡単にデプロイ・運用ができるため
-
-### 認証 : devise(gem)
-**検討技術：** Firebase Authentication<br>
-**採用理由**
-- Railsのエコシステム内で完結しやすく、追加のランニングコストが不要なため
