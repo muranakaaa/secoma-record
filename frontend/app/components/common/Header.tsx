@@ -42,7 +42,7 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem>
                     <Link href="/sign_out" className="w-full">
-                      サインアウト
+                      ログアウト
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
