@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Info } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -77,13 +77,24 @@ const HomePage = () => {
       <Card className="w-full max-w-3xl mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">セコマレコード</CardTitle>
+          <p className="text-center text-sm md:text-lg leading-tight text-nowrap">セコマ巡りの旅を、より楽しく、よりスムーズに。</p>
         </CardHeader>
         <CardContent>
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <h2 className="text-lg font-semibold mb-2 flex items-center">
+              <Info className="w-5 h-5 mr-2 text-blue-500" />
+              セコマレコードとは？
+            </h2>
+            <p className="text-sm text-gray-700">
+              セイコーマート全店制覇を目指す人のための訪問記録管理アプリです。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。
+              <span className="block mt-2 text-xs text-gray-500">セイコーマート非公式</span>
+            </p>
+          </div>
           <div className="mb-6">
             <form className="flex gap-2" onSubmit={handleSearch}>
               <Input
                 type="text"
-                placeholder="店舗を検索"
+                placeholder="店舗名で検索"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-grow"
