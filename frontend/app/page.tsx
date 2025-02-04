@@ -30,7 +30,15 @@ const HomePage = () => {
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": localStorage.getItem("access-token") || "",
+            "client": localStorage.getItem("client") || "",
+            "uid": localStorage.getItem("uid") || "",
+          },
+        });
         if (!response.ok) throw new Error("Failed to fetch");
         const data: Area[] = await response.json();
         setAreas(data);

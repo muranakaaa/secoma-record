@@ -1,6 +1,6 @@
 module Api
   module V1
-    class ShopsController < ApplicationController
+    class ShopsController < Api::V1::BaseController
       def index
         if params[:sub_area]
           fetch_shops_by_sub_area
@@ -74,6 +74,15 @@ module Api
                     .select(:id, :name, :address)
                     .limit(100)
 
+        visited_shop_ids = []
+        if user_signed_in?
+          visited_shop_ids = Visit.where(user_id: current_user.id).pluck(:shop_id).map(&:to_i)
+        end
+
+
+        Rails.logger.debug "Fetched shops: #{shops.map(&:id)}"
+        Rails.logger.debug "Visited shop IDs: #{visited_shop_ids}"
+
         render json: {
           sub_area: sub_area_name,
           shops: shops.map do |shop|
@@ -81,9 +90,9 @@ module Api
               id: shop.id,
               name: shop.name,
               address: shop.address,
-              visited: false
+              visited: visited_shop_ids.include?(shop.id)
             }
-        end
+          end
         }
       end
 
