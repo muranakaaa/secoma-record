@@ -21,7 +21,6 @@ export default function ShopListPage() {
   const subArea = searchParams.get("sub_area") || "";
   const area = searchParams.get("area") || "";
   const [shops, setShops] = useState<Shop[]>([]);
-  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
   console.log("Fetched shops data:", shops);
@@ -46,7 +45,7 @@ const fetchShops = async () => {
     if (!response.ok) throw new Error("Failed to fetch");
     const data = await response.json();
 
-    console.log("Fetched shops:", data); // デバッグ用ログ
+    console.log("Fetched shops:", data);
     setShops(data.shops);
   } catch (error) {
     console.error("Error fetching shops:", error);
