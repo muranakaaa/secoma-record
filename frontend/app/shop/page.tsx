@@ -15,6 +15,7 @@ type Shop = {
   visited: boolean;
 };
 
+
 export default function ShopListPage() {
   const searchParams = useSearchParams();
   const subArea = searchParams.get("sub_area") || "";
@@ -23,24 +24,34 @@ export default function ShopListPage() {
   const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
+  console.log("Fetched shops data:", shops);
+}, [shops]);
+
+
+  useEffect(() => {
     if (!subArea) return;
 
-    const fetchShops = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}`);
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
+const fetchShops = async () => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token") || "",
+        "client": localStorage.getItem("client") || "",
+        "uid": localStorage.getItem("uid") || "",
+      },
+    });
 
-        setShops(data.shops);
-      } catch (error) {
-        console.error("Error fetching shops:", error);
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred");
-        }
-}
-    };
+    if (!response.ok) throw new Error("Failed to fetch");
+    const data = await response.json();
+
+    console.log("Fetched shops:", data); // デバッグ用ログ
+    setShops(data.shops);
+  } catch (error) {
+    console.error("Error fetching shops:", error);
+  }
+};
 
     fetchShops();
   }, [subArea]);
