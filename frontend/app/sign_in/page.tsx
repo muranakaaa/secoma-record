@@ -67,6 +67,7 @@ export default function SignIn() {
 
       router.push("/");
     } catch (error) {
+      console.error("Error:", error);
       if (axios.isAxiosError(error)) {
         setSnackbar({
           message: '登録ユーザーが見つかりません',
@@ -95,7 +96,7 @@ export default function SignIn() {
                   placeholder="secoma-record@example.com"
                   {...register("email", validationRules.email)}
                 />
-                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                {errors.email && <p data-testid="email-error" className="text-red-500">{errors.email.message}</p>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">パスワード</Label>
@@ -105,7 +106,7 @@ export default function SignIn() {
                   placeholder="••••••••"
                   {...register("password", validationRules.password)}
                 />
-                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+                {errors.password && <p data-testid="password-error" className="text-red-500">{errors.password.message}</p>}
               </div>
 
               <Button type="submit" className="w-full">
