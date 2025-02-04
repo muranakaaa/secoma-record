@@ -124,22 +124,3 @@ erDiagram
     SHOPS ||--o{ VISITS : "has many"
 
 ```
-
-## APIエンドポイント一覧
-| HTTPメソッド | エンドポイント | 説明 |
-|-------------|--------------|------|
-| `POST` | `/api/v1/auth/sign_up` | ユーザー登録 |
-| `POST` | `/api/v1/auth/sign_in` | ユーザーログイン |
-| `DELETE` | `/api/v1/auth/sign_out` | ユーザーのサインアウト |
-| `POST` | `/api/v1/visits` | 訪問記録の作成 |
-| `GET` | `/api/v1/visits?shop_id=X` | 指定店舗の訪問記録取得 |
-| `PUT` | `/api/v1/visits/:id` | 訪問記録の更新 |
-| `DELETE` | `/api/v1/visits/:id` | 訪問記録の削除 |
-| `GET` | `/api/v1/areas` | エリア一覧取得 |
-| `GET` | `/api/v1/areas/:id` | 詳細エリア一覧取得 |
-| `GET` | `/api/v1/shops?area_id=X` | 指定エリアの店舗一覧取得 |
-| `GET` | `/api/v1/shops?sub_area=Y&area=Z` | 指定エリア・サブエリアの店舗一覧取得 |
-| `GET` | `/api/v1/shops/by_sub_area?sub_area=Y` | サブエリアごとの店舗一覧取得 |
-| `GET` | `/api/v1/shops/:id` | 店舗詳細情報取得 |
-| `GET` | `/api/v1/shops/search_shops?query=キーワード` | 店舗検索 |
-| `GET` | `/api/v1/areas/` | トップページでのエリア一覧取得 |
