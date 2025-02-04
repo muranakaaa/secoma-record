@@ -72,8 +72,7 @@ module Api
 
         shops = Shop.where(sub_area: sub_area_name)
                     .select(:id, :name, :address)
-                    .page(params[:page])
-                    .per(params[:per_page])
+                    .limit(100)
 
         render json: {
           sub_area: sub_area_name,
@@ -84,24 +83,15 @@ module Api
               address: shop.address,
               visited: false
             }
-          end,
-          meta: {
-            total_pages: shops.total_pages,
-            total_count: shops.total_count
-          }
+        end
         }
       end
 
       def fetch_all_shops
-        per_page = params[:per_page].presence || 10
-        shops = Shop.page(params[:page]).per(per_page)
+        shops = Shop.limit(100)
 
         render json: {
-          data: shops,
-          meta: {
-            total_pages: shops.total_pages,
-            total_count: shops.total_count
-          }
+          data: shops
         }
       end
     end

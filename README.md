@@ -139,7 +139,7 @@ erDiagram
 | `GET` | `/api/v1/areas/:id` | 詳細エリア一覧取得 |
 | `GET` | `/api/v1/shops?area_id=X` | 指定エリアの店舗一覧取得 |
 | `GET` | `/api/v1/shops?sub_area=Y&area=Z` | 指定エリア・サブエリアの店舗一覧取得 |
-| `GET` | `/api/v1/shops/by_sub_area?sub_area=Y&page=A&per_page=B` | サブエリアごとの店舗一覧取得（ページング対応） |
+| `GET` | `/api/v1/shops/by_sub_area?sub_area=Y` | サブエリアごとの店舗一覧取得（ページング対応） |
 | `GET` | `/api/v1/shops/:id` | 店舗詳細情報取得 |
 | `GET` | `/api/v1/shops/search_shops?query=キーワード` | 店舗検索 |
 | `GET` | `/api/v1/areas/` | トップページでのエリア一覧取得 |
