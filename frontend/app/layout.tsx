@@ -10,9 +10,25 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'セコマレコード',
   description:
-    'セコマレコードは、「すべてのセイコーマートの店舗に行きたい」という想いから作られた、無料のセイコーマート訪問記録管理サービスです。会員登録せずに、セコマの店舗検索システムとして使用することもできます。セイコーマート非公式。',
+    'セイコーマート全店制覇を目指す人のための訪問記録管理アプリです（非公式）。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。',
   verification: {
   google: process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE_CONTENT,
+  },
+  openGraph: {
+    title: 'セコマレコード',
+    description:
+      'セイコーマート全店制覇を目指す人のための訪問記録管理アプリです（非公式）。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。',
+    url: 'https://secoma-record.com',
+    siteName: 'セコマレコード',
+    images: [
+      {
+        url: '/ogp/thumbnail.png',
+        width: 1200,
+        height: 630,
+        alt: 'セコマレコードのOGP画像',
+      },
+    ],
+    type: 'website',
   },
 };
 
