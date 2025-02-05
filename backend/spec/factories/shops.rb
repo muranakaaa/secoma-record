@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :shop do
-    name { "テスト店舗" }
-    address { "東京都新宿区" }
+    name { "セイコーマート稚内中央店" }
+    address { "北海道稚内市中央４丁目６番３号" }
+    area { "稚内・留萌" }
+    sub_area { "稚内市" }
   end
 end

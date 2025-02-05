@@ -62,4 +62,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_04_143545) do
   end
 
   add_foreign_key "visits", "shops"
+  add_foreign_key "visits", "users"
 end

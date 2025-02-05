@@ -4,6 +4,7 @@ module Api
       def index
         areas = Shop.where.not(area: nil).distinct.pluck(:area)
         area_counts = Shop.where(area: areas).group(:area).count
+        visited_shops = {}
 
         visited_shop_ids = []
         if user_signed_in?
@@ -14,10 +15,6 @@ module Api
         Shop.where(id: visited_shop_ids).where.not(area: nil).each do |shop|
           area_visited_counts[shop.area] += 1
         end
-
-        Rails.logger.debug "Fetched Areas: #{areas}"
-        Rails.logger.debug "Total shop counts: #{area_counts}"
-        Rails.logger.debug "Visited shop counts (by area): #{area_visited_counts}"
 
         result = areas.map do |area|
           total_shops = area_counts[area] || 0
@@ -54,8 +51,6 @@ module Api
                                     .group("shops.sub_area")
                                     .count
         end
-
-        Rails.logger.debug "Visited shop counts: #{visited_shop_counts}"
 
         result = sub_areas.map do |sub_area|
           {
