@@ -17,6 +17,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
   config.enable_reloading = false
   config.hosts << "secoma-record.fly.dev"
+  config.hosts << "secoma-record.com"
 
   config.eager_load = true
   config.consider_all_requests_local = false
