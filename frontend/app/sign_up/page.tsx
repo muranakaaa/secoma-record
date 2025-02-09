@@ -66,8 +66,9 @@ export default function SignUp() {
       router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        console.log("Error response:", error.response?.data);
         setSnackbar({
-          message: "不正なユーザー情報です",
+          message: error.response?.data?.errors?.join(", ") || "不正なユーザー情報です",
           severity: "error",
           pathname: "/sign_up",
         });

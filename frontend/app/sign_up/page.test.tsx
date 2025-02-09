@@ -73,22 +73,22 @@ describe("SignUp Page", () => {
     });
   });
 
-//   test("サインアップ失敗時の動作", async () => {
-//     (axios.post as jest.Mock).mockRejectedValue(new Error("Invalid data"));
+  test("サインアップ失敗時の動作", async () => {
+    (axios.post as jest.Mock).mockRejectedValue(new Error("Invalid data"));
 
-//     render(<SignUp />);
+    render(<SignUp />);
 
-//     fireEvent.change(screen.getByLabelText("メールアドレス"), { target: { value: "wrong@example.com" } });
-//     fireEvent.change(screen.getByLabelText("パスワード"), { target: { value: "wrongpassword" } });
-//     fireEvent.change(screen.getByLabelText("ユーザー名"), { target: { value: "テストユーザー" } });
-//     fireEvent.click(screen.getByRole("button", { name: "登録" }));
+    fireEvent.change(screen.getByLabelText("メールアドレス"), { target: { value: "wrong@example.com" } });
+    fireEvent.change(screen.getByLabelText("パスワード"), { target: { value: "wrongpassword" } });
+    fireEvent.change(screen.getByLabelText("ユーザー名"), { target: { value: "テストユーザー" } });
+    fireEvent.click(screen.getByRole("button", { name: "登録" }));
 
-//     await waitFor(() => {
-//       expect(setSnackbar).toHaveBeenCalledWith({
-//         message: "不正なユーザー情報です",
-//         severity: "error",
-//         pathname: "/sign_up",
-//       });
-//     });
-//   });
+    await waitFor(() => {
+      expect(setSnackbar).toHaveBeenCalledWith({
+        message: "不正なユーザー情報です",
+        severity: "error",
+        pathname: "/sign_up",
+      });
+    });
+  });
 });

@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_04_143545) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_09_024905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "areas", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_areas_on_slug", unique: true
+  end
 
   create_table "shops", force: :cascade do |t|
     t.string "name"
@@ -21,8 +29,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_04_143545) do
     t.decimal "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "area"
     t.string "sub_area"
+    t.string "area"
   end
 
   create_table "users", force: :cascade do |t|
@@ -62,5 +70,4 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_04_143545) do
   end
 
   add_foreign_key "visits", "shops"
-  add_foreign_key "visits", "users"
 end
