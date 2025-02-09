@@ -11,16 +11,20 @@ Rails.application.routes.draw do
       end
       resources :areas, only: [:index, :show]
       resources :visits, only: [:index, :create, :update, :destroy]
+
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"
-      mount_devise_token_auth_for "User", at: "auth"
+
+      mount_devise_token_auth_for "User", at: "auth", controllers: {
+        registrations: 'devise_token_auth/registrations'
+      }
 
       namespace :current do
         resource :user, only: [:show]
       end
       namespace :user do
-         resource :confirmations, only: [:update]
-       end
+        resource :confirmations, only: [:update]
+      end
     end
   end
 

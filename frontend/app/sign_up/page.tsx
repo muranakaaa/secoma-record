@@ -49,31 +49,72 @@ export default function SignUp() {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth`;
       const headers = { "Content-Type": "application/json" };
-      const confirmSuccessUrl = `${process.env.NEXT_PUBLIC_FRONT_BASE_URL}/sign_in`;
 
-      const response = await axios.post(url, { ...data, confirm_success_url: confirmSuccessUrl }, { headers });
+      const requestData = {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      };
 
-      localStorage.setItem("access-token", response.headers["access-token"] || "");
-      localStorage.setItem("client", response.headers["client"] || "");
-      localStorage.setItem("uid", response.headers["uid"] || "");
+      console.log("Request Data:", requestData);
 
-      setSnackbar({
-        message: "認証メールをご確認ください",
-        severity: "success",
-        pathname: "/",
-      });
+      const response = await axios.post(url, JSON.stringify(requestData), { headers });
 
-      router.push("/");
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("Error response:", error.response?.data);
+      console.log("SignUp Response:", response);
+
+      if (response.data.status === "success") {
         setSnackbar({
-          message: error.response?.data?.errors?.join(", ") || "不正なユーザー情報です",
+          message: "仮登録が完了しました。認証メールをご確認ください。",
+          severity: "success",
+          pathname: "/",
+        });
+
+        router.push("/");
+      } else {
+        setSnackbar({
+          message: "サインアップに失敗しました",
           severity: "error",
           pathname: "/sign_up",
         });
       }
+    } catch (error) {
+  console.error("SignUp Error:", JSON.stringify(error.response?.data?.errors, null, 2));
+
+  let errorMessage = "不正なユーザー情報です"; // デフォルトのメッセージ
+
+  if (axios.isAxiosError(error) && error.response?.data?.errors) {
+    console.log("Actual Error Message:", JSON.stringify(error.response.data.errors, null, 2));
+
+    const errors = error.response.data.errors;
+
+    if (typeof errors === "string") {
+      errorMessage = errors;
+    } else if (Array.isArray(errors)) {
+      errorMessage = errors.join(", ");
+    } else if (typeof errors === "object") {
+      // `full_messages` があれば優先的に使う
+      if (errors.full_messages && Array.isArray(errors.full_messages)) {
+        errorMessage = errors.full_messages.join(", ");
+      } else {
+        // `email` などの個別フィールドのエラーメッセージを取得
+        errorMessage = Object.values(errors).flat().join(", ");
+      }
     }
+  }
+
+  console.log("Processed Error Message:", errorMessage); // ここでログ出力
+
+  setSnackbar({
+    message: errorMessage,
+    severity: "error",
+    pathname: "/sign_up",
+  });
+}
+
+
+
+
+
   };
 
   return (
@@ -92,6 +133,7 @@ export default function SignUp() {
                   id="email"
                   type="email"
                   placeholder="secoma-record@example.com"
+                  autoComplete="current-password"
                   {...register("email", validationRules.email)}
                 />
                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}

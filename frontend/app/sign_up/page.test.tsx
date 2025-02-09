@@ -44,13 +44,21 @@ describe("SignUp Page", () => {
     expect(await screen.findByText("正しい形式のメールアドレスを入力してください。")).toBeInTheDocument();
   });
 
-  test("サインアップ成功時の動作", async () => {
+  test("サインアップ成功時の動作（認証メール送信）", async () => {
     (axios.post as jest.Mock).mockResolvedValue({
-      headers: {
-        "access-token": "token123",
-        client: "client123",
-        uid: "uid123",
-      },
+      data: {
+        status: "success",
+        data: {
+          id: 28,
+          provider: "email",
+          uid: "test@example.com",
+          allow_password_change: false,
+          name: "テストユーザー",
+          email: "test@example.com",
+          created_at: "2025-02-09T21:34:50.888+09:00",
+          updated_at: "2025-02-09T21:34:50.888+09:00"
+        }
+      }
     });
 
     render(<SignUp />);
@@ -61,11 +69,8 @@ describe("SignUp Page", () => {
     fireEvent.click(screen.getByRole("button", { name: "登録" }));
 
     await waitFor(() => {
-      expect(localStorage.setItem).toHaveBeenCalledWith("access-token", "token123");
-      expect(localStorage.setItem).toHaveBeenCalledWith("client", "client123");
-      expect(localStorage.setItem).toHaveBeenCalledWith("uid", "uid123");
       expect(setSnackbar).toHaveBeenCalledWith({
-        message: "認証メールをご確認ください",
+        message: "仮登録が完了しました。認証メールをご確認ください。",
         severity: "success",
         pathname: "/",
       });
@@ -74,7 +79,15 @@ describe("SignUp Page", () => {
   });
 
   test("サインアップ失敗時の動作", async () => {
-    (axios.post as jest.Mock).mockRejectedValue(new Error("Invalid data"));
+    (axios.post as jest.Mock).mockRejectedValue({
+      response: {
+        data: {
+          errors: {
+            email: ["メールアドレスはすでに使用されています。"],
+          },
+        },
+      },
+    });
 
     render(<SignUp />);
 
@@ -85,7 +98,7 @@ describe("SignUp Page", () => {
 
     await waitFor(() => {
       expect(setSnackbar).toHaveBeenCalledWith({
-        message: "不正なユーザー情報です",
+        message: "メールアドレスはすでに使用されています。",
         severity: "error",
         pathname: "/sign_up",
       });
