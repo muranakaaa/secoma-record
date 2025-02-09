@@ -78,42 +78,37 @@ export default function SignUp() {
         });
       }
     } catch (error) {
-  console.error("SignUp Error:", JSON.stringify(error.response?.data?.errors, null, 2));
+    console.error("SignUp Error:", error);
 
-  let errorMessage = "不正なユーザー情報です"; // デフォルトのメッセージ
+    let errorMessage = "不正なユーザー情報です";
+    if (axios.isAxiosError(error)) {
+      console.log("Axios Error:", error.response?.data);
 
-  if (axios.isAxiosError(error) && error.response?.data?.errors) {
-    console.log("Actual Error Message:", JSON.stringify(error.response.data.errors, null, 2));
+      const errors = error.response?.data?.errors;
 
-    const errors = error.response.data.errors;
-
-    if (typeof errors === "string") {
-      errorMessage = errors;
-    } else if (Array.isArray(errors)) {
-      errorMessage = errors.join(", ");
-    } else if (typeof errors === "object") {
-      // `full_messages` があれば優先的に使う
-      if (errors.full_messages && Array.isArray(errors.full_messages)) {
-        errorMessage = errors.full_messages.join(", ");
-      } else {
-        // `email` などの個別フィールドのエラーメッセージを取得
-        errorMessage = Object.values(errors).flat().join(", ");
+      if (typeof errors === "string") {
+        errorMessage = errors;
+      } else if (Array.isArray(errors)) {
+        errorMessage = errors.join(", ");
+      } else if (typeof errors === "object") {
+        if (errors.full_messages && Array.isArray(errors.full_messages)) {
+          errorMessage = errors.full_messages.join(", ");
+        } else {
+          errorMessage = Object.values(errors).flat().join(", ");
+        }
       }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
     }
+
+    console.log("Processed Error Message:", errorMessage);
+
+    setSnackbar({
+      message: errorMessage,
+      severity: "error",
+      pathname: "/sign_up",
+    });
   }
-
-  console.log("Processed Error Message:", errorMessage); // ここでログ出力
-
-  setSnackbar({
-    message: errorMessage,
-    severity: "error",
-    pathname: "/sign_up",
-  });
-}
-
-
-
-
 
   };
 
