@@ -15,8 +15,8 @@ Rails.application.routes.draw do
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"
 
-      mount_devise_token_auth_for "User", at: "auth", controllers: {
-        registrations: 'devise_token_auth/registrations'
+      mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+        registrations: 'api/v1/auth/registrations'
       }
 
       namespace :current do
