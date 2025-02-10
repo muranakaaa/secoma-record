@@ -3,11 +3,12 @@ class ApplicationController < ActionController::API
   include DeviseHackFakeSession
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :log_params, if: -> { request.post? }
 
   protected
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :name])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:email, :password])
   end
 end

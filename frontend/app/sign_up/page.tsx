@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -45,72 +45,45 @@ export default function SignUp() {
     },
   };
 
-  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
-    try {
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth`;
-      const headers = { "Content-Type": "application/json" };
+  const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
+      const SignUp = async (data: SignUpFormData) => {
+        const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/auth'
+        const headers = { 'Content-Type': 'application/json' }
+        const confirmSuccessUrl =
+          process.env.NEXT_PUBLIC_FRONT_BASE_URL + '/sign_in'
 
-      const requestData = {
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      };
-
-      console.log("Request Data:", requestData);
-
-      const response = await axios.post(url, JSON.stringify(requestData), { headers });
-
-      console.log("SignUp Response:", response);
-
-      if (response.data.status === "success") {
-        setSnackbar({
-          message: "仮登録が完了しました。認証メールをご確認ください。",
-          severity: "success",
-          pathname: "/",
-        });
-
-        router.push("/");
-      } else {
-        setSnackbar({
-          message: "サインアップに失敗しました",
-          severity: "error",
-          pathname: "/sign_up",
-        });
+        await axios({
+          method: 'POST',
+          url: url,
+          data: { ...data, confirm_success_url: confirmSuccessUrl },
+          headers: headers,
+        })
+          .then((res: AxiosResponse) => {
+            localStorage.setItem(
+              'access-token',
+              res.headers['access-token'] || '',
+            )
+            localStorage.setItem('client', res.headers['client'] || '')
+            localStorage.setItem('uid', res.headers['uid'] || '')
+            setSnackbar({
+              message: '認証メールをご確認ください',
+              severity: 'success',
+              pathname: '/',
+            })
+            router.push('/')
+          })
+          .catch((e: AxiosError<{ error: string }>) => {
+            console.log(e.message)
+            setSnackbar({
+              message: '不正なユーザー情報です',
+              severity: 'error',
+              pathname: '/sign_up',
+            })
+          })
       }
-    } catch (error) {
-    console.error("SignUp Error:", error);
-
-    let errorMessage = "不正なユーザー情報です";
-    if (axios.isAxiosError(error)) {
-      console.log("Axios Error:", error.response?.data);
-
-      const errors = error.response?.data?.errors;
-
-      if (typeof errors === "string") {
-        errorMessage = errors;
-      } else if (Array.isArray(errors)) {
-        errorMessage = errors.join(", ");
-      } else if (typeof errors === "object") {
-        if (errors.full_messages && Array.isArray(errors.full_messages)) {
-          errorMessage = errors.full_messages.join(", ");
-        } else {
-          errorMessage = Object.values(errors).flat().join(", ");
-        }
-      }
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-
-    console.log("Processed Error Message:", errorMessage);
-
-    setSnackbar({
-      message: errorMessage,
-      severity: "error",
-      pathname: "/sign_up",
-    });
+      SignUp(data)
   }
 
-  };
 
   return (
     <main className="container mx-auto px-4 py-6 md:py-10 flex items-center justify-center min-h-[calc(100vh-8rem)]">
