@@ -313,6 +313,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  actioncable
   active_model_serializers
   bootsnap
   brakeman
