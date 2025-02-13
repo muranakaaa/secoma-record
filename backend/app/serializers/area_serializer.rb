@@ -1,3 +1,3 @@
 class AreaSerializer < ActiveModel::Serializer
-  attributes :id, :area, :visited_shops, :total_shops
+  attributes :id, :area, :visitedShops, :totalShops
 end

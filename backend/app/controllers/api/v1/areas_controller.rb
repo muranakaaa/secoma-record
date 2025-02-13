@@ -1,4 +1,6 @@
 module Api
+  require 'ostruct'
+  
   module V1
     class AreasController < Api::V1::BaseController
       def index
@@ -20,15 +22,15 @@ module Api
           total_shops = area_counts[area] || 0
           visited_shops = area_visited_counts[area] || 0
 
-          {
+          Area.new(
             id: area.parameterize,
             area: area.strip,
             visitedShops: visited_shops,
             totalShops: total_shops
-          }
+          )
         end
 
-        render json: result
+        render json: result, each_serializer: AreaSerializer
       end
 
       def show
@@ -61,7 +63,7 @@ module Api
           }
         end
 
-        render json: { area: area_name, sub_areas: result }
+        render json: { area: area_name, sub_areas: result }, each_serializer: SubAreaSerializer
       end
 
     end
