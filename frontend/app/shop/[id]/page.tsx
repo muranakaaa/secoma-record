@@ -138,9 +138,11 @@ const ShopDetailPage = () => {
         'uid': localStorage.getItem('uid') || '',
       },
       body: JSON.stringify({
-        shop_id: id,
-        visit_date: date,
-        comment,
+        visit: {
+          shop_id: id,
+          visit_date: date,
+          comment
+        }
       }),
     });
 
