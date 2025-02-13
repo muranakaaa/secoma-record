@@ -2,4 +2,9 @@
 
 <p><%= t '.confirm_link_msg' %> </p>
 
-<p><%= link_to t('.confirm_account_link'), "#{ENV['NEXT_PUBLIC_FRONT_BASE_URL']}/confirmation?confirmation_token=#{@token}", target: :_blank, rel: "noopener noreferrer" %></p>
+<p>
+  <%= link_to t('.confirm_account_link'),
+    URI.join(ENV['NEXT_PUBLIC_FRONT_BASE_URL'], "/confirmation?confirmation_token=#{@token}").to_s,
+    target: :_blank, rel: "noopener noreferrer"
+  %>
+</p>
