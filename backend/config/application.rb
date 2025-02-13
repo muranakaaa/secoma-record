@@ -14,7 +14,7 @@ require "action_view/railtie"
 
 Bundler.require(*Rails.groups)
 
-Dotenv::Railtie.load if defined?(Dotenv)
+Dotenv::Rails.load if defined?(Dotenv)
 
 module Backend
   class Application < Rails::Application
