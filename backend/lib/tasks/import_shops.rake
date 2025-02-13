@@ -1,7 +1,7 @@
 require "csv"
 require "net/http"
 require "json"
-require "cgi" # 必要に応じて追加
+require "cgi"
 
 namespace :import do
   desc "Import shops from CSV and fetch Google Places data"
@@ -19,7 +19,6 @@ namespace :import do
         address: row["住所"]
       )
 
-      # クエリパラメータを適切にエンコード
       query = CGI.escape("#{row['店舗名']} #{row['住所']}")
       url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{query}&inputtype=textquery&fields=geometry&key=#{api_key}"
 

@@ -5,16 +5,20 @@ default: &default
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
-  port: <%= ENV['DB_PORT'] %>
+  port: <%= ENV['DB_PORT'] || 5432 %>
 
 development:
   <<: *default
-  database: <%= ENV['POSTGRES_DB'] %>_development
+  database: secoma_record_development
 
 test:
   <<: *default
-  database: <%= ENV['POSTGRES_DB'] %>_test
+  database: secoma_record_test
 
 production:
   <<: *default
-  database: <%= ENV['POSTGRES_DB'] %>
+  database: secoma_record_production
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST_PRODUCTION'] %>
+  port: 5432
