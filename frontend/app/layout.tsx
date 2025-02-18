@@ -8,11 +8,12 @@ import { Toaster } from './components/ui/toaster';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://secoma-record.com"),
   title: 'セコマレコード',
   description:
     'セイコーマート全店制覇を目指す人のための訪問記録管理アプリです（非公式）。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。',
   verification: {
-  google: process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE_CONTENT,
+    google: process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE_CONTENT,
   },
   openGraph: {
     title: 'セコマレコード',
