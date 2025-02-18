@@ -1,12 +1,16 @@
-export const fetchShops = async (area_romaji: string, sub_area_romaji: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/shop/${area_romaji}/${sub_area_romaji}`;
+export const fetchShops = async (areaRomaji: string, subAreaRomaji: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/shop/${areaRomaji}/${subAreaRomaji}`,
+    { cache: "force-cache" }
+  );
 
-  const res = await fetch(url, { cache: "force-cache" });
-
-  if (!res.ok) {
-    throw new Error("店舗情報の取得に失敗しました");
-  }
+  if (!res.ok) throw new Error("店舗情報の取得に失敗しました");
 
   const data = await res.json();
-  return data;
+
+  return {
+    area: data.area,
+    sub_area: data.sub_area,
+    shops: data.shops,
+  };
 };
