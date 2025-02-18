@@ -3,12 +3,11 @@ export const fetchAreas = async () => {
   if (!res.ok) throw new Error("エリア情報の取得に失敗しました");
 
   const data = await res.json();
-  
-  return data.map((area: { id: string; area: string; totalShops: number }) => {
-    return {
-      id: area.id && area.id.trim() !== "" ? area.id : area.area.replace(/\s+/g, "-").toLowerCase(),
-      area: area.area,
-      totalShops: area.totalShops,
-    };
-  });
+
+  return data.map((area: { id: string; area: string; totalShops: number; visitedShops?: number }) => ({
+    id: area.id,
+    area: area.area,
+    totalShops: area.totalShops,
+    visitedShops: area.visitedShops ?? 0,
+  }));
 };
