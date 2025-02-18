@@ -1,10 +1,6 @@
-'use client';
-
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import useSWR from 'swr';
+import { fetchArea } from "../../../lib/fetchArea";
 import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 
@@ -15,40 +11,8 @@ type SubArea = {
   visitedShops: number;
 };
 
-export default function AreaPage() {
-  const params = useParams();
-  const [areaName, setAreaName] = useState<string | null>(null);
-  const [subAreas, setSubAreas] = useState<SubArea[]>([]);
-  const [, setError] = useState<string | null>(null);
-
-  const fetcher = (url: string) => fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "access-token": localStorage.getItem("access-token") || "",
-      "client": localStorage.getItem("client") || "",
-      "uid": localStorage.getItem("uid") || "",
-    },
-  }).then(res => {
-    if (!res.ok) throw new Error("Failed to fetch");
-    return res.json();
-  });
-
-  const { data, error } = useSWR(params && params.id ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/${params.id}` : null, fetcher);
-
-  useEffect(() => {
-    if (data) {
-      setAreaName(data.area);
-      setSubAreas(data.sub_areas);
-    } else if (error) {
-      console.error("Error fetching sub areas:", error);
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-    }
-  }, [data, error]);
+export default async function AreaPage({ params }: { params: { id: string } }) {
+  const areaData = await fetchArea(params.id);
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -58,14 +22,14 @@ export default function AreaPage() {
             <ChevronLeft className="w-4 h-4 mr-1" />
             TOPに戻る
           </Link>
-          <CardTitle className="text-2xl font-bold">{areaName ? `${areaName} エリア` : "Loading..."}</CardTitle>
+          <CardTitle className="text-2xl font-bold">{areaData ? `${areaData.area} エリア` : "エリア情報なし"}</CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {subAreas.map((subArea) => (
+            {areaData.sub_areas.map((subArea: SubArea) => (
               <li key={subArea.id}>
                 <Link
-                  href={`/shop?sub_area=${encodeURIComponent(subArea.name)}&area=${encodeURIComponent(areaName || "")}`}
+                  href={`/shop?sub_area=${encodeURIComponent(subArea.name)}&area=${encodeURIComponent(areaData.area)}`}
                   className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
                 >
                   <div className="flex items-center gap-2">
