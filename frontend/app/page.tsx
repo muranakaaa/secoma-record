@@ -3,7 +3,8 @@
 import { CheckCircle, Info } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import useSWR from 'swr';
+import { useState } from "react";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
@@ -27,58 +28,23 @@ const HomePage = () => {
     router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
   };
 
-  useEffect(() => {
-    const fetchAreas = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/`,{
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token") || "",
-            "client": localStorage.getItem("client") || "",
-            "uid": localStorage.getItem("uid") || "",
-          },
-        });
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data: Area[] = await response.json();
-        setAreas(data);
-      } catch (error) {
-        console.error("Error fetching areas:", error);
-      }
-    };
+  const fetcher = (url: string) => fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("access-token") || "",
+      "client": localStorage.getItem("client") || "",
+      "uid": localStorage.getItem("uid") || "",
+    },
+  }).then(res => {
+    if (!res.ok) throw new Error("Failed to fetch");
+    return res.json();
+  });
 
-    fetchAreas();
-  }, []);
+  const { data: fetchedAreas, error } = useSWR(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/`, fetcher);
 
-  useEffect(() => {
-  console.log(`
- ::::::::::::::::::::::::::::::::........::::::::::
- @@@@@@@@@@@@@@@@@@@@@@@@@@@@%#*+===--=+#@@@@@@@@@@
- @@@@@@@@@@@@@@@@@@@@@@@@@@#+=--====-+%@@@@@@@@@@@@
- @@@@@@@@@@@@@@@@@@@@@@@@*=--======-+@@@@@@@@@@@@@@
- @@@@@@@@@@@@@@@@@@@@@@%+-==========%@@@@@@@@@@@@@@
- #**##%%@@@@@@@@@@@@@@%=-===========@@@@@@@@@@@@@@@
- %+-*=-==+%@@@@@@@@@@@=-============%@@@@@@@@@@@@@@
- @@*-==-=@@@@@@@@@@@@#-============-#@@@@@@@@@@@@@@
- @@#-===%@@@@@@@@@@@@+-============-+@@@@@@@@@@@@@@
- @@*-===@@@@@@@@@@@@%==============-+@@@@@@@#*++++#
- @@+-===%@@@@@@@@@@@*-=============-+@@@@%+=---+#@@
- @@====-+@@@@@@@@@@%================%@@@#=-==-*@@@@
- @%=====-+%@@@@@@@#===============-*@@@*-=====@@@@@
- @%-=====-=+*###*=-=============-=#@@@#-====-+@@@@@
- @%========------===========--==*@@@@*======-*@@@@@
- @@=========================*#%@@@%*=-=======@@@@@@
- @@*-=======================+++++==-======-=#@@@@@@
- @@@=-======================-----========-=%@@@@@@@
- @@@%=-======================-=======---=*@@@@@@@@@
- @@@@%=-=====================++======+*%@@@@@@@@@@@
- @@@@@@*=--==================*%@@@@@@@@@@@@%##@@@@@
- @@@@@@@@#+=--===============-==++*****++=++#@@@@@@
- @@@@@@@@@@%#+===--=============-----==+*%@@@@@@@@@
- @@@@@@@@@@@@@@%#**+=====---=====+**#%@@@@@@@@@@@@@
- ::::::::::::::::::::...........:::::::::::::::::::
-  `);
-}, []);
+  if (error) console.error("Error fetching areas:", error);
+
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -113,8 +79,8 @@ const HomePage = () => {
           <div>
             <h2 className="text-xl font-semibold mb-4">エリアで選ぶ</h2>
             <ul className="space-y-2">
-            {areas.length > 0 ? (
-              areas.map((area, index) => {
+            {fetchedAreas?.length > 0 ? (
+              fetchedAreas.map((area, index) => {
                 const areaSlug = area.area.replace(/\s+/g, "-").toLowerCase();
                 return (
                   <li key={area.id || `fallback-${index}`}>

@@ -4,6 +4,7 @@ import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import useSWR from 'swr';
 import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 
@@ -20,38 +21,34 @@ export default function AreaPage() {
   const [subAreas, setSubAreas] = useState<SubArea[]>([]);
   const [, setError] = useState<string | null>(null);
 
+  const fetcher = (url: string) => fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("access-token") || "",
+      "client": localStorage.getItem("client") || "",
+      "uid": localStorage.getItem("uid") || "",
+    },
+  }).then(res => {
+    if (!res.ok) throw new Error("Failed to fetch");
+    return res.json();
+  });
+
+  const { data, error } = useSWR(params && params.id ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/${params.id}` : null, fetcher);
+
   useEffect(() => {
-    if (!params || !params.id) return;
-
-    const fetchSubAreas = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/${params.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token") || "",
-            "client": localStorage.getItem("client") || "",
-            "uid": localStorage.getItem("uid") || "",
-          },
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
-
-        setAreaName(data.area);
-        setSubAreas(data.sub_areas);
-      } catch (error) {
-        console.error("Error fetching sub areas:", error);
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred");
-        }
+    if (data) {
+      setAreaName(data.area);
+      setSubAreas(data.sub_areas);
+    } else if (error) {
+      console.error("Error fetching sub areas:", error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
       }
-    };
-
-    fetchSubAreas();
-  }, [params]);
+    }
+  }, [data, error]);
 
   return (
     <main className="container mx-auto px-4 py-8">

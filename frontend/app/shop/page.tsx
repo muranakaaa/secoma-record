@@ -4,6 +4,8 @@ import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import useSWR from 'swr';
+
 
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -27,33 +29,29 @@ export default function ShopListPage() {
 }, [shops]);
 
 
+  const fetcher = (url: string) => fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("access-token") || "",
+      "client": localStorage.getItem("client") || "",
+      "uid": localStorage.getItem("uid") || "",
+    },
+  }).then(res => {
+    if (!res.ok) throw new Error("Failed to fetch");
+    return res.json();
+  });
+
+  const { data, error } = useSWR(subArea ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}` : null, fetcher);
+
   useEffect(() => {
-    if (!subArea) return;
+    if (data) {
+      console.log("Fetched shops:", data);
+      setShops(data.shops);
+    }
+  }, [data]);
 
-const fetchShops = async () => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token") || "",
-        "client": localStorage.getItem("client") || "",
-        "uid": localStorage.getItem("uid") || "",
-      },
-    });
-
-    if (!response.ok) throw new Error("Failed to fetch");
-    const data = await response.json();
-
-    console.log("Fetched shops:", data);
-    setShops(data.shops);
-  } catch (error) {
-    console.error("Error fetching shops:", error);
-  }
-};
-
-    fetchShops();
-  }, [subArea]);
+  if (error) console.error("Error fetching shops:", error);
 
   return (
     <main className="container mx-auto px-4 py-8">
