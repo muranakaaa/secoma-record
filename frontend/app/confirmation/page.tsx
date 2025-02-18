@@ -1,52 +1,60 @@
 'use client'
 
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import type { NextPage } from 'next'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { useSnackbarState } from '../hooks/useGlobalState'
 
 const Confirmation: NextPage = () => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const [, setSnackbar] = useSnackbarState()
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [, setSnackbar] = useSnackbarState();
+  const [confirmationToken, setConfirmationToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const confirmationToken = searchParams.get('confirmation_token')
+    if (typeof window !== "undefined") {
+      setConfirmationToken(searchParams.get('confirmation_token'));
+    }
+  }, [searchParams]);
 
-    if (!confirmationToken) {
+  const fetcher = async (url: string, token: string) => {
+    if (!token) return null;
+    const res = await axios.patch(url, { confirmation_token: token });
+    return res.data;
+  };
+
+  const { data, error } = useSWR(
+    confirmationToken ? [`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/confirmations`, confirmationToken] : null,
+    ([url, token]) => fetcher(url, token),
+    { revalidateOnFocus: false }
+  );
+
+  useEffect(() => {
+    if (!confirmationToken) return;
+
+    if (data) {
       setSnackbar({
-        message: '不正なアクセスです',
-        severity: 'error',
-        pathname: '/',
-      })
-      router.push('/')
-      return
+        message: '認証に成功しました',
+        severity: 'success',
+        pathname: '/sign_in',
+      });
+      router.push('/sign_in');
     }
 
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/confirmations`
+    if (error) {
+      console.error(error.message);
+      setSnackbar({
+        message: '認証に失敗しました',
+        severity: 'error',
+        pathname: '/',
+      });
+      router.push('/');
+    }
+  }, [confirmationToken, data, error, router, setSnackbar]);
 
-    axios({ method: 'PATCH', url: url, data: { confirmation_token: confirmationToken } })
-      .then(() => {
-        setSnackbar({
-          message: '認証に成功しました',
-          severity: 'success',
-          pathname: '/sign_in',
-        })
-        router.push('/sign_in')
-      })
-      .catch((e: AxiosError<{ error: string }>) => {
-        console.log(e.message)
-        setSnackbar({
-          message: '不正なアクセスです',
-          severity: 'error',
-          pathname: '/',
-        })
-        router.push('/')
-      })
-  }, [searchParams, router, setSnackbar])
+  return null;
+};
 
-  return <></>
-}
-
-export default Confirmation
+export default Confirmation;

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  metadataBase: new URL("https://secoma-record.com"),
+
   async rewrites() {
     return [
       {
