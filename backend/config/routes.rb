@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
       resources :visits, only: [:index, :create, :update, :destroy]
       get "shop/:area/:sub_area", to: "shops#index_by_area_and_sub_area"
+      get "shop/:area/:sub_area/:id", to: "shops#show_by_area_and_sub_area"
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"
 
