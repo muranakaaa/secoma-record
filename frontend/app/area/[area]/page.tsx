@@ -5,6 +5,14 @@ import Link from "next/link";
 import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 
+export async function generateMetadata({ params }: { params: { area: string } }) {
+  const areaData = await fetchArea(params.area);
+  return {
+    title: areaData ? `${areaData.area}エリアのセイコーマート店舗一覧【セコマレコード】` : "エリア情報",
+    description: areaData ? `【セコマレコード】の${areaData.area}エリアのページです。` : "エリア情報の詳細",
+  };
+}
+
 export default async function AreaPage({ params }: { params?: { area?: string } }) {
   if (!params || !params.area) {
     console.error("Error: Area param is undefined.");
