@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       end
 
       resources :visits, only: [:index, :create, :update, :destroy]
+      get "shop/:area/:sub_area", to: "shops#index_by_area_and_sub_area"
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"
 
