@@ -1,18 +1,10 @@
 "use client";
-
+import { Visit } from "@/types";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import Link from "next/link";
 import useSWR from "swr";
 import { useUserState } from "../hooks/useGlobalState";
-
-type Visit = {
-  id: number;
-  shop_id: number;
-  user_id: number;
-  visit_date: string;
-  comment: string | null;
-};
 
 const fetcher = (url: string) => fetch(url).then(res => res.ok ? res.json() : []);
 

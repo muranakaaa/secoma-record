@@ -1,15 +1,9 @@
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { fetchShops } from "../../lib/fetchShops";
+import { Shop } from "../../types";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-
-type Shop = {
-  id: number;
-  name: string;
-  address: string;
-  visited: boolean;
-};
 
 export default async function ShopListPage({
   searchParams,

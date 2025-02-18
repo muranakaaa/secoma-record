@@ -1,13 +1,7 @@
-import Link from "next/link";
+import { Area } from "@/types";
 import { CheckCircle } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "./ui/badge";
-
-type Area = {
-  id: string;
-  area: string;
-  visitedShops: number;
-  totalShops: number;
-};
 
 const AreaList = ({ areas }: { areas: Area[] }) => {
   if (areas.length === 0) return <p className="text-center text-gray-500">エリア情報がありません</p>;
