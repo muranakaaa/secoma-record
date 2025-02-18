@@ -1,9 +1,6 @@
-"use client";
-
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import useSWR from "swr";
+import { fetchShops } from "../../lib/fetchShops";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
@@ -14,68 +11,14 @@ type Shop = {
   visited: boolean;
 };
 
-export default function ShopListPage() {
-  const searchParams = useSearchParams();
-  const subArea = searchParams.get("sub_area") || "";
-  const area = searchParams.get("area") || "";
-
-  const fetcher = (url: string) =>
-    fetch(url, {
-      method: "GET",
-      headers: typeof window !== "undefined" ? {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token") || "",
-        "client": localStorage.getItem("client") || "",
-        "uid": localStorage.getItem("uid") || "",
-      } : {},
-    }).then((res) => {
-      if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
-    });
-
-  const { data, error, isLoading } = useSWR(
-    subArea ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/by_sub_area?sub_area=${subArea}` : null,
-    fetcher
-  );
-
-  if (error) {
-    console.error("Error fetching shops:", error);
-    return (
-      <main className="container mx-auto px-4 py-8">
-        <Card className="w-full max-w-3xl mx-auto">
-          <CardHeader>
-            <Link href={`/area/${encodeURIComponent(area)}`} className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              {area}に戻る
-            </Link>
-            <CardTitle className="text-2xl font-bold">{subArea} の店舗一覧</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-red-500 text-center">データの取得に失敗しました。</p>
-          </CardContent>
-        </Card>
-      </main>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <main className="container mx-auto px-4 py-8">
-        <Card className="w-full max-w-3xl mx-auto">
-          <CardHeader>
-            <Link href={`/area/${encodeURIComponent(area)}`} className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              {area}に戻る
-            </Link>
-            <CardTitle className="text-2xl font-bold">{subArea} の店舗一覧</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-center">データを取得しています...</p>
-          </CardContent>
-        </Card>
-      </main>
-    );
-  }
+export default async function ShopListPage({
+  searchParams,
+}: {
+  searchParams: { sub_area?: string; area?: string };
+}) {
+  const subArea = searchParams.sub_area || "";
+  const area = searchParams.area || "";
+  const shopData = await fetchShops(subArea);
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -88,26 +31,24 @@ export default function ShopListPage() {
           <CardTitle className="text-2xl font-bold">{subArea} の店舗一覧</CardTitle>
         </CardHeader>
         <CardContent>
-          {data?.shops.length > 0 ? (
+          {shopData?.shops.length > 0 ? (
             <ul className="space-y-4">
-              {data.shops.map((shop: Shop) => (
+              {shopData.shops.map((shop: Shop) => (
                 <li key={shop.id}>
                   <Link
                     href={`/shop/${shop.id}?sub_area=${encodeURIComponent(subArea)}&area=${encodeURIComponent(area)}`}
                     className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent"
                   >
-                    <div className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-lg">{shop.name}</h3>
-                        {shop.visited && (
-                          <Badge className="flex items-center gap-1 bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3" />
-                            訪問済み
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-gray-600 text-sm">{shop.address}</p>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-lg">{shop.name}</h3>
+                      {shop.visited && (
+                        <Badge className="flex items-center gap-1 bg-green-100 text-green-800">
+                          <CheckCircle className="w-3 h-3" />
+                          訪問済み
+                        </Badge>
+                      )}
                     </div>
+                    <p className="text-gray-600 text-sm">{shop.address}</p>
                   </Link>
                 </li>
               ))}
