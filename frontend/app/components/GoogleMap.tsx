@@ -29,7 +29,7 @@ const GoogleMap = ({ latitude, longitude, shopName }: { latitude: number | null;
       title: shopName,
     });
 
-  }, [isLoaded, latitude, longitude]);
+  }, [isLoaded, latitude, longitude, shopName]);
 
   return (
     <>

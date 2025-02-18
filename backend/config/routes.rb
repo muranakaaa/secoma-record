@@ -1,24 +1,27 @@
 Rails.application.routes.draw do
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
-
   namespace :api do
     namespace :v1 do
+      resources :areas, only: [:index, :show], param: :id do
+        resources :sub_areas, only: [:index, :show], param: :id do
+          resources :shops, only: [:index, :show]
+        end
+      end
+
       resources :shops, only: [:index, :show] do
         collection do
-          get 'by_sub_area', to: 'shops#index'
           get :search_shops
         end
       end
-      resources :areas, only: [:index, :show]
-      resources :visits, only: [:index, :create, :update, :destroy]
 
+      resources :visits, only: [:index, :create, :update, :destroy]
+      get "shop/:area/:sub_area", to: "shops#index_by_area_and_sub_area"
+      get "shop/:area/:sub_area/:id", to: "shops#show_by_area_and_sub_area"
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"
 
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
       }
-
       namespace :current do
         resource :user, only: [:show]
       end

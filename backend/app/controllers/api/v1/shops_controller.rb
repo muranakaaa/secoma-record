@@ -1,89 +1,32 @@
 module Api
   module V1
     class ShopsController < Api::V1::BaseController
-      def index
-        if params[:sub_area]
-          fetch_shops_by_sub_area
-        else
-          fetch_all_shops
-        end
-      end
+      def index_by_area_and_sub_area
+        area_romaji = params[:area]
+        sub_area_romaji = params[:sub_area]
 
+        Rails.logger.debug "🔍 Received area_romaji: #{area_romaji}, sub_area_romaji: #{sub_area_romaji}"
 
-      def show
-        Rails.logger.info "Received request for Shop ID: #{params[:id]}"
+        area_record = Shop.find_by(area_romaji: area_romaji)
+        sub_area_record = Shop.find_by(sub_area_romaji: sub_area_romaji)
 
-        shop = Shop.find(params[:id])
-
-        render json: {
-          id: shop.id,
-          name: shop.name,
-          address: shop.address,
-          latitude: shop.latitude,
-          longitude: shop.longitude,
-          area: shop.area,
-          visited: false
-        }
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: "Shop not found" }, status: :not_found
-      end
-
-      def update_places_info
-        Shop.find_in_batches(batch_size: 100) do |shops|
-          shops.each(&:fetch_additional_info)
-        end
-        render json: { message: "Shops updated with Google Places data." }
-      end
-
-      def search_shops
-        query = params[:query]
-
-        if query.blank?
-          render json: { error: "検索キーワードが必要です" }, status: :bad_request
+        if area_record.nil? || sub_area_record.nil?
+          render json: { error: "該当エリア・サブエリアが見つかりません" }, status: :not_found
           return
         end
 
-        shops = Shop.where("name LIKE ?", "%#{query}%")
-                    .select(:id, :name, :address)
-                    .limit(100)
+        area_name = area_record.area
+        sub_area_name = sub_area_record.sub_area
 
-        render json: {
-          query: query,
-          shops: shops.map do |shop|
-            {
-              id: shop.id,
-              name: shop.name,
-              address: shop.address,
-              visited: false
-            }
-          end
-        }
-      end
-
-      private
-
-      def fetch_shops_by_sub_area
-        sub_area_name = params[:sub_area]
-
-        if sub_area_name.blank?
-          render json: { error: "sub_area parameter is required" }, status: :bad_request
-          return
-        end
-
-        shops = Shop.where(sub_area: sub_area_name)
-                    .select(:id, :name, :address)
-                    .limit(100)
+        shops = Shop.where(area: area_name, sub_area: sub_area_name).select(:id, :name, :address)
 
         visited_shop_ids = []
         if user_signed_in?
           visited_shop_ids = Visit.where(user_id: current_user.id).pluck(:shop_id).map(&:to_i)
         end
 
-
-        Rails.logger.debug "Fetched shops: #{shops.map(&:id)}"
-        Rails.logger.debug "Visited shop IDs: #{visited_shop_ids}"
-
         render json: {
+          area: area_name,
           sub_area: sub_area_name,
           shops: shops.map do |shop|
             {
@@ -96,11 +39,34 @@ module Api
         }
       end
 
-      def fetch_all_shops
-        shops = Shop.limit(100)
+      def show_by_area_and_sub_area
+        area_romaji = params[:area]
+        sub_area_romaji = params[:sub_area]
+        shop_id = params[:id]
+
+        Rails.logger.debug "🔍 Received shop request for area: #{area_romaji}, sub_area: #{sub_area_romaji}, shop_id: #{shop_id}"
+
+        shop = Shop.find_by(id: shop_id, area_romaji: area_romaji, sub_area_romaji: sub_area_romaji)
+
+        if shop.nil?
+          render json: { error: "該当する店舗が見つかりません" }, status: :not_found
+          return
+        end
+
+        visited_shop_ids = []
+        if user_signed_in?
+          visited_shop_ids = Visit.where(user_id: current_user.id).pluck(:shop_id).map(&:to_i)
+        end
 
         render json: {
-          data: shops
+          id: shop.id,
+          name: shop.name,
+          address: shop.address,
+          latitude: shop.latitude,
+          longitude: shop.longitude,
+          area: shop.area,
+          sub_area: shop.sub_area,
+          visited: visited_shop_ids.include?(shop.id)
         }
       end
     end

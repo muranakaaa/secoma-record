@@ -1,7 +1,13 @@
 export const fetchAreas = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas/`, {
-    cache: "force-cache",
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas`);
   if (!res.ok) throw new Error("エリア情報の取得に失敗しました");
-  return res.json();
+
+  const data = await res.json();
+
+  return data.map((area: { id: string; area: string; totalShops: number; visitedShops?: number }) => ({
+    id: area.id,
+    area: area.area,
+    totalShops: area.totalShops,
+    visitedShops: area.visitedShops ?? 0,
+  }));
 };
