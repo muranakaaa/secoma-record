@@ -1,15 +1,9 @@
+import { SubArea } from "@/types";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { fetchArea } from "../../../lib/fetchArea";
 import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-
-type SubArea = {
-  id: string;
-  name: string;
-  totalShops: number;
-  visitedShops: number;
-};
 
 export default async function AreaPage({ params }: { params: { id: string } }) {
   const areaData = await fetchArea(params.id);

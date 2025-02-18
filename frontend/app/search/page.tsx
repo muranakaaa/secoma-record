@@ -5,17 +5,11 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import useSWR from "swr";
+import { Shop } from "../../types";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
-
-type Shop = {
-  id: number;
-  name: string;
-  address: string;
-  visited: boolean;
-};
 
 export default function SearchResultsPage() {
   const searchParams = useSearchParams();
