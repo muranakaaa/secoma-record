@@ -16,6 +16,7 @@ export type PasswordResetFormData = {
 export type Area = {
   id: string;
   area: string;
+  area_romaji: string;
   visitedShops: number;
   totalShops: number;
 };
@@ -23,6 +24,7 @@ export type Area = {
 export type SubArea = {
   id: string;
   name: string;
+  sub_area_romaji: string;
   totalShops: number;
   visitedShops: number;
 };

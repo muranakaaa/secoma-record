@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :areas, only: [:index, :show], param: :name do
-        resources :sub_areas, only: [:index, :show], param: :name do
+      resources :areas, only: [:index, :show], param: :id do
+        resources :sub_areas, only: [:index, :show], param: :id do
           resources :shops, only: [:index, :show]
         end
       end
