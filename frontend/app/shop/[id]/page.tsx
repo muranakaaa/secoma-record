@@ -11,14 +11,6 @@ import useSWR from 'swr';
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { useUserState } from '../../hooks/useGlobalState';
 
-type Shop = {
-  id: number;
-  name: string;
-  address: string;
-  latitude: number | null;
-  longitude: number | null;
-};
-
 type Visit = {
   id: number;
   shop_id: number;
@@ -43,28 +35,22 @@ const fetcher = (url: string) => fetch(url, {
 const ShopDetailPage = () => {
   const { id } = useParams();
   const [user] = useUserState();
-  const [date, setDate] = useState<Date | null>(null);
-  const [comment, setComment] = useState<string>('');
-  const [isEditing, setIsEditing] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const subArea = searchParams.get("sub_area") || "";
   const area = searchParams.get("area") || "";
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
-  // 店舗情報の取得
   const { data: shop, error: shopError } = useSWR(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/${id}`,
     fetcher
   );
 
-  // 訪問記録の取得（ユーザーがログインしている場合のみ）
-  const { data: visits, error: visitsError } = useSWR(
+  const { data: visits = [], error: visitsError } = useSWR<Visit[]>(
     user.isSignedIn && user.id ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits?shop_id=${id}` : null,
     fetcher
   );
 
-  // Google Maps 初期化
   useEffect(() => {
     if (!shop || !isGoogleMapsLoaded || !mapRef.current) return;
 
@@ -133,13 +119,12 @@ const ShopDetailPage = () => {
             <h3 className="text-lg font-semibold mb-2">住所</h3>
             <p>{shop.address}</p>
           </div>
-          {/* Google Map を表示する要素 */}
           <div ref={mapRef} className="w-full h-96 mt-2"></div>
           <h3 className="text-lg font-semibold">訪問記録</h3>
           {user.isSignedIn ? (
             <div>
-              {visits?.length > 0 ? (
-                visits.map((visit) => (
+              {visits.length > 0 ? (
+                visits.map((visit: Visit) => (
                   <div key={visit.id} className="space-y-2">
                     <p>
                       <strong>訪問日: </strong>

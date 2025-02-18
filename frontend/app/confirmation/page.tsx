@@ -3,52 +3,58 @@
 import axios from 'axios'
 import type { NextPage } from 'next'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { useSnackbarState } from '../hooks/useGlobalState'
 
 const Confirmation: NextPage = () => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const [, setSnackbar] = useSnackbarState()
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [, setSnackbar] = useSnackbarState();
+  const [confirmationToken, setConfirmationToken] = useState<string | null>(null);
 
-  const confirmationToken = searchParams.get('confirmation_token');
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setConfirmationToken(searchParams.get('confirmation_token'));
+    }
+  }, [searchParams]);
 
-  const fetcher = (url: string, token: string) => axios.patch(url, { confirmation_token: token }).then(res => res.data);
+  const fetcher = async (url: string, token: string) => {
+    if (!token) return null;
+    const res = await axios.patch(url, { confirmation_token: token });
+    return res.data;
+  };
 
   const { data, error } = useSWR(
     confirmationToken ? [`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/confirmations`, confirmationToken] : null,
-    fetcher
+    ([url, token]) => fetcher(url, token),
+    { revalidateOnFocus: false }
   );
 
-  if (!confirmationToken) {
-    setSnackbar({
-      message: '不正なアクセスです',
-      severity: 'error',
-      pathname: '/',
-    });
-    router.push('/');
-  }
+  useEffect(() => {
+    if (!confirmationToken) return;
 
-  if (data) {
-    setSnackbar({
-      message: '認証に成功しました',
-      severity: 'success',
-      pathname: '/sign_in',
-    });
-    router.push('/sign_in');
-  }
+    if (data) {
+      setSnackbar({
+        message: '認証に成功しました',
+        severity: 'success',
+        pathname: '/sign_in',
+      });
+      router.push('/sign_in');
+    }
 
-  if (error) {
-    console.log(error.message);
-    setSnackbar({
-      message: '不正なアクセスです',
-      severity: 'error',
-      pathname: '/',
-    });
-    router.push('/');
-  }
+    if (error) {
+      console.error(error.message);
+      setSnackbar({
+        message: '認証に失敗しました',
+        severity: 'error',
+        pathname: '/',
+      });
+      router.push('/');
+    }
+  }, [confirmationToken, data, error, router, setSnackbar]);
 
-  return <></>
-}
+  return null;
+};
 
-export default Confirmation
+export default Confirmation;

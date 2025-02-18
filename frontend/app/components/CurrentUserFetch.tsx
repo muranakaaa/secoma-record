@@ -1,23 +1,31 @@
-"use client"
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { useEffect } from 'react';
-import useSWR from 'swr';
-import { useUserState } from '../hooks/useGlobalState';
+"use client";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { useUserState } from "../hooks/useGlobalState";
 
 const CurrentUserFetch = () => {
   const [user, setUser] = useUserState();
+  const [headers, setHeaders] = useState<Record<string, string>>({});
 
-  const fetcher = (url: string) => axios.get(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      'access-token': localStorage.getItem('access-token') || '',
-      client: localStorage.getItem('client') || '',
-      uid: localStorage.getItem('uid') || '',
-    },
-  }).then(res => res.data);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHeaders({
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token") || "",
+        client: localStorage.getItem("client") || "",
+        uid: localStorage.getItem("uid") || "",
+      });
+    }
+  }, []);
+
+  const fetcher = (url: string) =>
+    axios.get(url, { headers }).then((res) => res.data);
 
   const { data, error } = useSWR(
-    !user.isFetched && localStorage.getItem('access-token') ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/current/user` : null,
+    user.isFetched || !headers["access-token"]
+      ? null
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/current/user`,
     fetcher
   );
 
@@ -30,20 +38,20 @@ const CurrentUserFetch = () => {
         isFetched: true,
       });
     } else if (error) {
-      console.log(error.message);
+      console.error(error.message);
       setUser({
         ...user,
         isFetched: true,
       });
-    } else if (!localStorage.getItem('access-token')) {
+    } else if (!headers["access-token"]) {
       setUser({
         ...user,
         isFetched: true,
       });
     }
-  }, [data, error, user, setUser]);
+  }, [data, error, user, setUser, headers]);
 
-  return <></>;
+  return null;
 };
 
 export default CurrentUserFetch;

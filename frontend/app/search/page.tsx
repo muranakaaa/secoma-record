@@ -3,9 +3,8 @@
 import { CheckCircle, ChevronLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import useSWR from 'swr';
 import { useState } from "react";
+import useSWR from "swr";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -24,38 +23,25 @@ export default function SearchResultsPage() {
   const initialQuery = searchParams.get("query") || "";
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [searchResults, setSearchResults] = useState<Shop[]>([]);
-  const [fetchError, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const fetcher = (url: string) => fetch(url).then(res => {
-    if (!res.ok) throw new Error("検索に失敗しました");
-    return res.json();
-  });
+  const fetcher = (url: string) =>
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("検索に失敗しました");
+        return res.json();
+      });
 
-  const { data, error } = useSWR(initialQuery ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/search_shops?query=${encodeURIComponent(initialQuery)}` : null, fetcher);
+  const { data, error, isLoading } = useSWR(
+    initialQuery ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/search_shops?query=${encodeURIComponent(initialQuery)}` : null,
+    fetcher
+  );
 
-  useEffect(() => {
-    if (data) {
-      console.log("APIレスポンス:", data);
-      setSearchResults(data.shops);
-
-      if (data.shops.length === 0) {
-        setError("検索結果がありません。別のキーワードで試してください。");
-      }
-    }
-  }, [data]);
-
-  if (error) {
-    console.error("検索エラー:", error);
-    setError("検索中にエラーが発生しました。");
-  }
+  const searchResults = data?.shops || [];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!searchQuery.trim()) {
-      setError("検索ワードを入力してください。");
       return;
     }
 
@@ -81,17 +67,17 @@ export default function SearchResultsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-grow"
             />
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={isLoading}>
               <Search className="w-4 h-4 mr-2" />
-              {loading ? "検索中..." : "検索"}
+              {isLoading ? "検索中..." : "検索"}
             </Button>
           </form>
 
-          {error && <p className="text-center text-red-500">{error}</p>}
+          {error && <p className="text-center text-red-500">{error.message}</p>}
 
-          {searchResults.length > 0 && (
+          {searchResults.length > 0 ? (
             <ul className="space-y-4">
-              {searchResults.map((shop) => (
+              {searchResults.map((shop: Shop) => (
                 <li key={shop.id}>
                   <Link href={`/shop/${shop.id}`}>
                     <div
@@ -116,6 +102,8 @@ export default function SearchResultsPage() {
                 </li>
               ))}
             </ul>
+          ) : (
+            !isLoading && <p className="text-center text-gray-500">検索結果がありません。</p>
           )}
         </CardContent>
       </Card>
