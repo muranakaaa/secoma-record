@@ -5,6 +5,15 @@ import GoogleMap from "../../../../components/GoogleMap";
 import Visits from "../../../../components/Visits";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
 
+export async function generateMetadata({ params }: { params: { area: string; sub_area: string; id: string } }) {
+  const shopData = await fetchShop(params.area, params.sub_area, params.id);
+  return {
+    title: shopData ? `${shopData.name}【セコマレコード】` : "店舗情報",
+    description: shopData ? `${shopData.name} の詳細情報【セコマレコード】` : "店舗情報の詳細",
+  };
+}
+
+
 export default async function ShopDetailPage({
   params,
 }: {

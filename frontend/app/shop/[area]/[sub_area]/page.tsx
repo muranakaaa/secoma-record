@@ -5,6 +5,15 @@ import Link from "next/link";
 import { Badge } from "../../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 
+export async function generateMetadata({ params }: { params: { area: string; sub_area: string } }) {
+  const shopData = await fetchShops(params.area, params.sub_area);
+  return {
+    title: shopData ? `${shopData.sub_area}のセイコーマート店舗一覧【セコマレコード】` : "店舗情報",
+    description: shopData ? `【セコマレコード】の${shopData.sub_area}地域のページです` : "店舗情報の詳細",
+  };
+}
+
+
 export default async function ShopListPage({
   params,
 }: {
