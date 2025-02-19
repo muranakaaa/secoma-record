@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { useSnackbarState } from '../hooks/useGlobalState'
+import { useSnackbarState } from '../../hooks/useGlobalState'
 
 const Confirmation: NextPage = () => {
   const searchParams = useSearchParams();

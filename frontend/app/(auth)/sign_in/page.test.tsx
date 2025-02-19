@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useSnackbarState, useUserState } from "../hooks/useGlobalState";
+import { useSnackbarState, useUserState } from "../../hooks/useGlobalState";
 import SignIn from "./page";
 
 jest.mock("axios");

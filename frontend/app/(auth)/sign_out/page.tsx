@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useSnackbarState, useUserState } from '../hooks/useGlobalState';
+import { useSnackbarState, useUserState } from '../../hooks/useGlobalState';
 
 const SignOut = () => {
   const router = useRouter();
