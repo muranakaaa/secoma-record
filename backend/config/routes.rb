@@ -2,9 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :areas, only: [:index, :show], param: :id do
-        resources :sub_areas, only: [:index, :show], param: :id do
-          resources :shops, only: [:index, :show]
-        end
+        resources :sub_areas, only: [:index, :show], param: :id
       end
 
       resources :shops, only: [:index, :show] do
@@ -14,8 +12,8 @@ Rails.application.routes.draw do
       end
 
       resources :visits, only: [:index, :create, :update, :destroy]
-      get "shop/:area/:sub_area", to: "shops#index_by_area_and_sub_area"
-      get "shop/:area/:sub_area/:id", to: "shops#show_by_area_and_sub_area"
+      get ":area/:sub_area", to: "shops#index_by_area_and_sub_area"
+      get ":area/:sub_area/:id", to: "shops#show_by_area_and_sub_area"
       get "/profile", to: "users#profile"
       get "health_check", to: "health_check#index"
 

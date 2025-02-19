@@ -1,6 +1,6 @@
 export const fetchShops = async (areaRomaji: string, subAreaRomaji: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/shop/${areaRomaji}/${subAreaRomaji}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/${areaRomaji}/${subAreaRomaji}`,
     { cache: "force-cache" }
   );
 

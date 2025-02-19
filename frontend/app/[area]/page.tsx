@@ -2,24 +2,22 @@ import { fetchArea } from "@/lib/fetchArea";
 import { SubArea } from "@/types";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "../../components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Badge } from "../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
-export async function generateMetadata({ params }: { params: { area: string } }) {
-  const areaData = await fetchArea(params.area);
+export function generateMetadata({ params }: { params: { area: string; sub_area: string } }) {
   return {
-    title: areaData ? `${areaData.area}エリアのセイコーマート店舗一覧【セコマレコード】` : "エリア情報",
-    description: areaData ? `【セコマレコード】の${areaData.area}エリアのページです。` : "エリア情報の詳細",
+    title: `${params.sub_area}のセイコーマート店舗一覧【セコマレコード】`,
+    description: `【セコマレコード】の${params.sub_area}地域のページです`,
   };
 }
+
 
 export default async function AreaPage({ params }: { params?: { area?: string } }) {
   if (!params || !params.area) {
     console.error("Error: Area param is undefined.");
     return <div>エリアが指定されていません</div>;
   }
-
-  console.log("Received area param:", params.area);
 
   try {
     const areaData = await fetchArea(params.area);
@@ -43,7 +41,7 @@ export default async function AreaPage({ params }: { params?: { area?: string } 
               {areaData.sub_areas.map((subArea: SubArea) => (
                 <li key={subArea.id}>
                   <Link
-                    href={`/shop/${params.area}/${subArea.id}`}
+                    href={`/${params.area}/${subArea.id}`}
                     className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
                   >
                     <div className="flex items-center gap-2">
