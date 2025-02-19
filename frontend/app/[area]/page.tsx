@@ -5,13 +5,17 @@ import Link from "next/link";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
-export function generateMetadata({ params }: { params: { area: string; sub_area: string } }) {
+export async function generateMetadata({ params }: { params: { area: string; sub_area?: string } }) {
+  const areaData = await fetchArea(params.area);
+
   return {
-    title: `${params.sub_area}のセイコーマート店舗一覧【セコマレコード】`,
-    description: `【セコマレコード】の${params.sub_area}地域のページです`,
+    title: `${areaData.area}のセイコーマート店舗一覧【セコマレコード】`,
+    description: `【セコマレコード】${areaData.area} エリアのセイコーマート全店舗コンプリートを目指しませんか？ セコマレコードでは店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。`,
+    alternates: {
+      canonical: `https://secoma-record.com/${params.area}/${params.sub_area || ""}`,
+    },
   };
 }
-
 
 export default async function AreaPage({ params }: { params?: { area?: string } }) {
   if (!params || !params.area) {
