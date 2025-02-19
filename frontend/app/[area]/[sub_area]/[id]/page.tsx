@@ -7,9 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui
 
 export async function generateMetadata({ params }: { params: { area: string; sub_area: string; id: string } }) {
   const shopData = await fetchShop(params.area, params.sub_area, params.id);
+  const shopName = shopData ? shopData.name : "店舗情報";
   return {
-    title: shopData ? `${shopData.name}【セコマレコード】` : "店舗情報",
-    description: shopData ? `${shopData.name} の詳細情報【セコマレコード】` : "店舗情報の詳細",
+    title: `${shopName}の店舗情報【セコマレコード】`,
+    description:  `${shopName}の店舗情報【セコマレコード】Google Mapの地図を見ることができます。【住所】${shopData.address}`,
+    alternates: {
+      canonical: `https://secoma-record.com/${params.area}/${params.sub_area}/${params.id}`,
+    },
   };
 }
 
