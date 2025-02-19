@@ -1,13 +1,13 @@
 "use client"
-
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { useForm, type SubmitHandler } from "react-hook-form"
-import { PasswordResetFormData } from "../../../types"
-import { Button } from "../../components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card"
-import { Input } from "../../components/ui/input"
-import { Label } from "../../components/ui/label"
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { PasswordResetFormData } from "../../../types";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import Link from "next/link";
 
 export default function PasswordResetPage() {
   const [message, setMessage] = useState("")
@@ -90,9 +90,9 @@ export default function PasswordResetPage() {
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600">
-            <a href="/sign_in" className="text-blue-600 hover:underline">
+            <Link href="/sign_in" className="text-blue-600 hover:underline">
               ログイン画面へ戻る
-            </a>
+            </Link>
           </p>
         </CardFooter>
       </Card>
