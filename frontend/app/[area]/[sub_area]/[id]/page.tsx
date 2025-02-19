@@ -1,9 +1,9 @@
 import { fetchShop } from "@/lib/fetchShop";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import GoogleMap from "../../../../components/GoogleMap";
-import Visits from "../../../../components/Visits";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
+import GoogleMap from "../../../components/GoogleMap";
+import Visits from "../../../components/Visits";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 
 export async function generateMetadata({ params }: { params: { area: string; sub_area: string; id: string } }) {
   const shopData = await fetchShop(params.area, params.sub_area, params.id);
@@ -12,7 +12,6 @@ export async function generateMetadata({ params }: { params: { area: string; sub
     description: shopData ? `${shopData.name} の詳細情報【セコマレコード】` : "店舗情報の詳細",
   };
 }
-
 
 export default async function ShopDetailPage({
   params,
@@ -34,7 +33,7 @@ return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
         <Link
-          href={`/shop/${params.area}/${params.sub_area}`}
+          href={`/${params.area}/${params.sub_area}`}
           className="flex items-center text-blue-600 hover:text-blue-800 mb-2"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />

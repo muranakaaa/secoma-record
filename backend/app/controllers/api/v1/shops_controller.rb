@@ -5,10 +5,8 @@ module Api
         area_romaji = params[:area]
         sub_area_romaji = params[:sub_area]
 
-        Rails.logger.debug "🔍 Received area_romaji: #{area_romaji}, sub_area_romaji: #{sub_area_romaji}"
-
-        area_record = Shop.find_by(area_romaji: area_romaji)
-        sub_area_record = Shop.find_by(sub_area_romaji: sub_area_romaji)
+        area_record = Shop.where(area_romaji: area_romaji).select(:id, :area).distinct.order(:id).first
+        sub_area_record = Shop.where(sub_area_romaji: sub_area_romaji, area: area_record&.area).select(:id, :sub_area).distinct.order(:id).first
 
         if area_record.nil? || sub_area_record.nil?
           render json: { error: "該当エリア・サブエリアが見つかりません" }, status: :not_found

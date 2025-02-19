@@ -2,17 +2,15 @@ import { fetchShops } from "@/lib/fetchShops";
 import { Shop } from "@/types";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "../../../components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 
-export async function generateMetadata({ params }: { params: { area: string; sub_area: string } }) {
-  const shopData = await fetchShops(params.area, params.sub_area);
+export function generateMetadata({ params }: { params: { area: string; sub_area: string } }) {
   return {
-    title: shopData ? `${shopData.sub_area}のセイコーマート店舗一覧【セコマレコード】` : "店舗情報",
-    description: shopData ? `【セコマレコード】の${shopData.sub_area}地域のページです` : "店舗情報の詳細",
+    title: `${params.sub_area}のセイコーマート店舗一覧【セコマレコード】`,
+    description: `【セコマレコード】の${params.sub_area}地域のページです`,
   };
 }
-
 
 export default async function ShopListPage({
   params,
@@ -34,7 +32,7 @@ return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
         <Link
-          href={`/area/${params.area}`}
+          href={`/${params.area}`}
           className="flex items-center text-blue-600 hover:text-blue-800 mb-2"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
@@ -47,7 +45,7 @@ return (
           {shopData.shops.map((shop: Shop) => (
             <li key={shop.id}>
               <Link
-                href={`/shop/${params.area}/${params.sub_area}/${shop.id}`}
+                href={`/${params.area}/${params.sub_area}/${shop.id}`}
                 className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent"
               >
                 <div className="flex justify-between items-start mb-2">

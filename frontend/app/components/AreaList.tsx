@@ -11,7 +11,7 @@ const AreaList = ({ areas }: { areas: Area[] }) => {
       {areas.map((area: Area, index) => (
         <li key={area.id || `fallback-${index}`}>
           <Link
-            href={`/area/${area.id}`}
+            href={`/${area.id}`}
             className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
           >
             <div className="flex items-center gap-2">
