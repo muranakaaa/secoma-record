@@ -17,14 +17,7 @@ export async function generateMetadata({ params }: { params: { area: string; sub
   };
 }
 
-export default async function ShopDetailPage({
-  params,
-}: {
-  params: { area: string; sub_area: string; id: string };
-}) {
-  if (!params.area || !params.sub_area || !params.id) {
-    return <div>エリア、サブエリア、または店舗IDが指定されていません。</div>;
-  }
+export default async function ShopDetailPage({ params }: { params: { area: string; sub_area: string; id: string };}) {
 
 const shopData = await fetchShop(params.area, params.sub_area, params.id);
 
