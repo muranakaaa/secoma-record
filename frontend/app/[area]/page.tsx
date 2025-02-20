@@ -1,29 +1,39 @@
 import { fetchArea } from "@/lib/fetchArea";
 import { SubArea } from "@/types";
 import { CheckCircle, ChevronLeft } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
-export async function generateMetadata({ params }: { params: { area: string; sub_area?: string } }) {
-  const areaData = await fetchArea(params.area);
+type Params = { area: string };
+
+export async function generateMetadata(
+  { params }: { params: Promise<Params> },
+): Promise<Metadata> {
+  const { area } = await params;
+  const areaData = await fetchArea(area);
 
   return {
     title: `${areaData.area}のセイコーマート店舗一覧【セコマレコード】`,
-    description: `【セコマレコード】${areaData.area} エリアのセイコーマート全店舗コンプリートを目指しませんか？ セコマレコードでは店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。`,
-    alternates: {
-      canonical: `https://secoma-record.com/${params.area}/${params.sub_area || ""}`,
+    description: `【セコマレコード】${areaData.area} エリアのセイコーマート全店舗コンプリートを目指しませんか？お店ごとの訪問記録も管理できます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。`,
+    alternates: { canonical: `https://secoma-record.com/${area}` },
+    openGraph: {
+      type: "website",
+      url: `https://secoma-record.com/${area}`,
+      title: `${areaData.area}のセイコーマート店舗一覧【セコマレコード】`,
+      description: `【セコマレコード】${areaData.area} のセイコーマート店舗を検索し、訪問記録を管理しましょう！`,
+      siteName: "セコマレコード",
+      images: [{ url: "/ogp/thumbnail.png", width: 1200, height: 630, alt: "セコマレコードのOGP画像" }],
     },
   };
 }
 
-export default async function AreaPage({ params }: { params: { area: string } }) {
-
-  const areaData = await fetchArea(params.area);
-
-  if (!areaData) {
-    return <div className="text-center text-gray-500">エリア情報が見つかりません</div>;
-  }
+export default async function AreaPage({ params }: { params: Promise<Params> }) {
+  const { area } = await params;
+  const areaData = await fetchArea(area);
+  if (!areaData) return notFound();
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -39,10 +49,7 @@ export default async function AreaPage({ params }: { params: { area: string } })
           <ul className="space-y-2">
             {areaData.sub_areas.map((subArea: SubArea) => (
               <li key={subArea.id}>
-                <Link
-                  href={`/${params.area}/${subArea.id}`}
-                  className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
-                >
+                <Link href={`/${area}/${subArea.id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
                   <div className="flex items-center gap-2">
                     <span>{subArea.name}</span>
                     {subArea.visitedShops === subArea.totalShops && (
@@ -52,9 +59,7 @@ export default async function AreaPage({ params }: { params: { area: string } })
                       </Badge>
                     )}
                   </div>
-                  <span className="text-gray-600">
-                    {subArea.visitedShops}/{subArea.totalShops}
-                  </span>
+                  <span className="text-gray-600">{subArea.visitedShops}/{subArea.totalShops}</span>
                 </Link>
               </li>
             ))}
