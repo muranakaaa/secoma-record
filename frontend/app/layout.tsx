@@ -9,39 +9,24 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://secoma-record.com"),
-  title: '【セコマレコード】セイコーマート全店制覇を目指す人のための訪問記録管理アプリ',
-  description:
-    '【セコマレコード】セイコーマート全店舗コンプリートに向けた訪問記録管理アプリです（非公式）。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。',
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE_CONTENT,
-  },
-  openGraph: {
-    title: 'セコマレコード',
-    description:
-      'セイコーマート全店制覇を目指す人のための訪問記録管理アプリです（非公式）。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。',
-    url: 'https://secoma-record.com',
-    siteName: 'セコマレコード',
-    images: [
-      {
-        url: '/ogp/thumbnail.png',
-        width: 1200,
-        height: 630,
-        alt: 'セコマレコードのOGP画像',
-      },
-    ],
-    type: 'website',
-  },
+  title: "【セコマレコード】セイコーマート全店制覇を目指す人のための訪問記録管理アプリ",
+  description: "【セコマレコード】セイコーマート全店舗コンプリートに向けた訪問記録管理アプリです（非公式）。エリアごとの店舗検索や訪問記録の管理ができるため、効率的に訪問計画を立てられます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。",
   alternates: {
     canonical: "https://secoma-record.com",
   },
+  openGraph: {
+    type: "website",
+    url: "https://secoma-record.com",
+    title: "セコマレコード",
+    description: "セイコーマート全店制覇を目指す人のための訪問記録管理アプリ。",
+    siteName: "セコマレコード",
+    images: [{ url: "/ogp/thumbnail.png", width: 1200, height: 630, alt: "セコマレコードのOGP画像" }],
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+
   return (
     <html lang="ja">
       <body>
