@@ -211,9 +211,6 @@ class Shop < ApplicationRecord
 
   before_save :set_romaji_values
 
-  validates :area_romaji, presence: true, if: -> { area.present? }
-  validates :sub_area_romaji, presence: true, if: -> { sub_area.present? }
-
   private
 
   def set_romaji_values
