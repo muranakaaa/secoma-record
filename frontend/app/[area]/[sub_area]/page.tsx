@@ -13,17 +13,17 @@ export async function generateMetadata(
   { params }: { params: Promise<Params> },
 ): Promise<Metadata> {
   const { area, sub_area } = await params;
-  const shopData = await fetchShops(area, sub_area);
+  const { area: areaName, sub_area: subAreaName } = await fetchShops(area, sub_area);
 
   return {
-    title: `${shopData.sub_area}のセイコーマート店舗一覧【セコマレコード】`,
-    description: `【セコマレコード】${shopData.sub_area} ／ ${shopData.area}のセイコーマート店舗一覧です。訪問済みの店舗を記録できます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。`,
+    title: `${subAreaName}のセイコーマート店舗一覧【セコマレコード】`,
+    description: `【セコマレコード】${subAreaName} ／ ${areaName}のセイコーマート店舗一覧です。訪問済みの店舗を記録できます。セコマ巡りの旅をより楽しく、よりスムーズに進められるよう、あなたの“セコマ制覇”をサポートします。`,
     alternates: { canonical: `https://secoma-record.com/${area}/${sub_area}` },
     openGraph: {
       type: "website",
       url: `https://secoma-record.com/${area}/${sub_area}`,
-      title: `${shopData.sub_area}のセイコーマート店舗一覧【セコマレコード】`,
-      description: `【セコマレコード】${shopData.sub_area} ／ ${shopData.area}のセイコーマート店舗を検索し、訪問履歴を管理しましょう！`,
+      title: `${subAreaName}のセイコーマート店舗一覧【セコマレコード】`,
+      description: `【セコマレコード】${subAreaName} ／ ${areaName}のセイコーマート店舗を検索し、訪問履歴を管理しましょう！`,
       siteName: "セコマレコード",
       images: [{ url: "/ogp/thumbnail.png", width: 1200, height: 630, alt: "セコマレコードのOGP画像" }],
     },
@@ -35,31 +35,33 @@ export default async function ShopListPage({ params }: { params: Promise<Params>
   const shopData = await fetchShops(area, sub_area);
   if (!shopData) return notFound();
 
+  const { area: areaName, sub_area: subAreaName, shops } = shopData;
+
   return (
     <main className="container mx-auto px-4 py-8">
       <Card className="w-full max-w-3xl mx-auto">
         <CardHeader>
           <Link href={`/${area}`} className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
             <ChevronLeft className="w-4 h-4 mr-1" />
-            {shopData.area} に戻る
+            {areaName} に戻る
           </Link>
-          <CardTitle className="text-2xl font-bold">{shopData.sub_area} の店舗一覧</CardTitle>
+          <CardTitle className="text-2xl font-bold">{subAreaName} の店舗一覧</CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-4">
-            {shopData.shops.map((shop: Shop) => (
-              <li key={shop.id}>
-                <Link href={`/${area}/${sub_area}/${shop.id}`} className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent">
+            {shops.map(({ id, name, address, visited }: Shop) => (
+              <li key={id}>
+                <Link href={`/${area}/${sub_area}/${id}`} className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-lg">{shop.name}</h3>
-                    {shop.visited && (
+                    <h3 className="font-semibold text-lg">{name}</h3>
+                    {visited && (
                       <Badge className="flex items-center gap-1 bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3" />
                         訪問済み
                       </Badge>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm">{shop.address}</p>
+                  <p className="text-gray-600 text-sm">{address}</p>
                 </Link>
               </li>
             ))}
