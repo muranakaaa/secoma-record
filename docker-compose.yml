@@ -6,6 +6,7 @@ services:
     volumes:
       - ./backend:/app
       - ./mapion_scraper/output:/app/mapion_scraper/output
+      - ./mapion_scraper/spreadsheet:/app/mapion_scraper/spreadsheet
     ports:
       - "3000:3000"
     depends_on:
