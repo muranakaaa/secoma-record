@@ -13,6 +13,8 @@ services:
       - db
     env_file:
       - .env
+    environment:
+      - RAILS_ALLOWED_HOSTS=secoma-record.fly.dev,secoma-record.com,www.example.com
 
   frontend:
     build:
