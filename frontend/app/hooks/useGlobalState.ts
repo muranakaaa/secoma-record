@@ -6,6 +6,8 @@ export const useUserState = () => {
     id: 0,
     name: '',
     email: '',
+    client: '',
+    accessToken: '',
     isSignedIn: false,
     isFetched: false,
   }

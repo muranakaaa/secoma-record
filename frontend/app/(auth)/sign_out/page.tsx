@@ -15,6 +15,8 @@ const SignOut = () => {
       id: 0,
       name: '',
       email: '',
+      client: '',
+      accessToken: '',
       isSignedIn: false,
       isFetched: true,
     });
