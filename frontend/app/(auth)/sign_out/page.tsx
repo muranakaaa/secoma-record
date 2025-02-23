@@ -12,6 +12,8 @@ const SignOut = () => {
   useEffect(() => {
     localStorage.clear();
     setUser({
+      client: '',
+      accessToken: '',
       id: 0,
       name: '',
       email: '',
@@ -22,7 +24,7 @@ const SignOut = () => {
       message: 'サインアウトに成功しました',
       severity: 'success',
       pathname: '/',
-    })
+    });
 
     router.push('/');
   }, [router, setUser, setSnackbar]);

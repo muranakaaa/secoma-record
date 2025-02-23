@@ -1,20 +1,22 @@
-import { UserStateType } from '@/types'
-import useSWR from 'swr'
+import { UserStateType } from '@/types';
+import useSWR from 'swr';
 
 export const useUserState = () => {
   const fallbackData: UserStateType = {
+    client: '',
+    accessToken: '',
     id: 0,
     name: '',
     email: '',
     isSignedIn: false,
     isFetched: false,
-  }
+  };
 
   const { data: state, mutate: setState } = useSWR('user', null, {
     fallbackData: fallbackData,
-  })
-  return [state, setState] as [UserStateType, (value: UserStateType) => void]
-}
+  });
+  return [state, setState] as [UserStateType, (value: UserStateType) => void];
+};
 
  export const useSnackbarState = () => {
    type snackbarStateType = {
