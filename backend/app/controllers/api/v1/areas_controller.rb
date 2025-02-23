@@ -4,21 +4,18 @@ module Api
   module V1
     class AreasController < Api::V1::BaseController
       def index
-        shops = Shop.where.not(area: nil).distinct.select(:area, :area_romaji)
+        area_data = Shop
+          .left_joins(:visits)
+          .where.not(area: nil)
+          .group(:area, :area_romaji)
+          .select('shops.area, shops.area_romaji, COUNT(DISTINCT shops.id) AS total_shops, COUNT(visits.id) AS visited_shops')
 
-        area_counts = Shop.where(area: shops.map(&:area)).group(:area).count
-        visit_counts = Visit.joins(:shop).where(shops: { area: shops.map(&:area) }).group("shops.area").count
-
-        result = shops.map do |shop|
-          area_romaji = shop.area_romaji.presence || shop.area.parameterize
-          total_shops = area_counts[shop.area] || 0
-          visited_shops = visit_counts[shop.area] || 0
-
+        result = area_data.map do |data|
           {
-            id: area_romaji,
-            area: shop.area.strip,
-            totalShops: total_shops,
-            visitedShops: visited_shops
+            id: data.area_romaji.presence || data.area.parameterize,
+            area: data.area.strip,
+            totalShops: data.total_shops,
+            visitedShops: data.visited_shops
           }
         end
 
