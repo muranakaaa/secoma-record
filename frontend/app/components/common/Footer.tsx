@@ -25,7 +25,7 @@ const Footer = () => {
               開発者Twitter
             </Link>
           </nav>
-          <div className="text-gray-500">© {new Date().getFullYear()} セイコーマート. All rights reserved.</div>
+          <div className="text-gray-500">© {new Date().getFullYear()} セコマレコード. All rights reserved.</div>
         </div>
       </div>
     </footer>
