@@ -45,6 +45,8 @@ export type Visit = {
 };
 
 export type UserStateType = {
+  client: string;
+  accessToken: string;
   id: number;
   name: string;
   email: string;

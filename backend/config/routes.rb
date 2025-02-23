@@ -12,7 +12,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :visits, only: [:index, :create, :update, :destroy]
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
       }
@@ -22,6 +21,7 @@ Rails.application.routes.draw do
       namespace :current do
         resource :user, only: [:show]
       end
+      resources :visits, only: [:index, :create, :update, :destroy]
       get ":area/:sub_area", to: "shops#index_by_area_and_sub_area"
       get ":area/:sub_area/:id", to: "shops#show_by_area_and_sub_area"
       get "/profile", to: "users#profile"
