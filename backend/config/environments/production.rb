@@ -16,8 +16,12 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
   config.enable_reloading = false
-  config.hosts << "secoma-record.fly.dev"
-  config.hosts << "secoma-record.com"
+
+  if ENV["RAILS_ALLOWED_HOSTS"].present?
+    ENV["RAILS_ALLOWED_HOSTS"].split(",").each do |host|
+      config.hosts << host.strip
+    end
+  end
 
   config.eager_load = true
   config.consider_all_requests_local = false
