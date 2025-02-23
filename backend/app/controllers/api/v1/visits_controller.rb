@@ -5,7 +5,7 @@ class Api::V1::VisitsController < Api::V1::BaseController
   def index
     shop_id = params[:shop_id]
     visits = Visit.where(shop_id: shop_id)
-    render json: visits
+    render json: visits, each_serializer: VisitSerializer
   end
 
   def create
