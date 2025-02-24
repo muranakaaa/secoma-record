@@ -2,6 +2,7 @@ require "net/http"
 require "json"
 
 class Shop < ApplicationRecord
+  # Shopは複数のVisitを持ち、Shopが削除されると関連するVisitも自動的に削除される。
   has_many :visits, dependent: :destroy
 
   AREA_MAPPING = {
@@ -205,10 +206,14 @@ class Shop < ApplicationRecord
     "埼玉県" => "saitama-ken"
   }
 
+  # to_romajiは、update_romaji.rakeで使用するためのメソッド。地域名をローマ字に変換する。
+  # 引数として渡されたtextがAREA_MAPPINGに存在する場合は、その対応するローマ字を返す。
+  # マッピングが存在しない場合は、text.to_s.parameterizeによってローマ字風に変換して返す。
   def self.to_romaji(text)
     AREA_MAPPING[text] || text.to_s.parameterize
   end
 
+  # Shopレコード作成・更新時にbefore_save :set_romaji_valuesで地域名をローマ字に自動変換する。
   before_save :set_romaji_values
 
   private
@@ -218,6 +223,9 @@ class Shop < ApplicationRecord
     self.sub_area_romaji = self.class.to_romaji(sub_area) if sub_area.present?
   end
 
+  # Google Places APIを使って住所情報から緯度経度を取得し、Shopレコードに保存する。
+  # - 入力: addressが存在する場合のみ実行。
+  # - 出力: 緯度(latitude)および経度(longitude)を取得して保存。
   def fetch_google_places_data
     return unless address.present?
 
