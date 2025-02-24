@@ -1,31 +1,22 @@
 module Api
   module V1
     class ShopsController < Api::V1::BaseController
+      # エリアとサブエリアの設定処理を共通化し、重複したコードを排除
+      before_action :set_area_and_sub_area, only: [:index_by_area_and_sub_area, :show_by_area_and_sub_area]
+
+      # 入力例: GET /api/v1/sapporo/chuou-ku
+      # 出力例: { "area": "札幌", "sub_area": "中央区", "shops": [{ "id": 1, "name": "店X", "address": "札幌市中央区1丁目", "visited": true }, { "id": 2, "name": "店Y", "address": "札幌市中央区2丁目", "visited": false }] }
+      # N+1クエリを避けるため、includes(:visits)を使って関連情報を事前ロード
       def index_by_area_and_sub_area
-        area_romaji = params[:area]
-        sub_area_romaji = params[:sub_area]
 
-        area_record = Shop.where(area_romaji: area_romaji).select(:id, :area).distinct.order(:id).first
-        sub_area_record = Shop.where(sub_area_romaji: sub_area_romaji, area: area_record&.area).select(:id, :sub_area).distinct.order(:id).first
+        shops = Shop.where(area: @area_name, sub_area: @sub_area_name)
+                    .includes(:visits).select(:id, :name, :address)
 
-        if area_record.nil? || sub_area_record.nil?
-          render json: { error: "該当エリア・サブエリアが見つかりません" }, status: :not_found
-          return
-        end
-
-        area_name = area_record.area
-        sub_area_name = sub_area_record.sub_area
-
-        shops = Shop.where(area: area_name, sub_area: sub_area_name).select(:id, :name, :address)
-
-        visited_shop_ids = []
-        if user_signed_in?
-          visited_shop_ids = Visit.where(user_id: current_user.id).pluck(:shop_id).map(&:to_i)
-        end
+        visited_shop_ids = user_signed_in? ? Visit.where(user_id: current_user.id).pluck(:shop_id) : []
 
         render json: {
-          area: area_name,
-          sub_area: sub_area_name,
+          area: @area_name,
+          sub_area: @sub_area_name,
           shops: shops.map do |shop|
             {
               id: shop.id,
@@ -37,24 +28,17 @@ module Api
         }
       end
 
+      # 入力例: GET /api/v1/sapporo/chuou-ku/1
+      # 出力例: { "id": 1, "name": "店X", "address": "札幌市中央区1丁目", "latitude": 43.1, "longitude": 141.3, "visited": true }
       def show_by_area_and_sub_area
-        area_romaji = params[:area]
-        sub_area_romaji = params[:sub_area]
-        shop_id = params[:id]
-
-        Rails.logger.debug "🔍 Received shop request for area: #{area_romaji}, sub_area: #{sub_area_romaji}, shop_id: #{shop_id}"
-
-        shop = Shop.find_by(id: shop_id, area_romaji: area_romaji, sub_area_romaji: sub_area_romaji)
+        shop = Shop.find_by(id: params[:id], area_romaji: params[:area], sub_area_romaji: params[:sub_area])
 
         if shop.nil?
           render json: { error: "該当する店舗が見つかりません" }, status: :not_found
           return
         end
 
-        visited_shop_ids = []
-        if user_signed_in?
-          visited_shop_ids = Visit.where(user_id: current_user.id).pluck(:shop_id).map(&:to_i)
-        end
+        visited_shop_ids = user_signed_in? ? Visit.where(user_id: current_user.id).pluck(:shop_id) : []
 
         render json: {
           id: shop.id,
@@ -66,6 +50,24 @@ module Api
           sub_area: shop.sub_area,
           visited: visited_shop_ids.include?(shop.id)
         }
+      end
+
+      private
+
+      # 指定されたエリアとサブエリアを設定する
+      # 入力例: params[:area] = "sapporo", params[:sub_area] = "chuou-ku"
+      # 出力例: @area_name = "札幌", @sub_area_name = "中央区"
+      def set_area_and_sub_area
+        area_record = Shop.where(area_romaji: params[:area]).select(:area).first
+        sub_area_record = Shop.where(sub_area_romaji: params[:sub_area], area: area_record&.area).select(:sub_area).first
+
+        if area_record.nil? || sub_area_record.nil?
+          render json: { error: "該当エリア・サブエリアが見つかりません" }, status: :not_found
+          return
+        end
+
+        @area_name = area_record.area
+        @sub_area_name = sub_area_record.sub_area
       end
     end
   end
