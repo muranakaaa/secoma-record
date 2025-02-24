@@ -6,9 +6,11 @@ import { Badge } from "./ui/badge";
 const AreaList = ({ areas }: { areas: Area[] }) => {
   if (areas.length === 0) return <p className="text-center text-gray-500">エリア情報がありません</p>;
 
+  const sortedAreas = areas.sort((a: Area, b: Area) => b.totalShops - a.totalShops);
+
   return (
     <ul className="space-y-2">
-      {areas.map((area: Area, index) => (
+      {sortedAreas.map((area: Area, index) => (
         <li key={area.id || `fallback-${index}`}>
           <Link
             href={`/${area.id}`}

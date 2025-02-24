@@ -36,6 +36,7 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
   if (!areaData) return notFound();
 
   const { area: areaName, sub_areas: subAreas } = areaData;
+  const sortedSubAreas = subAreas.sort((a: SubArea, b: SubArea) => b.totalShops - a.totalShops);
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -49,7 +50,7 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {subAreas.map(({ id, name, visitedShops, totalShops }: SubArea) => (
+            {sortedSubAreas.map(({ id, name, visitedShops, totalShops }: SubArea) => (
               <li key={id}>
                 <Link href={`/${area}/${id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
                   <div className="flex items-center gap-2">
