@@ -3,6 +3,9 @@ module Api
 
   module V1
     class AreasController < Api::V1::BaseController
+
+      # 入力例: GET /api/v1/areas
+      # 出力例: [{ "id": "sapporo", "area": "札幌", "totalShops": 10, "visitedShops": 5 }]
       def index
         area_data = Shop
           .left_joins(:visits)
@@ -22,6 +25,8 @@ module Api
         render json: result
       end
 
+      # 入力例: GET /api/v1/areas/sapporo
+      # 出力例: { "area": "札幌", "sub_areas": [{ "id": "chuou-ku", "name": "中央区", "totalShops": 5, "visitedShops": 3 }] }
       def show
         area_romaji = params[:id]
 
