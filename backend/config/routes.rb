@@ -12,6 +12,11 @@ Rails.application.routes.draw do
         end
       end
 
+      # 認証関連（Devise Token Auth）
+      # - `POST /api/v1/auth/` → ユーザー登録
+      # - `POST /api/v1/auth/sign_in` → ログイン
+      # - `DELETE /api/v1/auth/sign_out` → ログアウト
+      # RegistrationsControllerを使ってカスタマイズされたユーザー登録処理を行う
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
       }

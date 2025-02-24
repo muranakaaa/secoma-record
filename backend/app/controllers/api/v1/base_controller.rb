@@ -5,6 +5,7 @@ class Api::V1::BaseController < ApplicationController
 
   private
 
+  # Deviseの標準的なメソッド名にエイリアスすることで、認証関連のコードをより可読・簡潔にする
   def define_user_aliases
     return unless respond_to?(:current_api_v1_user)
 
