@@ -1,9 +1,8 @@
 module Api
-  require 'ostruct'
+  require "ostruct"
 
   module V1
     class AreasController < Api::V1::BaseController
-
       # 入力例: GET /api/v1/areas
       # 出力例: [{ "id": "sapporo", "area": "札幌", "totalShops": 10 }]
       def index
@@ -11,7 +10,7 @@ module Api
           .left_joins(:visits)
           .where.not(area: nil)
           .group(:area, :area_romaji)
-          .select('shops.area, shops.area_romaji, COUNT(DISTINCT shops.id) AS total_shops')
+          .select("shops.area, shops.area_romaji, COUNT(DISTINCT shops.id) AS total_shops")
 
         result = area_data.map do |data|
           {
@@ -44,7 +43,7 @@ module Api
           {
             id: sub_area_romaji.presence || SecureRandom.uuid,
             name: sub_area,
-            totalShops: sub_area_counts[sub_area] || 0,
+            totalShops: sub_area_counts[sub_area] || 0
           }
         end
 

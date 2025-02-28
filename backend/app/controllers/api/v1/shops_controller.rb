@@ -2,13 +2,12 @@ module Api
   module V1
     class ShopsController < Api::V1::BaseController
       # エリアとサブエリアの設定処理を共通化し、重複したコードを排除
-      before_action :set_area_and_sub_area, only: [:index_by_area_and_sub_area, :show_by_area_and_sub_area]
+      before_action :set_area_and_sub_area, only: [ :index_by_area_and_sub_area, :show_by_area_and_sub_area ]
 
       # 入力例: GET /api/v1/sapporo/chuou-ku
       # 出力例: { "area": "札幌", "sub_area": "中央区", "shops": [{ "id": 1, "name": "店X", "address": "札幌市中央区1丁目"}, { "id": 2, "name": "店Y", "address": "札幌市中央区2丁目" }] }
       # N+1クエリを避けるため、includes(:visits)を使って関連情報を事前ロード
       def index_by_area_and_sub_area
-
         shops = Shop.where(area: @area_name, sub_area: @sub_area_name)
                     .includes(:visits).select(:id, :name, :address)
 
@@ -19,7 +18,7 @@ module Api
             {
               id: shop.id,
               name: shop.name,
-              address: shop.address,
+              address: shop.address
             }
           end
         }
@@ -42,7 +41,7 @@ module Api
           latitude: shop.latitude,
           longitude: shop.longitude,
           area: shop.area,
-          sub_area: shop.sub_area,
+          sub_area: shop.sub_area
         }
       end
 
