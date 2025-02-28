@@ -1,10 +1,9 @@
 import { fetchArea } from "@/lib/fetchArea";
 import { SubArea } from "@/types";
-import { CheckCircle, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 type Params = { area: string };
