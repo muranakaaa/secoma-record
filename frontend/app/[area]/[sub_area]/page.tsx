@@ -1,10 +1,9 @@
 import { fetchShops } from "@/lib/fetchShops";
 import { Shop } from "@/types";
-import { CheckCircle, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 
 type Params = { area: string; sub_area: string };
@@ -49,17 +48,11 @@ export default async function ShopListPage({ params }: { params: Promise<Params>
         </CardHeader>
         <CardContent>
           <ul className="space-y-4">
-            {shops.map(({ id, name, address, visited }: Shop) => (
+            {shops.map(({ id, name, address }: Shop) => (
               <li key={id}>
                 <Link href={`/${area}/${sub_area}/${id}`} className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-semibold text-lg">{name}</h3>
-                    {visited && (
-                      <Badge className="flex items-center gap-1 bg-green-100 text-green-800">
-                        <CheckCircle className="w-3 h-3" />
-                        訪問済み
-                      </Badge>
-                    )}
                   </div>
                   <p className="text-gray-600 text-sm">{address}</p>
                 </Link>
