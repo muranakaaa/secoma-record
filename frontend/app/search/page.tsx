@@ -1,12 +1,11 @@
 "use client";
 
-import { CheckCircle, ChevronLeft, Search } from "lucide-react";
+import { ChevronLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import useSWR from "swr";
 import { Shop } from "../../types";
-import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -74,24 +73,10 @@ export default function SearchResultsPage() {
               {searchResults.map((shop: Shop) => (
                 <li key={shop.id}>
                   <Link href={`/shop/${shop.id}`}>
-                    <div
-                      className={`p-4 rounded-lg transition-colors duration-200 ${
-                        shop.visited
-                          ? "bg-green-50 border border-green-200"
-                          : "bg-white hover:bg-gray-100 border border-gray-200"
-                      }`}
-                    >
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="font-semibold text-lg">{shop.name}</h3>
-                        {shop.visited && (
-                          <Badge className="flex items-center gap-1 bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3" />
-                            訪問済み
-                          </Badge>
-                        )}
                       </div>
                       <p className="text-gray-600 text-sm">{shop.address}</p>
-                    </div>
                   </Link>
                 </li>
               ))}

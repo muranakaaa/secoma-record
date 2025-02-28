@@ -2,17 +2,14 @@ module Api
   module V1
     class ShopsController < Api::V1::BaseController
       # エリアとサブエリアの設定処理を共通化し、重複したコードを排除
-      before_action :set_area_and_sub_area, only: [:index_by_area_and_sub_area, :show_by_area_and_sub_area]
+      before_action :set_area_and_sub_area, only: [ :index_by_area_and_sub_area, :show_by_area_and_sub_area ]
 
       # 入力例: GET /api/v1/sapporo/chuou-ku
-      # 出力例: { "area": "札幌", "sub_area": "中央区", "shops": [{ "id": 1, "name": "店X", "address": "札幌市中央区1丁目", "visited": true }, { "id": 2, "name": "店Y", "address": "札幌市中央区2丁目", "visited": false }] }
+      # 出力例: { "area": "札幌", "sub_area": "中央区", "shops": [{ "id": 1, "name": "店X", "address": "札幌市中央区1丁目"}, { "id": 2, "name": "店Y", "address": "札幌市中央区2丁目" }] }
       # N+1クエリを避けるため、includes(:visits)を使って関連情報を事前ロード
       def index_by_area_and_sub_area
-
         shops = Shop.where(area: @area_name, sub_area: @sub_area_name)
                     .includes(:visits).select(:id, :name, :address)
-
-        visited_shop_ids = user_signed_in? ? Visit.where(user_id: current_user.id).pluck(:shop_id) : []
 
         render json: {
           area: @area_name,
@@ -21,15 +18,14 @@ module Api
             {
               id: shop.id,
               name: shop.name,
-              address: shop.address,
-              visited: visited_shop_ids.include?(shop.id)
+              address: shop.address
             }
           end
         }
       end
 
       # 入力例: GET /api/v1/sapporo/chuou-ku/1
-      # 出力例: { "id": 1, "name": "店X", "address": "札幌市中央区1丁目", "latitude": 43.1, "longitude": 141.3, "visited": true }
+      # 出力例: { "id": 1, "name": "店X", "address": "札幌市中央区1丁目", "latitude": 43.1, "longitude": 141.3 }
       def show_by_area_and_sub_area
         shop = Shop.find_by(id: params[:id], area_romaji: params[:area], sub_area_romaji: params[:sub_area])
 
@@ -38,8 +34,6 @@ module Api
           return
         end
 
-        visited_shop_ids = user_signed_in? ? Visit.where(user_id: current_user.id).pluck(:shop_id) : []
-
         render json: {
           id: shop.id,
           name: shop.name,
@@ -47,8 +41,7 @@ module Api
           latitude: shop.latitude,
           longitude: shop.longitude,
           area: shop.area,
-          sub_area: shop.sub_area,
-          visited: visited_shop_ids.include?(shop.id)
+          sub_area: shop.sub_area
         }
       end
 

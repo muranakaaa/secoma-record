@@ -1,24 +1,22 @@
 module Api
-  require 'ostruct'
+  require "ostruct"
 
   module V1
     class AreasController < Api::V1::BaseController
-
       # 入力例: GET /api/v1/areas
-      # 出力例: [{ "id": "sapporo", "area": "札幌", "totalShops": 10, "visitedShops": 5 }]
+      # 出力例: [{ "id": "sapporo", "area": "札幌", "totalShops": 10 }]
       def index
         area_data = Shop
           .left_joins(:visits)
           .where.not(area: nil)
           .group(:area, :area_romaji)
-          .select('shops.area, shops.area_romaji, COUNT(DISTINCT shops.id) AS total_shops, COUNT(visits.id) AS visited_shops')
+          .select("shops.area, shops.area_romaji, COUNT(DISTINCT shops.id) AS total_shops")
 
         result = area_data.map do |data|
           {
             id: data.area_romaji.presence || data.area.parameterize,
             area: data.area.strip,
-            totalShops: data.total_shops,
-            visitedShops: data.visited_shops
+            totalShops: data.total_shops
           }
         end
 
@@ -26,7 +24,7 @@ module Api
       end
 
       # 入力例: GET /api/v1/areas/sapporo
-      # 出力例: { "area": "札幌", "sub_areas": [{ "id": "chuou-ku", "name": "中央区", "totalShops": 5, "visitedShops": 3 }] }
+      # 出力例: { "area": "札幌", "sub_areas": [{ "id": "chuou-ku", "name": "中央区", "totalShops": 5 }] }
       def show
         area_romaji = params[:id]
 
@@ -40,14 +38,12 @@ module Api
         sub_areas = Shop.where(area: area_name).where.not(sub_area: nil).distinct.pluck(:sub_area, :sub_area_romaji)
 
         sub_area_counts = Shop.where(sub_area: sub_areas.map(&:first)).group(:sub_area).count
-        sub_area_visit_counts = Visit.joins(:shop).where(shops: { sub_area: sub_areas.map(&:first) }).group("shops.sub_area").count
 
         result = sub_areas.map do |(sub_area, sub_area_romaji)|
           {
             id: sub_area_romaji.presence || SecureRandom.uuid,
             name: sub_area,
-            totalShops: sub_area_counts[sub_area] || 0,
-            visitedShops: sub_area_visit_counts[sub_area] || 0
+            totalShops: sub_area_counts[sub_area] || 0
           }
         end
 

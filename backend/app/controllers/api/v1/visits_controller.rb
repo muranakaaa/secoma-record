@@ -1,9 +1,9 @@
 class Api::V1::VisitsController < Api::V1::BaseController
   # アクションが実行される前に、ユーザー認証を行う。
-  before_action :authenticate_user!, only: [:create, :update, :destroy]
+  before_action :authenticate_user!, only: [ :create, :update, :destroy ]
 
   # updateとdestroyアクション実行前に対象の訪問記録を取得する。
-  before_action :set_visit, only: [:update, :destroy]
+  before_action :set_visit, only: [ :update, :destroy ]
 
   def index
     shop_id = params[:shop_id]
@@ -49,6 +49,6 @@ class Api::V1::VisitsController < Api::V1::BaseController
   # 出力例: @visit（インスタンス変数）に対応する訪問記録が格納される。
   def set_visit
     @visit = current_user.visits.find_by(id: params[:id])
-    render_error('訪問記録が見つかりません', :not_found) unless @visit
+    render_error("訪問記録が見つかりません", :not_found) unless @visit
   end
 end

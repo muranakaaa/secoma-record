@@ -11,12 +11,12 @@
 #     context 'ユーザーがログインしていない場合' do
 #       it 'エリア一覧を取得し、訪問済みショップ数が0であることを確認する' do
 #         get '/api/v1/areas'
-        
+
 #         expect(response).to have_http_status(:ok)
 #         json = JSON.parse(response.body)
 #         expect(json).to be_an(Array)
 #         expect(json.size).to eq(2)
-        
+
 #         tokyo_area = json.find { |a| a['area'] == 'Tokyo' }
 #         expect(tokyo_area['totalShops']).to eq(2)
 #         expect(tokyo_area['visitedShops']).to eq(0)
@@ -45,7 +45,7 @@
 #     context '指定したエリアが存在する場合' do
 #       it '該当エリアのサブエリア情報を取得できることを確認する' do
 #         get '/api/v1/areas/Tokyo'
-        
+
 #         expect(response).to have_http_status(:ok)
 #         json = JSON.parse(response.body)
 #         expect(json['area']).to eq('Tokyo')
@@ -56,7 +56,7 @@
 #     context '指定したエリアが存在しない場合' do
 #       it 'エラーメッセージを返し、404ステータスコードを返すことを確認する' do
 #         get '/api/v1/areas/Unknown'
-        
+
 #         expect(response).to have_http_status(:not_found)
 #         json = JSON.parse(response.body)
 #         expect(json['error']).to eq('Area not found')

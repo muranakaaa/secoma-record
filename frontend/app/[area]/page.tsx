@@ -1,10 +1,9 @@
 import { fetchArea } from "@/lib/fetchArea";
 import { SubArea } from "@/types";
-import { CheckCircle, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 type Params = { area: string };
@@ -50,19 +49,13 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {sortedSubAreas.map(({ id, name, visitedShops, totalShops }: SubArea) => (
+            {sortedSubAreas.map(({ id, name, totalShops }: SubArea) => (
               <li key={id}>
                 <Link href={`/${area}/${id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
                   <div className="flex items-center gap-2">
                     <span>{name}</span>
-                    {visitedShops === totalShops && (
-                      <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800">
-                        <CheckCircle className="w-3 h-3" />
-                        コンプリート！
-                      </Badge>
-                    )}
                   </div>
-                  <span className="text-gray-600">{visitedShops}/{totalShops}</span>
+                  <span className="text-gray-600">{totalShops}件</span>
                 </Link>
               </li>
             ))}

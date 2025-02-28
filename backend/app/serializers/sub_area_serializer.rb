@@ -1,3 +1,3 @@
 class SubAreaSerializer < ActiveModel::Serializer
-  attributes :id, :name, :totalShops, :visitedShops
+  attributes :id, :name, :totalShops
 end

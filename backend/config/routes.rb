@@ -2,11 +2,11 @@ Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   namespace :api do
     namespace :v1 do
-      resources :areas, only: [:index, :show], param: :id do
-        resources :sub_areas, only: [:index, :show], param: :id
+      resources :areas, only: [ :index, :show ], param: :id do
+        resources :sub_areas, only: [ :index, :show ], param: :id
       end
 
-      resources :shops, only: [:index, :show] do
+      resources :shops, only: [ :index, :show ] do
         collection do
           get :search_shops
         end
@@ -17,16 +17,16 @@ Rails.application.routes.draw do
       # - `POST /api/v1/auth/sign_in` → ログイン
       # - `DELETE /api/v1/auth/sign_out` → ログアウト
       # RegistrationsControllerを使ってカスタマイズされたユーザー登録処理を行う
-      mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-        registrations: 'api/v1/auth/registrations'
+      mount_devise_token_auth_for "User", at: "auth", controllers: {
+        registrations: "api/v1/auth/registrations"
       }
       namespace :user do
-        resource :confirmations, only: [:update]
+        resource :confirmations, only: [ :update ]
       end
       namespace :current do
-        resource :user, only: [:show]
+        resource :user, only: [ :show ]
       end
-      resources :visits, only: [:index, :create, :update, :destroy]
+      resources :visits, only: [ :index, :create, :update, :destroy ]
       get ":area/:sub_area", to: "shops#index_by_area_and_sub_area"
       get ":area/:sub_area/:id", to: "shops#show_by_area_and_sub_area"
       get "/profile", to: "users#profile"

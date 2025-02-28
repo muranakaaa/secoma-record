@@ -16,7 +16,7 @@ module Api
         def render_create_success
           confirm_url = params[:confirm_success_url] || DeviseTokenAuth.default_confirm_success_url
           render json: {
-            status: 'success',
+            status: "success",
             confirm_success_url: confirm_url
           }
         end

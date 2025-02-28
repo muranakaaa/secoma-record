@@ -31,7 +31,7 @@ namespace :import do
       end
 
       puts "🔄 Updating: '#{shop.name}' -> Area: '#{area_name}', Sub Area: '#{sub_area_name}'"
-      
+
       if shop.update(area: area_name, sub_area: sub_area_name)
         puts "✅ Updated: '#{shop.name}' -> Area: '#{shop.area}', Sub Area: '#{shop.sub_area}'"
       else

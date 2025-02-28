@@ -16,9 +16,9 @@ group :development, :test do
   gem "bullet"
   gem "rubocop-rails-omakase", require: false
   gem "dotenv-rails", "~> 3.1.7", groups: [ :development, :test ]
-  gem 'rspec-rails'
+  gem "rspec-rails"
   gem "factory_bot_rails"
   gem "letter_opener_web"
-  gem 'spring-commands-rspec'
+  gem "spring-commands-rspec"
 end
-gem "dockerfile-rails", ">= 1.7", :group => :development
+gem "dockerfile-rails", ">= 1.7", group: :development
