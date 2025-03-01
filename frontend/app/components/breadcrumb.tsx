@@ -1,20 +1,19 @@
 "use client";
 
+import { BreadcrumbContextType } from "@/types";
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { createContext, useContext } from "react";
+import { createContext, useContext, ReactNode } from "react";
 import BreadcrumbJsonLD from "./BreadcrumbJsonLD";
 
-// パンくずリストのデータを管理するコンテキストを作成
-// area: URL用のエリアスラグ（例: "ishikari-sorachi-chitose"）
-// areaName: 表示用のエリア名（例: "石狩・空知・千歳 エリア"）
-// subArea: URL用のサブエリアスラグ（例: "ebetsu"）
-// subAreaName: 表示用のサブエリア名（例: "江別市"）
-// shopName: 表示用の店舗名（例: "セイコーマート江別店"）
-const BreadcrumbContext = createContext<{ area?: string; areaName?: string; subArea?: string; subAreaName?: string; shopName?: string }>({});
+const BreadcrumbContext = createContext<BreadcrumbContextType>({});
 
-// パンくずリストのデータを `BreadcrumbContext` に提供する Provider コンポーネント
-export const BreadcrumbProvider = ({ children, value }: { children: React.ReactNode; value: any }) => (
+interface BreadcrumbProviderProps {
+  children: ReactNode;
+  value: BreadcrumbContextType;
+}
+
+export const BreadcrumbProvider = ({ children, value }: BreadcrumbProviderProps) => (
   <BreadcrumbContext.Provider value={value}>{children}</BreadcrumbContext.Provider>
 );
 
