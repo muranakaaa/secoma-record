@@ -3,6 +3,8 @@ import { fetchAreas } from "@/lib/fetchAreas";
 import { fetchShops } from "@/lib/fetchShops";
 import { MetadataRoute } from "next";
 
+export const dynamic = "force-dynamic";
+
 const BASE_URL = "https://secoma-record.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
