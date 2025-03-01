@@ -27,6 +27,8 @@ export type Shop = {
   id: number;
   name: string;
   address: string;
+  area_romaji: string;
+  sub_area_romaji: string;
 };
 
 export type Visit = {

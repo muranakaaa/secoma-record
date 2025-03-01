@@ -45,6 +45,32 @@ module Api
         }
       end
 
+      # 入力例: GET /api/v1/shops/search?query=札幌駅
+      # 出力例: { "shops": [{ "id": 1, "name": "セイコーマート 札幌駅前店", "address": "札幌市中央区100丁目", "area_romaji": "sapporo", "sub_area_romaji": "chuou-ku" }] }
+      # LIKE検索を使用し、部分一致する店舗を取得
+      def search_shops
+        query = params[:query]
+
+        if query.blank?
+          return render json: { error: "検索クエリを指定してください" }, status: :bad_request
+        end
+
+        shops = Shop.where("name LIKE ?", "%#{query}%")
+                    .select(:id, :name, :address, :area_romaji, :sub_area_romaji)
+
+        render json: {
+          shops: shops.map do |shop|
+            {
+              id: shop.id,
+              name: shop.name,
+              address: shop.address,
+              area_romaji: shop.area_romaji,
+              sub_area_romaji: shop.sub_area_romaji
+            }
+          end
+        }
+      end
+
       private
 
       # 指定されたエリアとサブエリアを設定する

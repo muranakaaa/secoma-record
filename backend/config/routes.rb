@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
       resources :shops, only: [ :index, :show ] do
         collection do
-          get :search_shops
+          get "search_shops", to: "shops#search_shops"
         end
       end
 

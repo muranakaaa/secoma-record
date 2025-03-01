@@ -14,3 +14,14 @@ export const fetchShops = async (areaRomaji: string, subAreaRomaji: string) => {
     shops: data.shops,
   };
 };
+
+export const fetchSearchShops = async (query: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/shops/search_shops?query=${encodeURIComponent(query)}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) throw new Error("店舗検索に失敗しました");
+
+  return res.json();
+};
