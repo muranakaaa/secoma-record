@@ -1,20 +1,17 @@
 import Script from "next/script";
 
-type BreadCrumbItem = {
-  label: string;
-  url: string;
+type BreadcrumbJsonLDProps = {
+  breadCrumbs: { label: string; url: string }[];
 };
 
-type Props = {
-  breadCrumbs: BreadCrumbItem[];
-};
+export const BreadcrumbJsonLD = ({ breadCrumbs }: BreadcrumbJsonLDProps) => {
+  const BASE_URL = process.env.NEXT_PUBLIC_FRONT_BASE_URL || "https://secoma-record.com";
 
-const BreadcrumbJsonLD = ({ breadCrumbs }: Props) => {
   const itemListElement = breadCrumbs.map((breadCrumb, index) => ({
     "@type": "ListItem",
     "position": index + 1,
     "name": breadCrumb.label,
-    "item": `${process.env.NEXT_PUBLIC_BASE_URL}${breadCrumb.url}`,
+    "item": `${BASE_URL}${breadCrumb.url}`,
   }));
 
   const jsonld = {
