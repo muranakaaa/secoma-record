@@ -119,13 +119,6 @@ export default function SignIn() {
             </Link>{" "}
             から新規登録
           </p>
-          <p className="text-sm text-gray-600">
-            パスワードを忘れた方は{" "}
-            <Link href="/password_reset" className="text-blue-600 hover:underline">
-              こちら
-            </Link>{" "}
-            から再設定
-          </p>
         </CardFooter>
       </Card>
     </main>
