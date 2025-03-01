@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { Home, ChevronRight } from "lucide-react";
+import { createContext, useContext } from "react";
+import BreadcrumbJsonLD from "./BreadcrumbJsonLD";
 
 // パンくずリストのデータを管理するコンテキストを作成
 // area: URL用のエリアスラグ（例: "ishikari-sorachi-chitose"）
@@ -26,33 +27,36 @@ const Breadcrumb = ({ className = "", homeLabel = "TOP" }: { className?: string;
   if (shopName) breadcrumbItems.push({ label: shopName, url: `/${area}/${subArea}/${shopName}` });
 
   return (
-    <nav aria-label="パンくずリスト" className={`bg-gray-100 py-2 text-sm ${className}`}>
-      <div className="container mx-auto px-4">
-        <ol className="flex flex-wrap items-center">
-          <li className="flex items-center">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 flex items-center">
-              <Home size={14} className="mr-1" />
-              <span>{homeLabel}</span>
-            </Link>
-          </li>
-
-          {breadcrumbItems.map((item, index) => (
-            <li key={item.url} className="flex items-center">
-              <ChevronRight size={14} className="mx-2 text-gray-400" aria-hidden="true" />
-              {index === breadcrumbItems.length - 1 ? (
-                <span className="text-gray-900 font-medium" aria-current="page">
-                  {item.label}
-                </span>
-              ) : (
-                <Link href={item.url} className="text-gray-600 hover:text-gray-900">
-                  {item.label}
-                </Link>
-              )}
+    <>
+      <nav aria-label="パンくずリスト" className={`bg-gray-100 py-2 text-sm ${className}`}>
+        <div className="container mx-auto px-4">
+          <ol className="flex flex-wrap items-center">
+            <li className="flex items-center">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 flex items-center">
+                <Home size={14} className="mr-1" />
+                <span>{homeLabel}</span>
+              </Link>
             </li>
-          ))}
-        </ol>
-      </div>
-    </nav>
+
+            {breadcrumbItems.map((item, index) => (
+              <li key={item.url} className="flex items-center">
+                <ChevronRight size={14} className="mx-2 text-gray-400" aria-hidden="true" />
+                {index === breadcrumbItems.length - 1 ? (
+                  <span className="text-gray-900 font-medium" aria-current="page">
+                    {item.label}
+                  </span>
+                ) : (
+                  <Link href={item.url} className="text-gray-600 hover:text-gray-900">
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </nav>
+      <BreadcrumbJsonLD breadCrumbs={breadcrumbItems} />
+    </>
   );
 };
 
