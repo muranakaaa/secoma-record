@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Breadcrumb, { BreadcrumbProvider } from "../components/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 type Params = { area: string };
@@ -38,30 +39,33 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
   const sortedSubAreas = subAreas.sort((a: SubArea, b: SubArea) => b.totalShops - a.totalShops);
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader>
-          <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            TOPに戻る
-          </Link>
-          <CardTitle className="text-2xl font-bold">{`${areaName} エリア`}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {sortedSubAreas.map(({ id, name, totalShops }: SubArea) => (
-              <li key={id}>
-                <Link href={`/${area}/${id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
-                  <div className="flex items-center gap-2">
-                    <span>{name}</span>
-                  </div>
-                  <span className="text-gray-600">{totalShops}件</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-    </main>
+    <BreadcrumbProvider value={{ area, areaName }}>
+      <Breadcrumb />
+      <main className="container mx-auto px-4 py-8">
+        <Card className="w-full max-w-2xl mx-auto">
+          <CardHeader>
+            <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800 mb-2">
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              TOPに戻る
+            </Link>
+            <CardTitle className="text-2xl font-bold">{`${areaName} エリア`}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {sortedSubAreas.map(({ id, name, totalShops }: SubArea) => (
+                <li key={id}>
+                  <Link href={`/${area}/${id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
+                    <div className="flex items-center gap-2">
+                      <span>{name}</span>
+                    </div>
+                    <span className="text-gray-600">{totalShops}件</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </main>
+    </BreadcrumbProvider>
   );
 }

@@ -56,3 +56,11 @@ export type SnackbarStateType = {
   severity: null | "success" | "error";
   pathname: null | string;
 };
+
+export interface BreadcrumbContextType {
+  area?: string;
+  areaName?: string;
+  subArea?: string;
+  subAreaName?: string;
+  shopName?: string;
+}
