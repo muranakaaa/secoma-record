@@ -9,10 +9,6 @@ export type SignInFormData = {
   password: string;
 };
 
-export type PasswordResetFormData = {
-  email: string;
-};
-
 export type Area = {
   id: string;
   area: string;
