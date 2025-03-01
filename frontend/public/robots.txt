@@ -1,2 +1,4 @@
 User-agent: *
 Disallow:
+
+Sitemap: https://secoma-record.com/sitemap.xml
