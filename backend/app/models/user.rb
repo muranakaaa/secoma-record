@@ -8,7 +8,7 @@ class User < ApplicationRecord
   # 認証済み（confirmed_atが存在）の場合、同じメールアドレスの重複を防ぐ。
   validates :email, uniqueness: {
     scope: :confirmed_at,
-    message: "このメールアドレスは既に登録され、認証済みです。"
+    message: :taken
   }, if: -> { confirmed_at.present? }
 
   # 未認証（confirmed_atがnil）の場合、新規作成時に同じメールの未認証ユーザーを削除。

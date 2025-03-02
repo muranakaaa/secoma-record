@@ -210,7 +210,7 @@ class Shop < ApplicationRecord
   # 引数として渡されたtextがAREA_MAPPINGに存在する場合は、その対応するローマ字を返す。
   # マッピングが存在しない場合は、text.to_s.parameterizeによってローマ字風に変換して返す。
   def self.to_romaji(text)
-    AREA_MAPPING[text] || text.to_s.parameterize
+    AREA_MAPPING[text] || text.to_s
   end
 
   # Shopレコード作成・更新時にbefore_save :set_romaji_valuesで地域名をローマ字に自動変換する。
