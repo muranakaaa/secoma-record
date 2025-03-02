@@ -8,8 +8,7 @@ module Api
       # 出力例: { "area": "札幌", "sub_area": "中央区", "shops": [{ "id": 1, "name": "店X", "address": "札幌市中央区1丁目"}, { "id": 2, "name": "店Y", "address": "札幌市中央区2丁目" }] }
       # N+1クエリを避けるため、includes(:visits)を使って関連情報を事前ロード
       def index_by_area_and_sub_area
-        shops = Shop.where(area: @area_name, sub_area: @sub_area_name)
-                    .includes(:visits).select(:id, :name, :address)
+        shops = Shop.where(area: @area_name, sub_area: @sub_area_name).select(:id, :name, :address)
 
         render json: {
           area: @area_name,
@@ -52,9 +51,9 @@ module Api
         query = params[:query]
 
         if query.blank?
-          return render json: { error: "検索クエリを指定してください" }, status: :bad_request
+          render json: { error: "検索クエリを指定してください" }, status: :bad_request
+          return
         end
-
         shops = Shop.where("name LIKE ?", "%#{query}%")
                     .select(:id, :name, :address, :area_romaji, :sub_area_romaji)
 
@@ -77,16 +76,18 @@ module Api
       # 入力例: params[:area] = "sapporo", params[:sub_area] = "chuou-ku"
       # 出力例: @area_name = "札幌", @sub_area_name = "中央区"
       def set_area_and_sub_area
-        area_record = Shop.where(area_romaji: params[:area]).select(:area).first
-        sub_area_record = Shop.where(sub_area_romaji: params[:sub_area], area: area_record&.area).select(:sub_area).first
+        area_record = Shop.where(area_romaji: params[:area]).select(:id, :area).first
+        sub_area_record = Shop.where(sub_area_romaji: params[:sub_area], area: area_record&.area).select(:id, :sub_area).first
 
         if area_record.nil? || sub_area_record.nil?
+          Rails.logger.debug "DEBUG: area_record or sub_area_record is nil!"
           render json: { error: "該当エリア・サブエリアが見つかりません" }, status: :not_found
           return
         end
 
         @area_name = area_record.area
         @sub_area_name = sub_area_record.sub_area
+
       end
     end
   end
