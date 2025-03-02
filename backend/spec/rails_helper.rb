@@ -1,5 +1,6 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
+ENV['NEXT_PUBLIC_FRONT_BASE_URL'] ||= 'http://localhost:3001'
 require File.expand_path('../config/environment', __dir__)
 
 abort("The Rails environment is running in production mode!") if Rails.env.production?
