@@ -14,7 +14,7 @@
 **バックエンド:** Ruby 3.2.2 / Rails 7.2.2.1
 - コード解析 / フォーマッター: Rubocop
 - テストフレームワーク: RSpec
-- 主要ライブラリ: devise-token-auth / active_model_serializers / brakeman
+- 主要ライブラリ: devise-token-auth
 
 **フロントエンド:** TypeScript 5.7.3 / Next.js 15.1.4
 - コード解析: ESLint
