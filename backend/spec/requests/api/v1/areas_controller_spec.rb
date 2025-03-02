@@ -1,66 +1,47 @@
-# require 'rails_helper'
+require 'rails_helper'
 
-# RSpec.describe Api::V1::AreasController, type: :request do
-#   let!(:shop1) { create(:shop, area: 'Tokyo', sub_area: 'Shibuya') }
-#   let!(:shop2) { create(:shop, area: 'Tokyo', sub_area: 'Shinjuku') }
-#   let!(:shop3) { create(:shop, area: 'Osaka', sub_area: 'Namba') }
-#   let!(:user) { create(:user) }
-#   let!(:visit) { create(:visit, user: user, shop: shop1) }
+RSpec.describe "Api::V1::AreasController", type: :request do
+  let!(:shop1) { create(:shop, area: "札幌", area_romaji: "sapporo", sub_area: "中央区", sub_area_romaji: "chuou-ku") }
+  let!(:shop2) { create(:shop, area: "札幌", area_romaji: "sapporo", sub_area: "北区", sub_area_romaji: "kita-ku") }
 
-#   describe 'GET /api/v1/areas' do
-#     context 'ユーザーがログインしていない場合' do
-#       it 'エリア一覧を取得し、訪問済みショップ数が0であることを確認する' do
-#         get '/api/v1/areas'
+  describe "GET /api/v1/areas" do
+    context "正常系" do
+      it "エリア一覧を取得できる" do
+        get "/api/v1/areas"
 
-#         expect(response).to have_http_status(:ok)
-#         json = JSON.parse(response.body)
-#         expect(json).to be_an(Array)
-#         expect(json.size).to eq(2)
+        expect(response).to have_http_status(:success)
+        json = JSON.parse(response.body)
+        expect(json).to be_an(Array)
+        expect(json.size).to eq(1)
+        expect(json.first["area"]).to eq("札幌")
+        expect(json.first).to have_key("totalShops")
+      end
+    end
+  end
 
-#         tokyo_area = json.find { |a| a['area'] == 'Tokyo' }
-#         expect(tokyo_area['totalShops']).to eq(2)
-#         expect(tokyo_area['visitedShops']).to eq(0)
-#       end
-#     end
+  describe "GET /api/v1/areas/:id" do
+    context "正常系" do
+      it "指定したエリアのサブエリア情報を取得できる" do
+        get "/api/v1/areas/sapporo"
 
-#     context 'ユーザーがログインしている場合' do
-#       before do
-#         sign_in user
-#         visit = create(:visit, user: user, shop: shop1)
-#       end
+        expect(response).to have_http_status(:success)
+        json = JSON.parse(response.body)
+        expect(json["area"]).to eq("札幌")
+        expect(json["sub_areas"]).to be_an(Array)
+        expect(json["sub_areas"].size).to eq(2)
+        expect(json["sub_areas"].first["id"]).to eq("chuou-ku")
+        expect(json["sub_areas"].first["name"]).to eq("中央区")
+      end
+    end
 
-#       it '訪問済みショップ数が正しくカウントされることを確認する' do
-#         token = user.create_new_auth_token
-#         get '/api/v1/areas', headers: token
+    context "異常系" do
+      it "存在しないエリアを指定した場合は404を返す" do
+        get "/api/v1/areas/unknown-area"
 
-#         expect(response).to have_http_status(:ok)
-#         json = JSON.parse(response.body)
-#         tokyo_area = json.find { |a| a['area'] == 'Tokyo' }
-#         expect(tokyo_area['visitedShops']).to eq(1)
-#       end
-#     end
-#   end
-
-#   describe 'GET /api/v1/areas/:id' do
-#     context '指定したエリアが存在する場合' do
-#       it '該当エリアのサブエリア情報を取得できることを確認する' do
-#         get '/api/v1/areas/Tokyo'
-
-#         expect(response).to have_http_status(:ok)
-#         json = JSON.parse(response.body)
-#         expect(json['area']).to eq('Tokyo')
-#         expect(json['sub_areas'].size).to eq(2)
-#       end
-#     end
-
-#     context '指定したエリアが存在しない場合' do
-#       it 'エラーメッセージを返し、404ステータスコードを返すことを確認する' do
-#         get '/api/v1/areas/Unknown'
-
-#         expect(response).to have_http_status(:not_found)
-#         json = JSON.parse(response.body)
-#         expect(json['error']).to eq('Area not found')
-#       end
-#     end
-#   end
-# end
+        expect(response).to have_http_status(:not_found)
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq("Area not found")
+      end
+    end
+  end
+end
