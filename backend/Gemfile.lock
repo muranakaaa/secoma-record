@@ -24,7 +24,6 @@ GEM
     actionpack (7.2.2.1)
       actionview (= 7.2.2.1)
       activesupport (= 7.2.2.1)
-      nokogiri (>= 1.8.5)
       racc
       rack (>= 2.2.4, < 3.2)
       rack-session (>= 1.0.1)
@@ -38,7 +37,6 @@ GEM
       activestorage (= 7.2.2.1)
       activesupport (= 7.2.2.1)
       globalid (>= 0.6.0)
-      nokogiri (>= 1.8.5)
     actionview (7.2.2.1)
       activesupport (= 7.2.2.1)
       builder (~> 3.1)
@@ -150,7 +148,6 @@ GEM
     logger (1.6.5)
     loofah (2.24.0)
       crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -170,11 +167,8 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.1-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.1-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-linux-gnu)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.26.3)
@@ -216,10 +210,8 @@ GEM
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
-      nokogiri (>= 1.6)
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
-      nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     railties (7.2.2.1)
       actionpack (= 7.2.2.1)
       activesupport (= 7.2.2.1)
