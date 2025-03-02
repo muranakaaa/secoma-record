@@ -66,6 +66,15 @@ jobs:
         run: bin/rspec
         working-directory: ./backend
 
+      # Fly.io へのデプロイ
+      - name: Deploy to Fly.io
+        if: github.ref == 'refs/heads/main'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          flyctl deploy --remote-only
+        working-directory: ./backend
+
   frontend-ci:
     name: "Frontend CI: ESLint / Prettier"
     runs-on: ubuntu-latest
@@ -102,4 +111,9 @@ jobs:
       # Prettierによるコードフォーマットの実行
       - name: Run Prettier
         run: npm run format
+        working-directory: ./frontend
+
+      # Jest / React Testing Library のテストを実行
+      - name: Run Jest Tests
+        run: npm test
         working-directory: ./frontend
