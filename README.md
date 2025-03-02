@@ -59,7 +59,7 @@
         - CI: Rubocop / RSpec
         - CD: fly.io
     - フロントエンド
-        - CI: ESLint / Prettier / Jest / Codecov
+        - CI: ESLint / Prettier
         - CD: Vercel
 
 **テスト / セキュリティ**
