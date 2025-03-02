@@ -12,7 +12,6 @@ class Api::V1::VisitsController < Api::V1::BaseController
   end
 
   def create
-    log_request_headers
     visit = current_user.visits.new(visit_params)
     if visit.save
       render json: visit, status: :created
@@ -22,7 +21,6 @@ class Api::V1::VisitsController < Api::V1::BaseController
   end
 
   def update
-    log_request_headers
     if @visit.update(visit_params)
       render json: @visit
     else
@@ -31,7 +29,6 @@ class Api::V1::VisitsController < Api::V1::BaseController
   end
 
   def destroy
-    log_request_headers
     @visit.destroy
     head :no_content
   end

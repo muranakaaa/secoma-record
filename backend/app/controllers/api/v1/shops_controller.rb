@@ -87,7 +87,6 @@ module Api
 
         @area_name = area_record.area
         @sub_area_name = sub_area_record.sub_area
-
       end
     end
   end
