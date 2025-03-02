@@ -14,7 +14,7 @@ module Api
 
         result = area_data.map do |data|
           {
-            id: data.area_romaji.presence || data.area.parameterize,
+            id: data.area_romaji.presence || data.area.to_s.parameterize,
             area: data.area.strip,
             totalShops: data.total_shops
           }
