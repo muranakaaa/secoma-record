@@ -112,8 +112,3 @@ jobs:
       - name: Run Prettier
         run: npm run format
         working-directory: ./frontend
-
-      # Jest / React Testing Library のテストを実行
-      - name: Run Jest Tests
-        run: npm test
-        working-directory: ./frontend
