@@ -106,6 +106,8 @@ erDiagram
         decimal longitude
         string area
         string sub_area
+        string area_romaji
+        string sub_area_romaji
         datetime created_at "not null"
         datetime updated_at "not null"
     }
@@ -114,7 +116,7 @@ erDiagram
         bigint id "PK, not null"
         bigint user_id "FK -> USERS.id, not null"
         bigint shop_id "FK -> SHOPS.id, not null"
-        date visit_date
+        date visit_date "not null"
         text comment
         datetime created_at "not null"
         datetime updated_at "not null"
@@ -122,5 +124,4 @@ erDiagram
     
     USERS ||--o{ VISITS : "has many"
     SHOPS ||--o{ VISITS : "has many"
-
 ```
