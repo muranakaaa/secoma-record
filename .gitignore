@@ -26,3 +26,4 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 .env
+frontend/public/googlee77fc2180b422a41.html
