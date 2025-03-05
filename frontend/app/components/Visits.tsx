@@ -7,7 +7,7 @@ import { ja } from "date-fns/locale";
 import { CalendarIcon, PenIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
@@ -18,11 +18,8 @@ const fetcher = (url: string) => fetch(url).then(res => res.ok ? res.json() : []
 
 const Visits = ({ shopId, initialVisits }: { shopId: number; initialVisits: Visit[] }) => {
   const [user] = useUserState();
-  const { data: visits = initialVisits } = useSWR<Visit[]>(
-    user.isSignedIn ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits?shop_id=${shopId}` : null,
-    fetcher,
-    { fallbackData: initialVisits }
-  );
+  const visitsKey = user.isSignedIn ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits?shop_id=${shopId}` : null;
+  const { data: visits = initialVisits } = useSWR<Visit[]>(visitsKey, fetcher, { fallbackData: initialVisits });
 
   const [date, setDate] = useState<Date | null>(null);
   const [comment, setComment] = useState<string>("");
@@ -30,15 +27,19 @@ const Visits = ({ shopId, initialVisits }: { shopId: number; initialVisits: Visi
 
   const handleDelete = async (visitId: number) => {
     try {
+      mutate(visitsKey, visits.filter(v => v.id !== visitId), false);
+
       await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/visits/${visitId}`, {
         method: "DELETE",
         headers: {
-        'Content-Type': 'application/json',
-        'access-token': localStorage.getItem('access-token') || '',
-        'client': localStorage.getItem('client') || '',
-        'uid': localStorage.getItem('uid') || '',
-      },
+          'Content-Type': 'application/json',
+          'access-token': localStorage.getItem('access-token') || '',
+          'client': localStorage.getItem('client') || '',
+          'uid': localStorage.getItem('uid') || '',
+        },
       });
+
+      mutate(visitsKey);
     } catch (error) {
       console.error("Error deleting visit:", error);
     }
@@ -50,24 +51,30 @@ const Visits = ({ shopId, initialVisits }: { shopId: number; initialVisits: Visi
       ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits/${isEditing}`
       : `${process.env.NEXT_PUBLIC_API_BASE_URL}/visits`;
 
+    const newVisit = {
+      id: isEditing || Date.now(),
+      shop_id: shopId,
+      visit_date: date ? format(date, "yyyy-MM-dd") : null,
+      comment,
+    };
+
     try {
+      mutate(visitsKey, isEditing 
+        ? visits.map(v => v.id === isEditing ? newVisit : v)
+        : [...visits, newVisit], false);
+
       await fetch(endpoint, {
         method,
         headers: {
-        'Content-Type': 'application/json',
-        'access-token': localStorage.getItem('access-token') || '',
-        'client': localStorage.getItem('client') || '',
-        'uid': localStorage.getItem('uid') || '',
-      },
-        body: JSON.stringify({
-          visit: {
-            shop_id: shopId,
-            visit_date: date ? format(date, "yyyy-MM-dd") : null,
-            comment,
-          }
-        }),
+          'Content-Type': 'application/json',
+          'access-token': localStorage.getItem('access-token') || '',
+          'client': localStorage.getItem('client') || '',
+          'uid': localStorage.getItem('uid') || '',
+        },
+        body: JSON.stringify({ visit: newVisit }),
       });
 
+      mutate(visitsKey);
       setDate(null);
       setComment("");
       setIsEditing(null);
@@ -109,7 +116,7 @@ const Visits = ({ shopId, initialVisits }: { shopId: number; initialVisits: Visi
       ) : (
         <p>訪問記録がありません。</p>
       )}
-      {user.isSignedIn && (isEditing !== null || visits.length === 0) && (
+      {(isEditing !== null || visits.length === 0) && (
         <div className="flex flex-col space-y-2">
           <Popover>
             <PopoverTrigger asChild>
