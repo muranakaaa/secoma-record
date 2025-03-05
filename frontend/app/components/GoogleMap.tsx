@@ -1,42 +1,63 @@
-'use client';
+"use client";
 
-import Script from 'next/script';
-import { useEffect, useRef, useState } from 'react';
+import Script from "next/script";
+import { useEffect, useRef, useState } from "react";
 
-const GoogleMap = ({ latitude, longitude, shopName }: { latitude: number | null; longitude: number | null; shopName: string }) => {
+const GoogleMap = ({
+  latitude,
+  longitude,
+  shopName,
+}: {
+  latitude: number | null;
+  longitude: number | null;
+  shopName: string;
+}) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const mapInstance = useRef<google.maps.Map | null>(null);
+  const markerInstance = useRef<google.maps.Marker | null>(null);
+  const isLoaded = useRef(false);
 
   useEffect(() => {
-    if (!isLoaded || !mapRef.current) return;
+    if (!window.google || !window.google.maps) return;
 
-    const lat = latitude !== null && !isNaN(latitude) ? parseFloat(latitude.toString()) : null;
-    const lng = longitude !== null && !isNaN(longitude) ? parseFloat(longitude.toString()) : null;
+    isLoaded.current = true;
+    if (!mapRef.current || !latitude || !longitude) return;
 
-    if (lat === null || lng === null) {
+    const lat = parseFloat(latitude.toString());
+    const lng = parseFloat(longitude.toString());
+
+    if (isNaN(lat) || isNaN(lng)) {
       console.error("Google Maps: Invalid latitude or longitude", { latitude, longitude });
       return;
     }
 
-    const map = new google.maps.Map(mapRef.current, {
-      center: { lat, lng },
-      zoom: 15,
-    });
+    if (!mapInstance.current) {
+      mapInstance.current = new google.maps.Map(mapRef.current, {
+        center: { lat, lng },
+        zoom: 15,
+      });
+    } else {
+      mapInstance.current.setCenter({ lat, lng });
+    }
 
-    new google.maps.Marker({
-      position: { lat, lng },
-      map,
-      title: shopName,
-    });
-
-  }, [isLoaded, latitude, longitude, shopName]);
+    if (!markerInstance.current) {
+      markerInstance.current = new google.maps.Marker({
+        position: { lat, lng },
+        map: mapInstance.current,
+        title: shopName,
+      });
+    } else {
+      markerInstance.current.setPosition({ lat, lng });
+      markerInstance.current.setTitle(shopName);
+    }
+  }, [latitude, longitude, shopName]);
 
   return (
     <>
       <Script
         src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`}
         strategy="lazyOnload"
-        onLoad={() => setIsLoaded(true)}
+        onLoad={() => (isLoaded.current = true)}
       />
       <div ref={mapRef} className="w-full h-96 mt-2 bg-gray-200"></div>
     </>
