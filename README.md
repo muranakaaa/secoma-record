@@ -21,7 +21,7 @@
 - フォーマッター: Prettier
 - テストフレームワーク: Jest / React Testing Library
 - CSSフレームワーク: Tailwind CSS
-- 主要パッケージ: shadcn / axios / swr / react-hook-form / lucide-react
+- 主要パッケージ: shadcn / axios / swr
 
 **DB:** PostgreSQL 15
 
@@ -42,13 +42,13 @@
 - メールアドレスを利用したユーザー登録 / ログイン機能
 - 店舗の検索機能
 - 訪問記録の取得 / 作成 / 更新 / 削除
-- パンくずリスト
 
 **画面**
 - レスポンシブデザイン
 - ローディング画面
 - 404 / 500エラーのカスタム画面
 - スナックバー表示
+- パンくずリスト
 
 ### 非ユーザー向け
 **システム / インフラ**
@@ -70,7 +70,6 @@
     - スマートフォン
         - Android: Google Chrome
         - iOS: Safari / Google Chrome
-- Codecovによるコードカバレッジの分析と可視化
 - 脆弱性対応（Dependabot Alerts / Code Scanning Alerts / GitGuardian）
 
 ## ER図
