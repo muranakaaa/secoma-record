@@ -66,6 +66,12 @@ jobs:
         run: bin/rspec
         working-directory: ./backend
 
+      # Fly.io CLI をインストール
+      - name: Install Fly.io CLI
+        run: |
+          curl -L https://fly.io/install.sh | sh
+          echo "$HOME/.fly/bin" >> $GITHUB_PATH
+
       # Fly.io へのデプロイ
       - name: Deploy to Fly.io
         if: github.ref == 'refs/heads/main'
@@ -74,6 +80,7 @@ jobs:
         run: |
           flyctl deploy --remote-only
         working-directory: ./backend
+
 
   frontend-ci:
     name: "Frontend CI: ESLint / Prettier"
