@@ -71,6 +71,8 @@ jobs:
         run: |
           curl -L https://fly.io/install.sh | sh
           echo "$HOME/.fly/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.fly/bin:$PATH"
+          flyctl version
 
       # Fly.io へのデプロイ
       - name: Deploy to Fly.io
