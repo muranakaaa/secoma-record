@@ -1,7 +1,16 @@
-export const fetchAreas = async () => {
+"use client";
+
+export const fetchAreasWithToken = async () => {
+  const token = localStorage.getItem("access-token") || "";
+  const client = localStorage.getItem("client") || "";
+  const uid = localStorage.getItem("uid") || "";
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas`, {
     headers: {
       "Content-Type": "application/json",
+      "access-token": token,
+      "client": client,
+      "uid": uid,
     },
     cache: "no-store",
   });
