@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb, { BreadcrumbProvider } from "../../components/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import VisitedBadge from "../../components/Visitedbadge";
 
 type Params = { area: string; sub_area: string };
 
@@ -53,9 +54,15 @@ export default async function ShopListPage({ params }: { params: Promise<Params>
             <ul className="space-y-4">
               {shops.map(({ id, name, address }: Shop) => (
                 <li key={id}>
-                  <Link href={`/${area}/${sub_area}/${id}`} className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent">
+                  <Link
+                    href={`/${area}/${sub_area}/${id}`}
+                    className="block p-4 rounded-lg transition-colors duration-200 bg-white hover:bg-gray-100 border border-transparent"
+                  >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-lg">{name}</h3>
+                      <h3 className="font-semibold text-lg flex items-center gap-2">
+                        {name}
+                        <VisitedBadge shopId={id} />
+                      </h3>
                     </div>
                     <p className="text-gray-600 text-sm">{address}</p>
                   </Link>
