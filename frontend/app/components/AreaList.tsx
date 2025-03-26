@@ -35,7 +35,7 @@ const AreaList = () => {
 
   return (
     <ul className="space-y-2">
-      {sortedAreas.map((area: Area, index) => (
+      {sortedAreas.map((area: Area, index: number) => (
         <li key={area.id || `fallback-${index}`}>
           <Link
             href={`/${area.id}`}
