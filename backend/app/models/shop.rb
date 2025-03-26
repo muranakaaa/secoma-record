@@ -216,8 +216,6 @@ class Shop < ApplicationRecord
   # Shopレコード作成・更新時にbefore_save :set_romaji_valuesで地域名をローマ字に自動変換する。
   before_save :set_romaji_values
 
-  private
-
   def set_romaji_values
     self.area_romaji = self.class.to_romaji(area) if area.present?
     self.sub_area_romaji = self.class.to_romaji(sub_area) if sub_area.present?
