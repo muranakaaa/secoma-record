@@ -1,9 +1,10 @@
-"use client";
+import { cookies } from "next/headers";
 
 export const fetchAreasWithToken = async () => {
-  const token = localStorage.getItem("access-token") || "";
-  const client = localStorage.getItem("client") || "";
-  const uid = localStorage.getItem("uid") || "";
+  const cookieStore = cookies();
+  const token = cookieStore.get("access-token")?.value || "";
+  const client = cookieStore.get("client")?.value || "";
+  const uid = cookieStore.get("uid")?.value || "";
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas`, {
     headers: {
@@ -17,17 +18,5 @@ export const fetchAreasWithToken = async () => {
 
   if (!res.ok) throw new Error("エリア情報の取得に失敗しました");
 
-  const data = await res.json();
-
-  return data.map((area: {
-    id: string;
-    area: string;
-    totalShops: number;
-    visitedShops?: number;
-  }) => ({
-    id: area.id,
-    area: area.area,
-    totalShops: area.totalShops,
-    visitedShops: area.visitedShops ?? 0,
-  }));
+  return await res.json();
 };

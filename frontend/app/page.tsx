@@ -1,12 +1,12 @@
 import { Info } from "lucide-react";
 import { Suspense } from "react";
-import { fetchAreas } from "../lib/fetchAreas";
+import { fetchAreasWithToken } from "@/lib/fetchAreasWithToken";
 import AreaList from "./components/AreaList";
 import SearchForm from "./components/SearchForm";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 
 const HomePage = async () => {
-  const areas = await fetchAreas();
+  const areas = await fetchAreasWithToken();
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -30,7 +30,7 @@ const HomePage = async () => {
           <div>
             <h2 className="text-xl font-semibold mb-4">エリアで選ぶ</h2>
             <Suspense fallback={<p className="text-center text-gray-500">読み込み中...</p>}>
-              <AreaList areas={areas} />
+              <AreaList />
             </Suspense>
           </div>
         </CardContent>

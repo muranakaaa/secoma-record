@@ -1,13 +1,46 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Area } from "@/types";
 import Link from "next/link";
 
-type Props = {
-  areas: Area[];
-};
+const AreaList = () => {
+  const [areas, setAreas] = useState<Area[] | null>(null);
+  const [error, setError] = useState(false);
 
-const AreaList = ({ areas }: Props) => {
+  useEffect(() => {
+    const fetchAreasWithToken = async () => {
+      try {
+        const token = localStorage.getItem("access-token") || "";
+        const client = localStorage.getItem("client") || "";
+        const uid = localStorage.getItem("uid") || "";
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/areas`, {
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": token,
+            "client": client,
+            "uid": uid,
+          },
+          cache: "no-store",
+        });
+
+        if (!res.ok) throw new Error("エリア情報の取得に失敗しました");
+
+        const data = await res.json();
+        setAreas(data);
+      } catch (err) {
+        console.error(err);
+        setError(true);
+      }
+    };
+
+    fetchAreasWithToken();
+  }, []);
+
+  if (error) return <p className="text-center text-red-500">エリア情報の取得に失敗しました</p>;
+  if (!areas) return <p className="text-center text-gray-500">読み込み中...</p>;
+
   const sortedAreas = areas.sort((a, b) => b.totalShops - a.totalShops);
 
   return (
