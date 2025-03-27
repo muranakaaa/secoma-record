@@ -30,7 +30,7 @@ const HomePage = async () => {
           <div>
             <h2 className="text-xl font-semibold mb-4">エリアで選ぶ</h2>
             <Suspense fallback={<p className="text-center text-gray-500">読み込み中...</p>}>
-              <AreaList />
+              <AreaList areas={areas} />
             </Suspense>
           </div>
         </CardContent>
