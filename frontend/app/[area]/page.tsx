@@ -1,11 +1,10 @@
 import { fetchArea } from "@/lib/fetchArea";
-import { SubArea } from "@/types";
 import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
-import SubAreaList from "../components/SubAreaList";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb, { BreadcrumbProvider } from "../components/breadcrumb";
+import SubAreaList from "../components/SubAreaList";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 type Params = { area: string };
@@ -36,8 +35,7 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
   const areaData = await fetchArea(area);
   if (!areaData) return notFound();
 
-  const { area: areaName, sub_areas: subAreas } = areaData;
-  const sortedSubAreas = subAreas.sort((a: SubArea, b: SubArea) => b.totalShops - a.totalShops);
+  const { area: areaName } = areaData;
 
   return (
     <BreadcrumbProvider value={{ area, areaName }}>

@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { fetchSubAreasWithToken } from "@/lib/fetchSubAreasWithToken";
 import { SubArea } from "@/types";
 import Link from "next/link";
-import { fetchSubAreasWithToken } from "@/lib/fetchSubAreasWithToken";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SubAreaList = () => {
   const pathname = usePathname();
   const areaId = pathname.split("/")[1];
 
   const [subAreas, setSubAreas] = useState<SubArea[] | null>(null);
-  const [areaName, setAreaName] = useState<string>("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
