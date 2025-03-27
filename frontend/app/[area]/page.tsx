@@ -2,6 +2,7 @@ import { fetchArea } from "@/lib/fetchArea";
 import { SubArea } from "@/types";
 import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
+import SubAreaList from "../components/SubAreaList";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb, { BreadcrumbProvider } from "../components/breadcrumb";
@@ -51,18 +52,7 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
             <CardTitle className="text-2xl font-bold">{`${areaName} エリア`}</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              {sortedSubAreas.map(({ id, name, totalShops }: SubArea) => (
-                <li key={id}>
-                  <Link href={`/${area}/${id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
-                    <div className="flex items-center gap-2">
-                      <span>{name}</span>
-                    </div>
-                    <span className="text-gray-600">{totalShops}件</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <SubAreaList />
           </CardContent>
         </Card>
       </main>
