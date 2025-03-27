@@ -1,10 +1,10 @@
 import { fetchArea } from "@/lib/fetchArea";
-import { SubArea } from "@/types";
 import { ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb, { BreadcrumbProvider } from "../components/breadcrumb";
+import SubAreaList from "../components/SubAreaList";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 type Params = { area: string };
@@ -35,8 +35,7 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
   const areaData = await fetchArea(area);
   if (!areaData) return notFound();
 
-  const { area: areaName, sub_areas: subAreas } = areaData;
-  const sortedSubAreas = subAreas.sort((a: SubArea, b: SubArea) => b.totalShops - a.totalShops);
+  const { area: areaName } = areaData;
 
   return (
     <BreadcrumbProvider value={{ area, areaName }}>
@@ -51,18 +50,7 @@ export default async function AreaPage({ params }: { params: Promise<Params> }) 
             <CardTitle className="text-2xl font-bold">{`${areaName} エリア`}</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              {sortedSubAreas.map(({ id, name, totalShops }: SubArea) => (
-                <li key={id}>
-                  <Link href={`/${area}/${id}`} className="flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
-                    <div className="flex items-center gap-2">
-                      <span>{name}</span>
-                    </div>
-                    <span className="text-gray-600">{totalShops}件</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <SubAreaList />
           </CardContent>
         </Card>
       </main>

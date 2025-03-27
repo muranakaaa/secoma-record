@@ -51,11 +51,21 @@ module Api
 
         sub_area_counts = Shop.where(sub_area: sub_areas.map(&:first)).group(:sub_area).count
 
+        user_visits = if current_api_v1_user
+          Visit.joins(:shop)
+              .where(user: current_api_v1_user, shops: { area: area_name })
+              .group("shops.sub_area")
+              .count
+        else
+          {}
+        end
+
         result = sub_areas.map do |(sub_area, sub_area_romaji)|
           {
             id: sub_area_romaji.presence || SecureRandom.uuid,
             name: sub_area,
-            totalShops: sub_area_counts[sub_area] || 0
+            totalShops: sub_area_counts[sub_area] || 0,
+            visitedShops: user_visits[sub_area] || 0
           }
         end
 

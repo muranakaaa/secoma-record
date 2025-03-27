@@ -22,6 +22,7 @@ export type SubArea = {
   name: string;
   sub_area_romaji: string;
   totalShops: number;
+  visitedShops?: number;
 };
 
 export type Shop = {
