@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 export const fetchAreasWithToken = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("access-token")?.value || "";
   const client = cookieStore.get("client")?.value || "";
   const uid = cookieStore.get("uid")?.value || "";
