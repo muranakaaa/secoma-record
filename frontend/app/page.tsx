@@ -1,12 +1,10 @@
 import { Info } from "lucide-react";
 import { Suspense } from "react";
-import { fetchAreasWithToken } from "@/lib/fetchAreasWithToken";
 import AreaList from "./components/AreaList";
 import SearchForm from "./components/SearchForm";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 
 const HomePage = async () => {
-  const areas = await fetchAreasWithToken();
 
   return (
     <main className="container mx-auto px-4 py-8">
