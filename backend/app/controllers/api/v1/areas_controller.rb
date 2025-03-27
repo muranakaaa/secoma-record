@@ -12,11 +12,23 @@ module Api
           .group(:area, :area_romaji)
           .select("shops.area, shops.area_romaji, COUNT(DISTINCT shops.id) AS total_shops")
 
+        # ログインユーザーがいる場合、訪問済み店舗数をエリア単位で集計
+        user_visits = if current_api_v1_user
+          Visit.joins(:shop)
+            .where(user: current_api_v1_user)
+            .group("shops.area")
+            .count
+        else
+          {}
+        end
+
         result = area_data.map do |data|
+          area_key = data.area.strip
           {
             id: data.area_romaji.presence || data.area.to_s.parameterize,
             area: data.area.strip,
-            totalShops: data.total_shops
+            totalShops: data.total_shops,
+            visitedShops: user_visits[area_key] || 0
           }
         end
 
