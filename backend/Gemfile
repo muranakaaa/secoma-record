@@ -10,6 +10,7 @@ gem "rack-cors", "~> 2.0.2"
 gem "bootsnap", require: false
 gem "active_model_serializers"
 gem "actioncable"
+gem 'redis'
 
 group :development, :test do
   gem "brakeman", require: false
