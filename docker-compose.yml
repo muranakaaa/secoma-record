@@ -1,4 +1,22 @@
 services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  sidekiq:
+    build:
+      context: ./backend
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
   backend:
     build:
       context: ./backend
@@ -11,6 +29,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
     env_file:
       - .env
     environment:
