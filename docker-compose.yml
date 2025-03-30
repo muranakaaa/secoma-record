@@ -5,6 +5,18 @@ services:
     ports:
       - "6379:6379"
 
+  sidekiq:
+    build:
+      context: ./backend
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
   backend:
     build:
       context: ./backend

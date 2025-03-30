@@ -292,6 +292,12 @@ GEM
     securerandom (0.4.1)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
+    sidekiq (8.0.1)
+      connection_pool (>= 2.5.0)
+      json (>= 2.9.0)
+      logger (>= 1.6.2)
+      rack (>= 3.1.0)
+      redis-client (>= 0.23.2)
     spring (4.2.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -339,6 +345,7 @@ DEPENDENCIES
   rspec-rails
   rubocop-rails-omakase
   shoulda-matchers (~> 5.0)
+  sidekiq
   spring-commands-rspec
 
 BUNDLED WITH
