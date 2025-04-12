@@ -54,6 +54,7 @@
 **システム / インフラ**
 - Dockerによる開発環境のコンテナ化
 - Cloudflareによる独自ドメイン + SSL化
+- Sentryによるエラー監視
 - GitHub ActionsによるCI / CDパイプラインの構築
     - バックエンド
         - CI: Rubocop / RSpec
