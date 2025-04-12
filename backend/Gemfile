@@ -12,6 +12,8 @@ gem "active_model_serializers"
 gem "actioncable"
 gem 'redis'
 gem 'sidekiq'
+gem "sentry-ruby"
+gem "sentry-rails"
 
 group :development, :test do
   gem "brakeman", require: false
