@@ -6,8 +6,6 @@
 
 **アプリURL:** https://secoma-record.com/
 
-**開発者X:** https://x.com/miyoshi3rd
-
 **分析ダッシュボード:** https://lookerstudio.google.com/reporting/0e398a30-366a-4ac4-ae41-f71537df997e
 
 ## 使用技術一覧
